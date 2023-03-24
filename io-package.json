@@ -1,8 +1,22 @@
 {
   "common": {
     "name": "apg-info",
-    "version": "0.0.0",
-    "news": {},
+    "version": "0.0.1-alpha.0",
+    "news": {
+      "0.0.1-alpha.0": {
+        "en": "First alpha version",
+        "de": "Erste Alpha-Version",
+        "ru": "Первая альфа версия",
+        "pt": "Primeira versão alfa",
+        "nl": "Eerste alfa versie",
+        "fr": "Première version alpha",
+        "it": "Prima versione alfa",
+        "es": "Primera versión alfa",
+        "pl": "Pierwsza wersja alfa",
+        "uk": "Перший альфа-версія",
+        "zh-cn": "第一页"
+      }
+    },
     "title": "Austrian Power Grid Info",
     "titleLang": {
       "en": "Austrian Power Grid (APG) Info",
