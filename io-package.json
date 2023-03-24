@@ -56,6 +56,11 @@
     "connectionType": "local",
     "dataSource": "poll",
     "materialize": true,
+    "adminUI": {
+      "config": "json",
+      "tab": "materialize"
+    },
+    "supportCustoms": true,
     "dependencies": [
       {
         "js-controller": ">=4.0.0"
