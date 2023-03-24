@@ -128,7 +128,7 @@ class ApgInfo extends utils.Adapter {
     }
 
     /**
-     * Retrieves peak hours from REST-API
+     * Retrieves marketdata from REST-API
      */
     async getDataDayAhead() {
         let start = (await cleanDate(new Date())).getTime();
@@ -167,7 +167,7 @@ class ApgInfo extends utils.Adapter {
             let day0 = await cleanDate(new Date());
             let day1 = new Date(day0.getTime() + oneDayTime);
 
-            let jDay0 = {}, jDay1 = {}, jDayAll = {};
+            let jDay0 = {}, jDay1 = {};
             let iHour = 0;
             let sHour = '';
 
@@ -195,7 +195,6 @@ class ApgInfo extends utils.Adapter {
             }
             await JsonExplorer.TraverseJson(jDay0, 'marketprice.today', true, true);
             await JsonExplorer.TraverseJson(jDay1, 'marketprice.tomorrow', true, true);
-            //await JsonExplorer.TraverseJson(jDayAll, 'marketprice.all', true, true);
 
             await JsonExplorer.checkExpire('marketprice.*');
 
