@@ -1,0 +1,57 @@
+{
+  "common": {
+    "name": "apg-info",
+    "version": "0.0.0",
+    "news": {},
+    "title": "Austrian Power Grid Info",
+    "titleLang": {
+      "en": "Austrian Power Grid (APG) Info",
+      "de": "Austrian Power Grid (APG) Informationen"
+    },
+    "desc": {
+      "en": "Austrian Power Grid (APG) Info",
+      "de": "Austrian Power Grid (APG) Informationen"
+    },
+    "authors": [
+      "HGlab01 <iobroker.followthesun@gmail.com>"
+    ],
+    "keywords": [
+      "ioBroker",
+      "APG",
+      "Austrian Power Grid",
+      "Stromspitzen",
+      "Powermonitor",
+      "Spitzenzeiten",
+      "Hochlast",
+      "Day ahead preis",
+      "PHELIX-AT Day-Ahead",
+      "EPEX Spot AT",
+      "Strompreis"
+    ],
+    "license": "MIT",
+    "platform": "Javascript/Node.js",
+    "main": "main.js",
+    "icon": "apg-info.png",
+    "enabled": true,
+    "extIcon": "https://raw.githubusercontent.com/HGlab01/ioBroker.apg-info/main/admin/apg-info.png",
+    "readme": "https://github.com/HGlab01/ioBroker.apg-info/blob/main/README.md",
+    "loglevel": "info",
+    "mode": "schedule",
+    "schedule": "14 1 0,14 * * *",
+    "allowInit": true,
+    "type": "other",
+    "compact": true,
+    "connectionType": "local",
+    "dataSource": "poll",
+    "materialize": true,
+    "dependencies": [
+      {
+        "js-controller": ">=4.0.0"
+      }
+    ],
+    "plugins": {}
+  },
+  "native": {},
+  "objects": [],
+  "instanceObjects": []
+}
