@@ -60,7 +60,7 @@
       "config": "json",
       "tab": "materialize"
     },
-    "supportCustoms": true,
+    "supportCustoms": false,
     "dependencies": [
       {
         "js-controller": ">=4.0.0"
