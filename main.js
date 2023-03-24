@@ -64,7 +64,7 @@ class ApgInfo extends utils.Adapter {
         let resultPeakHours = await this.ExecuteRequestPeakHours();
         let resultDayAhead = await this.ExecuteRequestDayAhead();
 
-        if (resultPeakHours == 'error') {
+        if (resultPeakHours == 'error' || resultDayAhead == 'error') {
             this.terminate ? this.terminate(utils.EXIT_CODES.UNCAUGHT_EXCEPTION) : process.exit(0);
         } else {
             this.terminate ? this.terminate(0) : process.exit(0);
