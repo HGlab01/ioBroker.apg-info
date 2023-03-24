@@ -88,9 +88,12 @@ class ApgInfo extends utils.Adapter {
             callback();
         }
     }
-
+    
+     /**
+     * @param {number} ms
+     */
     sleep(ms) {
-        return new Promise(resolve => setTimeout(() => !this.unloaded && resolve(), ms));
+        return /** @type {Promise<void>} */(new Promise(resolve => setTimeout(() => !this.unloaded && resolve(), ms)));
     }
 
     /*
