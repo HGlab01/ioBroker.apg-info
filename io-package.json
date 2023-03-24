@@ -53,7 +53,7 @@
     "mode": "schedule",
     "schedule": "14 1 0,14 * * *",
     "allowInit": true,
-    "type": "other",
+    "type": "general",
     "compact": true,
     "connectionType": "local",
     "dataSource": "poll",
