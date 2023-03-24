@@ -1,5 +1,8 @@
 name: Test and Release
 
+permissions:
+  contents: write
+
 # Run this job on all pushes and pull requests
 # as well as tags with a semantic version
 on:
@@ -74,9 +77,9 @@ jobs:
           # To enable create a API-Token in Sentry (User settings, API keys)
           # Enter this token as a GitHub secret (with name SENTRY_AUTH_TOKEN) in the repository options
           # Then uncomment and customize the following block:
-          sentry: true
-          sentry-token: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          sentry-project: "iobroker-fuelpricemonitor"
-          sentry-version-prefix: "iobroker.fuelpricemonitor"
+          #sentry: true
+          #sentry-token: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          #sentry-project: "iobroker-apg-info"
+          #sentry-version-prefix: "iobroker.apg-info"
           # If your sentry project is linked to a GitHub repository, you can enable the following option
           # sentry-github-integration: true
