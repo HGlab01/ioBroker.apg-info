@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "author": {
     "name": "HGlab01",
-    "email": "iobroker.fuelpricemonitor@gmail.com"
+    "email": "iobroker.followthesun@gmail.com"
   },
   "license": "MIT",
   "engines": {
@@ -13,12 +13,12 @@
   "main": "main.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/HGlab01/ioBroker.fuelpricemonitor.git"
+    "url": "git+https://github.com/HGlab01/ioBroker.apg-info.git"
   },
   "bugs": {
-    "url": "https://github.com/HGlab01/ioBroker.fuelpricemonitor/issues"
+    "url": "https://github.com/HGlab01/ioBroker.apg-info/issues"
   },
-  "homepage": "https://github.com/HGlab01/ioBroker.fuelpricemonitor",
+  "homepage": "https://github.com/HGlab01/ioBroker.apg-info",
   "keywords": [
     "ioBroker",
     "Spritpreismonitor Österreich",
