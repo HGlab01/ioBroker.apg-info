@@ -1,20 +1,19 @@
-![Logo](admin/fuelpricemonitor.png)
-# ioBroker.fuelpricemonitor
+![Logo](admin/apg-info.png)
+# ioBroker.apg-info
 
-[![NPM version](http://img.shields.io/npm/v/iobroker.fuelpricemonitor.svg)](https://www.npmjs.com/package/iobroker.fuelpricemonitor)
-![Number of Installations (stable)](http://iobroker.live/badges/fuelpricemonitor-stable.svg)
-[![Downloads](https://img.shields.io/npm/dm/iobroker.fuelpricemonitor.svg)](https://www.npmjs.com/package/iobroker.fuelpricemonitor)
-![Number of Installations (latest)](http://iobroker.live/badges/fuelpricemonitor-installed.svg)
-[![Dependency Status](https://img.shields.io/librariesio/release/npm/iobroker.fuelpricemonitor)](https://libraries.io/npm/iobroker.fuelpricemonitor)
-[![Known Vulnerabilities](https://snyk.io/test/github/HGlab01/ioBroker.fuelpricemonitor/badge.svg)](https://snyk.io/test/github/HGlab01/ioBroker.fuelpricemonitor)
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FHGlab01%2FioBroker.fuelpricemonitor.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FHGlab01%2FioBroker.fuelpricemonitor?ref=badge_shield)
-![Test and Release](https://github.com/HGlab01/ioBroker.fuelpricemonitor/workflows/Test%20and%20Release/badge.svg)
+[![NPM version](http://img.shields.io/npm/v/iobroker.apg-info.svg)](https://www.npmjs.com/package/iobroker.apg-info)
+![Number of Installations (stable)](http://iobroker.live/badges/apg-info-stable.svg)
+[![Downloads](https://img.shields.io/npm/dm/iobroker.apg-info.svg)](https://www.npmjs.com/package/iobroker.apg-info)
+![Number of Installations (latest)](http://iobroker.live/badges/apg-info-installed.svg)
+[![Dependency Status](https://img.shields.io/librariesio/release/npm/iobroker.apg-info)](https://libraries.io/npm/iobroker.apg-info)
+[![Known Vulnerabilities](https://snyk.io/test/github/HGlab01/ioBroker.apg-info/badge.svg)](https://snyk.io/test/github/HGlab01/ioBroker.apg-info)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FHGlab01%2FioBroker.apg-info.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FHGlab01%2FioBroker.apg-info?ref=badge_shield)
+![Test and Release](https://github.com/HGlab01/ioBroker.apg-info/workflows/Test%20and%20Release/badge.svg)
 
-[![NPM](https://nodei.co/npm/iobroker.fuelpricemonitor.png?downloads=true)](https://nodei.co/npm/iobroker.fuelpricemonitor/)
+[![NPM](https://nodei.co/npm/iobroker.apg-info.png?downloads=true)](https://nodei.co/npm/iobroker.apg-info/)
 
-## fuelpricemonitor adapter for ioBroker
-This adapter retrieves the fuel (Diesel, Super95 and CNG) prices from the offical Austria database based on your configered geo-position. The API delivers the prices only for the first 5 station. For the other 5 stations the prices are not available. Additional locations can be added.
-Default schedule is done every 20 minutes as cron job in the instance tab.  
+## apg-info adapter for ioBroker
+This adapter provides the peak-times for the Austrian Power Grid, where power consumption shall be avoided. In addition the adapter provides the PHELIX-AT Day-Ahead (EPEX Spot) prices for Austria.  
 
 **This adapter uses Sentry libraries to automatically report exceptions and code errors to the developers.** For more details and for information how to disable the error reporting see [Sentry-Plugin Documentation](https://github.com/ioBroker/plugin-sentry#plugin-sentry)!
 
@@ -27,25 +26,8 @@ Default schedule is done every 20 minutes as cron job in the instance tab.
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### 0.3.4 (2023-02-05)
-* (HGlab01) Cheapest station from experimental to stable
-* (HGlab01) Bump axios to 1.3.2
-
-### 0.3.3 (2022-12-22)
-* (HGlab01) Cheapest station now per fuel type (#445)
-
-### 0.3.2 (2022-12-16)
-* (HGlab01) Add feature to find cheapest stations over all locations (#365)
-* (HGlab01) Bump ioBroker-jsonExplorer to 0.1.10
-* (HGlab01) Bump axios to 1.2.1
-
-### 0.3.1 (2022-10-25)
-* (HGlab01) Add option to exclude closed gas stations (#407)
-
-### 0.3.0 (2022-08-30)
-* (HGlab01) !Breaking change! NodeJS 14.16 or higher required
-* (HGlab01) !Breaking change! ioBroker js-controller 4.0 or higher required
-* (HGlab01) Bump is-online from 9.0.1 to 10.0.0
+### __WORK IN PROGRESS__
+* (HGlab01) First alpha version
 
 ## License
 MIT License
@@ -71,4 +53,4 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FHGlab01%2FioBroker.fuelpricemonitor.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FHGlab01%2FioBroker.fuelpricemonitor?ref=badge_large)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FHGlab01%2FioBroker.apg-info.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FHGlab01%2FioBroker.apg-info?ref=badge_large)
