@@ -20,11 +20,16 @@
   },
   "homepage": "https://github.com/HGlab01/ioBroker.apg-info",
   "keywords": [
-    "ioBroker",
-    "Spritpreismonitor Österreich",
-    "Benzin",
-    "Diesel",
-    "Treibstoff"
+    "APG",
+    "Austrian Power Grid",
+    "Stromspitzen",
+    "Powermonitor",
+    "Spitzenzeiten",
+    "Hochlast",
+    "Day ahead preis",
+    "PHELIX-AT Day-Ahead",
+    "EPEX Spot AT",
+    "Strompreis"
   ],
   "dependencies": {
     "@esm2cjs/is-online": "^10.0.0",
