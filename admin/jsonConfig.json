@@ -2,5 +2,12 @@
     "i18n": false,
     "type": "panel",
     "items": {
+        "treshold": {
+            "type": "number",
+            "label": "Treshold market price (€ct/kWh)",
+            "min": 0,
+            "step": 0.1,
+            "newLine": true
+        }
     }
 }
