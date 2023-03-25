@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "apg-info",
-    "version": "0.0.1-alpha.3",
+    "version": "0.0.1-alpha.4",
     "news": {
+      "0.0.1-alpha.4": {
+        "en": "alpha version",
+        "de": "alpha version",
+        "ru": "альфа версия",
+        "pt": "versão alfa",
+        "nl": "alfa versie",
+        "fr": "version alpha",
+        "it": "versione alfa",
+        "es": "versión alpha",
+        "pl": "wersja alfa",
+        "uk": "альфа версія",
+        "zh-cn": "目录"
+      },
       "0.0.1-alpha.3": {
         "en": "alpha version",
         "de": "alpha version",
