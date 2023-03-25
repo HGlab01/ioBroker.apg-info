@@ -15,7 +15,7 @@ const stateAttr = require(`${__dirname}/lib/stateAttr.js`); // Load attribute li
 const isOnline = require('@esm2cjs/is-online').default;
 
 //global variables
-
+let threshold = 10;
 
 class ApgInfo extends utils.Adapter {
 
@@ -40,16 +40,10 @@ class ApgInfo extends utils.Adapter {
      */
     async onReady() {
         // Initialize adapter
-        //get adapter configuration
         this.log.info('Started with JSON-Explorer version ' + JsonExplorer.version);
 
-        //get Geodata from configuration
-        let obj = await this.getForeignObjectAsync('system.config');
-        if (!obj) {
-            this.log.error('Adapter was not able to read iobroker configuration');
-            this.terminate ? this.terminate(utils.EXIT_CODES.INVALID_CONFIG_OBJECT) : process.exit(0);
-            return;
-        }
+        if (this.config.threshold) threshold = this.config.threshold;
+        else this.log.info('Market price threshold not found and set to 10');
 
         if (await isOnline() == false) {
             this.log.error('No internet connection detected');
@@ -88,10 +82,10 @@ class ApgInfo extends utils.Adapter {
             callback();
         }
     }
-    
-     /**
-     * @param {number} ms
-     */
+
+    /**
+    * @param {number} ms
+    */
     sleep(ms) {
         return /** @type {Promise<void>} */(new Promise(resolve => setTimeout(() => !this.unloaded && resolve(), ms)));
     }
@@ -144,7 +138,7 @@ class ApgInfo extends utils.Adapter {
      */
     async getDataDayAhead() {
         let start = (await cleanDate(new Date())).getTime();
-        let end = start + 1000 * 60 * 60 * 24 * 2;
+        let end = start + 1000 * 60 * 60 * 24 * 3;
         let uri = `https://api.awattar.at/v1/marketdata?start=${start}&end=${end}`;
         this.log.debug(`API-Call ${uri}`);
         console.log(`API-Call ${uri}`);
@@ -167,7 +161,9 @@ class ApgInfo extends utils.Adapter {
         })
     }
 
-
+    /**
+     * Handles json-object and creates states for market prices
+     */
     async ExecuteRequestDayAhead() {
         try {
             let result = await this.getDataDayAhead();
@@ -175,11 +171,10 @@ class ApgInfo extends utils.Adapter {
 
             await JsonExplorer.TraverseJson(result.data, 'marketprice.details', true, true);
 
-            const oneDayTime = 1000 * 60 * 60 * 24;
             let day0 = await cleanDate(new Date());
-            let day1 = new Date(day0.getTime() + oneDayTime);
+            let day1 = await addDays(day0, 1);
 
-            let jDay0 = {}, jDay1 = {};
+            let jDay0 = {}, jDay1 = {}, jDay0Tr = {}, jDay1Tr = {};
             let iHour = 0;
             let sHour = '';
 
@@ -202,16 +197,24 @@ class ApgInfo extends utils.Adapter {
 
                 let dateToCheck = await cleanDate(new Date(result.data[idS].start_timestamp));
                 let marketprice = result.data[idS].marketprice / 10;
-                if (dateToCheck.getTime() == day0.getTime()) jDay0[sHour] = marketprice;
-                else if (dateToCheck.getTime() == day1.getTime()) jDay1[sHour] = marketprice;
+                if (dateToCheck.getTime() == day0.getTime()) {
+                    jDay0[sHour] = marketprice;
+                    if (marketprice < threshold) jDay0Tr[sHour] = marketprice;
+                }
+                else if (dateToCheck.getTime() == day1.getTime()) {
+                    jDay1[sHour] = marketprice;
+                    if (marketprice < threshold) jDay1Tr[sHour] = marketprice;
+                }
             }
             await JsonExplorer.TraverseJson(jDay0, 'marketprice.today', true, true);
+            await JsonExplorer.TraverseJson(jDay0Tr, 'marketprice.belowThreshold.today', true, true);
             await JsonExplorer.TraverseJson(jDay1, 'marketprice.tomorrow', true, true);
+            await JsonExplorer.TraverseJson(jDay1Tr, 'marketprice.belowThreshold.tomorrow', true, true);
 
             await JsonExplorer.checkExpire('marketprice.*');
 
             // check for outdated states to be deleted
-            let statesToDelete = await this.getStatesAsync('marketprice.*');
+            let statesToDelete = await this.getStatesAsync('marketprice.belowThreshold.*');
             for (const idS in statesToDelete) {
                 let state = await this.getStateAsync(idS);
                 if (state != null && state.val == null) {
@@ -219,6 +222,15 @@ class ApgInfo extends utils.Adapter {
                     await this.delObjectAsync(idS);
                 }
             }
+            statesToDelete = await this.getStatesAsync('marketprice.details.*');
+            for (const idS in statesToDelete) {
+                let state = await this.getStateAsync(idS);
+                if (state != null && state.val == null) {
+                    this.log.debug(`State "${idS}" will be deleted`);
+                    await this.delObjectAsync(idS);
+                }
+            }
+
         } catch (error) {
             let eMsg = `Error in ExecuteRequestDayAhead(): ${error})`;
             this.log.error(eMsg);
@@ -231,19 +243,18 @@ class ApgInfo extends utils.Adapter {
 
 
     /**
-     * Handles json-object and creates states
+     * Handles json-object and creates states for peak hours
      */
     async ExecuteRequestPeakHours() {
         try {
             let result = await this.getDataPeakHours();
             this.log.debug(`Peak hour result is: ${JSON.stringify(result)}`);
 
-            const oneDayTime = 1000 * 60 * 60 * 24;
             let day0 = await cleanDate(new Date());
-            let day1 = new Date(day0.getTime() + oneDayTime);
-            let day2 = new Date(day0.getTime() + oneDayTime * 2);
-            let day3 = new Date(day0.getTime() + oneDayTime * 3);
-            let day4 = new Date(day0.getTime() + oneDayTime * 4);
+            let day1 = await addDays(day0, 1);
+            let day2 = await addDays(day0, 2);
+            let day3 = await addDays(day0, 3);
+            let day4 = await addDays(day0, 4);
 
             let jDay0 = {}, jDay1 = {}, jDay2 = {}, jDay3 = {}, jDay4 = {}, jDayAll = {};
             let iHour = 0;
@@ -280,7 +291,8 @@ class ApgInfo extends utils.Adapter {
             await JsonExplorer.TraverseJson(jDay0, 'peakTime.today', true, true);
             await JsonExplorer.TraverseJson(jDay1, 'peakTime.today+1', true, true);
             await JsonExplorer.TraverseJson(jDay2, 'peakTime.today+2', true, true);
-            await JsonExplorer.TraverseJson(jDay2, 'peakTime.today+3', true, true);
+            await JsonExplorer.TraverseJson(jDay3, 'peakTime.today+3', true, true);
+            await JsonExplorer.TraverseJson(jDay4, 'peakTime.today+4', true, true);
             await JsonExplorer.TraverseJson(jDayAll, 'peakTime.allDays', true, true);
 
             await JsonExplorer.checkExpire('peakTime.*');
@@ -338,8 +350,8 @@ if (module.parent) {
 }
 
 /**
- * xxxx
- * @param {Date} date
+ * sets time to 00:00:00.00000
+ * @param {Date} date date to be changed
  */
 async function cleanDate(date) {
     date.setHours(0);
@@ -347,4 +359,18 @@ async function cleanDate(date) {
     date.setSeconds(0);
     date.setMilliseconds(0);
     return date;
+}
+
+/**
+ * adds days to a date
+ * @param {Date} date origin date
+ * @param {number} numberOfDays number of days which origin date shall be added (positive and negative allowes)
+ */
+
+async function addDays(date, numberOfDays) {
+    const oneDayTime = 1000 * 60 * 60 * 24;
+    const oneHourAndOneMinute = 1000 * 60 * 61;
+    let originDate = await cleanDate(date);
+    let targetDate = new Date(originDate.getTime() + oneDayTime * numberOfDays + oneHourAndOneMinute); //oneHourAndOneMinute to cover Zeitumstellung
+    return (await cleanDate(targetDate));
 }

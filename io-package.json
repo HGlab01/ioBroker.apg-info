@@ -107,7 +107,9 @@
     ],
     "plugins": {}
   },
-  "native": {},
+  "native": {
+    "threshold": 10
+  },
   "objects": [],
   "instanceObjects": []
 }
