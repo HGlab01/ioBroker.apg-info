@@ -138,7 +138,7 @@ class ApgInfo extends utils.Adapter {
      */
     async getDataDayAhead() {
         let start = (await cleanDate(new Date())).getTime();
-        let end = start + 1000 * 60 * 60 * 24 * 2;
+        let end = start + 1000 * 60 * 60 * 24 * 3;
         let uri = `https://api.awattar.at/v1/marketdata?start=${start}&end=${end}`;
         this.log.debug(`API-Call ${uri}`);
         console.log(`API-Call ${uri}`);
