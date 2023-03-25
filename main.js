@@ -15,7 +15,7 @@ const stateAttr = require(`${__dirname}/lib/stateAttr.js`); // Load attribute li
 const isOnline = require('@esm2cjs/is-online').default;
 
 //global variables
-let treshold = 10;
+let threshold = 10;
 
 class ApgInfo extends utils.Adapter {
 
@@ -42,8 +42,8 @@ class ApgInfo extends utils.Adapter {
         // Initialize adapter
         this.log.info('Started with JSON-Explorer version ' + JsonExplorer.version);
 
-        if (this.config.treshold) treshold = this.config.treshold;
-        else this.log.info('Market price treshold not found and set to 10');
+        if (this.config.threshold) threshold = this.config.threshold;
+        else this.log.info('Market price threshold not found and set to 10');
 
         if (await isOnline() == false) {
             this.log.error('No internet connection detected');
@@ -199,22 +199,22 @@ class ApgInfo extends utils.Adapter {
                 let marketprice = result.data[idS].marketprice / 10;
                 if (dateToCheck.getTime() == day0.getTime()) {
                     jDay0[sHour] = marketprice;
-                    if (marketprice < treshold) jDay0Tr[sHour] = marketprice;
+                    if (marketprice < threshold) jDay0Tr[sHour] = marketprice;
                 }
                 else if (dateToCheck.getTime() == day1.getTime()) {
                     jDay1[sHour] = marketprice;
-                    if (marketprice < treshold) jDay1Tr[sHour] = marketprice;
+                    if (marketprice < threshold) jDay1Tr[sHour] = marketprice;
                 }
             }
             await JsonExplorer.TraverseJson(jDay0, 'marketprice.today', true, true);
-            await JsonExplorer.TraverseJson(jDay0Tr, 'marketprice.belowTreshold.today', true, true);
+            await JsonExplorer.TraverseJson(jDay0Tr, 'marketprice.belowThreshold.today', true, true);
             await JsonExplorer.TraverseJson(jDay1, 'marketprice.tomorrow', true, true);
-            await JsonExplorer.TraverseJson(jDay1Tr, 'marketprice.belowTreshold.tomorrow', true, true);
+            await JsonExplorer.TraverseJson(jDay1Tr, 'marketprice.belowThreshold.tomorrow', true, true);
 
             await JsonExplorer.checkExpire('marketprice.*');
 
             // check for outdated states to be deleted
-            let statesToDelete = await this.getStatesAsync('marketprice.belowTreshold.*');
+            let statesToDelete = await this.getStatesAsync('marketprice.belowThreshold.*');
             for (const idS in statesToDelete) {
                 let state = await this.getStateAsync(idS);
                 if (state != null && state.val == null) {
