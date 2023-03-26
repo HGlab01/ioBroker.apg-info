@@ -191,26 +191,36 @@ class ApgInfo extends utils.Adapter {
                 this.log.debug(result.data[idS].marketprice);
 
                 iHour = new Date(result.data[idS].start_timestamp).getHours();
-                if (iHour < 9) sHour = '0' + String(iHour) + '_to_' + '0' + String(iHour + 1);
-                else if (iHour == 9) sHour = '0' + String(iHour) + '_to_' + String(iHour + 1);
-                else sHour = String(iHour) + '_to_' + String(iHour + 1);
+                let endHour = new Date(result.data[idS].end_timestamp).getHours() - 1;
+                do { //if range is more than one hour
+                    if (iHour < 9) sHour = '0' + String(iHour) + '_to_' + '0' + String(iHour + 1);
+                    else if (iHour == 9) sHour = '0' + String(iHour) + '_to_' + String(iHour + 1);
+                    else sHour = String(iHour) + '_to_' + String(iHour + 1);
 
-                let dateToCheck = await cleanDate(new Date(result.data[idS].start_timestamp));
-                let marketprice = result.data[idS].marketprice / 10;
-                if (dateToCheck.getTime() == day0.getTime()) {
-                    jDay0[sHour] = marketprice;
-                    if (marketprice < threshold) jDay0Tr[sHour] = marketprice;
-                }
-                else if (dateToCheck.getTime() == day1.getTime()) {
-                    jDay1[sHour] = marketprice;
-                    if (marketprice < threshold) jDay1Tr[sHour] = marketprice;
-                }
+                    let dateToCheck = await cleanDate(new Date(result.data[idS].start_timestamp));
+                    let marketprice = Math.round(result.data[idS].marketprice / 10 * 1000) / 1000;
+                    if (dateToCheck.getTime() == day0.getTime()) {
+                        jDay0[sHour] = marketprice;
+                        if (marketprice < threshold) jDay0Tr[sHour] = marketprice;
+                    }
+                    else if (dateToCheck.getTime() == day1.getTime()) {
+                        jDay1[sHour] = marketprice;
+                        if (marketprice < threshold) jDay1Tr[sHour] = marketprice;
+                    }
+                    iHour++;
+                } while (iHour <= endHour)
             }
+            this.log.debug('Marketprice jDay0: ' + JSON.stringify(jDay0));
+            this.log.debug('Marketprice jDay0Tr: ' + JSON.stringify(jDay0Tr));
+            this.log.debug('Marketprice jDay1: ' + JSON.stringify(jDay1));
+            this.log.debug('Marketprice jDay1Tr: ' + JSON.stringify(jDay1Tr));
+
             await JsonExplorer.TraverseJson(jDay0, 'marketprice.today', true, true);
             await JsonExplorer.TraverseJson(jDay0Tr, 'marketprice.belowThreshold.today', true, true);
             await JsonExplorer.TraverseJson(jDay1, 'marketprice.tomorrow', true, true);
             await JsonExplorer.TraverseJson(jDay1Tr, 'marketprice.belowThreshold.tomorrow', true, true);
 
+            await this.sleep(500); //needed before strting check
             await JsonExplorer.checkExpire('marketprice.*');
 
             // check for outdated states to be deleted
@@ -288,6 +298,14 @@ class ApgInfo extends utils.Adapter {
                 else jDayAll['item ' + i] = new Date(result.StatusInfos[idS].utc).getTime();
                 i = i + 1;
             }
+
+            this.log.debug('Peak jDay0: ' + JSON.stringify(jDay0));
+            this.log.debug('Peak jDay1: ' + JSON.stringify(jDay1));
+            this.log.debug('Peak jDay2: ' + JSON.stringify(jDay2));
+            this.log.debug('Peak jDay3: ' + JSON.stringify(jDay3));
+            this.log.debug('Peak jDay4: ' + JSON.stringify(jDay4));
+            this.log.debug('Peak jDayAll: ' + JSON.stringify(jDayAll));
+
             await JsonExplorer.TraverseJson(jDay0, 'peakTime.today', true, true);
             await JsonExplorer.TraverseJson(jDay1, 'peakTime.today+1', true, true);
             await JsonExplorer.TraverseJson(jDay2, 'peakTime.today+2', true, true);
@@ -295,6 +313,7 @@ class ApgInfo extends utils.Adapter {
             await JsonExplorer.TraverseJson(jDay4, 'peakTime.today+4', true, true);
             await JsonExplorer.TraverseJson(jDayAll, 'peakTime.allDays', true, true);
 
+            await this.sleep(500); //needed before strting check
             await JsonExplorer.checkExpire('peakTime.*');
 
             // check for outdated states to be deleted
