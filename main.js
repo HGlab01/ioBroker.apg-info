@@ -169,19 +169,17 @@ class ApgInfo extends utils.Adapter {
             let result = await this.getDataDayAhead();
             this.log.debug(`Day ahead result is: ${JSON.stringify(result.data)}`);
 
-            await JsonExplorer.TraverseJson(result.data, 'marketprice.details', true, true);
-
-            let day0 = await cleanDate(new Date());
-            let day1 = await addDays(day0, 1);
-
-            let jDay0 = {}, jDay1 = {}, jDay0Tr = {}, jDay1Tr = {};
-            let iHour = 0;
-            let sHour = '';
-
             if (!result.data) {
                 this.log.error('No data found in marketprice-result!')
                 return 'error';
             }
+            await JsonExplorer.TraverseJson(result.data, 'marketprice.details', true, true);
+
+            let day0 = await cleanDate(new Date());
+            let day1 = await addDays(day0, 1);
+            let jDay0 = {}, jDay1 = {}, jDay0Tr = {}, jDay1Tr = {};
+            let iHour = 0;
+            let sHour = '';
 
             for (const idS in result.data) {
                 if (!result.data[idS].marketprice) {
@@ -191,7 +189,7 @@ class ApgInfo extends utils.Adapter {
                 this.log.debug(result.data[idS].marketprice);
 
                 iHour = new Date(result.data[idS].start_timestamp).getHours();
-                let endHour = new Date(result.data[idS].end_timestamp).getHours() - 1;
+                let endHour = new Date(result.data[idS].end_timestamp).getHours();
                 do { //if range is more than one hour
                     if (iHour < 9) sHour = '0' + String(iHour) + '_to_' + '0' + String(iHour + 1);
                     else if (iHour == 9) sHour = '0' + String(iHour) + '_to_' + String(iHour + 1);
@@ -208,7 +206,7 @@ class ApgInfo extends utils.Adapter {
                         if (marketprice < threshold) jDay1Tr[sHour] = marketprice;
                     }
                     iHour++;
-                } while (iHour <= endHour)
+                } while (iHour <= (endHour - 1))
             }
             this.log.debug('Marketprice jDay0: ' + JSON.stringify(jDay0));
             this.log.debug('Marketprice jDay0Tr: ' + JSON.stringify(jDay0Tr));
@@ -259,22 +257,21 @@ class ApgInfo extends utils.Adapter {
         try {
             let result = await this.getDataPeakHours();
             this.log.debug(`Peak hour result is: ${JSON.stringify(result)}`);
+           
+            if (!result.StatusInfos) {
+                this.log.error('No StatusInfos found in peak-result!')
+                return 'error';
+            }
 
             let day0 = await cleanDate(new Date());
             let day1 = await addDays(day0, 1);
             let day2 = await addDays(day0, 2);
             let day3 = await addDays(day0, 3);
             let day4 = await addDays(day0, 4);
-
             let jDay0 = {}, jDay1 = {}, jDay2 = {}, jDay3 = {}, jDay4 = {}, jDayAll = {};
             let iHour = 0;
             let sHour = '';
             let i = 1;
-
-            if (!result.StatusInfos) {
-                this.log.error('No StatusInfos found in peak-result!')
-                return 'error';
-            }
 
             for (const idS in result.StatusInfos) {
                 if (!result.StatusInfos[idS].utc) {
