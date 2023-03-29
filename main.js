@@ -10,7 +10,7 @@ const utils = require('@iobroker/adapter-core');
 
 // Load your modules here, e.g.:
 const axios = require('axios');
-const JsonExplorer = require('iobroker-jsonexplorer');
+const jsonExplorer = require('iobroker-jsonexplorer');
 const stateAttr = require(`${__dirname}/lib/stateAttr.js`); // Load attribute library
 const isOnline = require('@esm2cjs/is-online').default;
 
@@ -32,7 +32,7 @@ class ApgInfo extends utils.Adapter {
         //this.on('stateChange', this.onStateChange.bind(this));
         //this.on('message', this.onMessage.bind(this));
         this.on('unload', this.onUnload.bind(this));
-        JsonExplorer.init(this, stateAttr);
+        jsonExplorer.init(this, stateAttr);
     }
 
     /**
@@ -40,7 +40,7 @@ class ApgInfo extends utils.Adapter {
      */
     async onReady() {
         // Initialize adapter
-        this.log.info('Started with JSON-Explorer version ' + JsonExplorer.version);
+        this.log.info('Started with JSON-Explorer version ' + jsonExplorer.version);
 
         if (this.config.threshold) threshold = this.config.threshold;
         else this.log.info('Market price threshold not found and set to 10');
@@ -58,7 +58,7 @@ class ApgInfo extends utils.Adapter {
         this.log.info(`Delay execution by ${delay}ms to better spread API calls`);
         await this.sleep(delay);
 
-        await JsonExplorer.setLastStartTime();
+        await jsonExplorer.setLastStartTime();
         let resultPeakHours = await this.ExecuteRequestPeakHours();
         let resultDayAhead = await this.ExecuteRequestDayAhead();
 
@@ -174,7 +174,7 @@ class ApgInfo extends utils.Adapter {
                 this.log.error('No data found in marketprice-result!')
                 return 'error';
             }
-            await JsonExplorer.TraverseJson(result.data, 'marketprice.details', true, true);
+            await jsonExplorer.TraverseJson(result.data, 'marketprice.details', true, true);
 
             let day0 = await cleanDate(new Date());
             let day1 = await addDays(day0, 1);
@@ -214,13 +214,13 @@ class ApgInfo extends utils.Adapter {
             this.log.debug('Marketprice jDay1: ' + JSON.stringify(jDay1));
             this.log.debug('Marketprice jDay1Tr: ' + JSON.stringify(jDay1Tr));
 
-            await JsonExplorer.TraverseJson(jDay0, 'marketprice.today', true, true);
-            await JsonExplorer.TraverseJson(jDay0Tr, 'marketprice.belowThreshold.today', true, true);
-            await JsonExplorer.TraverseJson(jDay1, 'marketprice.tomorrow', true, true);
-            await JsonExplorer.TraverseJson(jDay1Tr, 'marketprice.belowThreshold.tomorrow', true, true);
+            await jsonExplorer.TraverseJson(jDay0, 'marketprice.today', true, true);
+            await jsonExplorer.TraverseJson(jDay0Tr, 'marketprice.belowThreshold.today', true, true);
+            await jsonExplorer.TraverseJson(jDay1, 'marketprice.tomorrow', true, true);
+            await jsonExplorer.TraverseJson(jDay1Tr, 'marketprice.belowThreshold.tomorrow', true, true);
 
             await this.sleep(500); //needed before strting check
-            await JsonExplorer.checkExpire('marketprice.*');
+            await jsonExplorer.checkExpire('marketprice.*');
 
             // check for outdated states to be deleted
             let statesToDelete = await this.getStatesAsync('marketprice.belowThreshold.*');
@@ -234,7 +234,7 @@ class ApgInfo extends utils.Adapter {
             statesToDelete = await this.getStatesAsync('marketprice.details.*');
             for (const idS in statesToDelete) {
                 let state = await this.getStateAsync(idS);
-                if (state != null && state.val == null) {
+                if (state && state.val == null) {
                     this.log.debug(`State "${idS}" will be deleted`);
                     await this.delObjectAsync(idS);
                 }
@@ -243,10 +243,8 @@ class ApgInfo extends utils.Adapter {
         } catch (error) {
             let eMsg = `Error in ExecuteRequestDayAhead(): ${error})`;
             this.log.error(eMsg);
-            if (eMsg.includes('getaddrinfo EAI_AGAIN') == false) {
-                console.error(eMsg);
-                this.sendSentry(error);
-            }
+            console.error(eMsg);
+            this.sendSentry(error);
         }
     }
 
@@ -258,7 +256,7 @@ class ApgInfo extends utils.Adapter {
         try {
             let result = await this.getDataPeakHours();
             this.log.debug(`Peak hour result is: ${JSON.stringify(result)}`);
-           
+
             if (!result.StatusInfos) {
                 this.log.error('No StatusInfos found in peak-result!')
                 return 'error';
@@ -304,21 +302,21 @@ class ApgInfo extends utils.Adapter {
             this.log.debug('Peak jDay4: ' + JSON.stringify(jDay4));
             this.log.debug('Peak jDayAll: ' + JSON.stringify(jDayAll));
 
-            await JsonExplorer.TraverseJson(jDay0, 'peakTime.today', true, true);
-            await JsonExplorer.TraverseJson(jDay1, 'peakTime.today+1', true, true);
-            await JsonExplorer.TraverseJson(jDay2, 'peakTime.today+2', true, true);
-            await JsonExplorer.TraverseJson(jDay3, 'peakTime.today+3', true, true);
-            await JsonExplorer.TraverseJson(jDay4, 'peakTime.today+4', true, true);
-            await JsonExplorer.TraverseJson(jDayAll, 'peakTime.allDays', true, true);
+            await jsonExplorer.TraverseJson(jDay0, 'peakTime.today', true, true);
+            await jsonExplorer.TraverseJson(jDay1, 'peakTime.today+1', true, true);
+            await jsonExplorer.TraverseJson(jDay2, 'peakTime.today+2', true, true);
+            await jsonExplorer.TraverseJson(jDay3, 'peakTime.today+3', true, true);
+            await jsonExplorer.TraverseJson(jDay4, 'peakTime.today+4', true, true);
+            await jsonExplorer.TraverseJson(jDayAll, 'peakTime.allDays', true, true);
 
             await this.sleep(500); //needed before strting check
-            await JsonExplorer.checkExpire('peakTime.*');
+            await jsonExplorer.checkExpire('peakTime.*');
 
             // check for outdated states to be deleted
             let statesToDelete = await this.getStatesAsync('peakTime.*');
             for (const idS in statesToDelete) {
                 let state = await this.getStateAsync(idS);
-                if (state != null && state.val == null) {
+                if (state && state.val == null) {
                     this.log.debug(`State "${idS}" will be deleted`);
                     await this.delObjectAsync(idS);
                 }
@@ -327,10 +325,8 @@ class ApgInfo extends utils.Adapter {
         } catch (error) {
             let eMsg = `Error in ExecuteRequestPeakHours(): ${error})`;
             this.log.error(eMsg);
-            if (eMsg.includes('getaddrinfo EAI_AGAIN') == false) {
-                console.error(eMsg);
-                this.sendSentry(error);
-            }
+            console.error(eMsg);
+            this.sendSentry(error);
         }
     }
 
