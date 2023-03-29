@@ -87,7 +87,6 @@ class ApgInfo extends utils.Adapter {
     * @param {number} ms
     */
     sleep(ms) {
-        //return /** @type {Promise<void>} */(new Promise(resolve => setTimeout(() => !this.unloaded && resolve(), ms)));
         return /** @type {Promise<void>} */(new Promise(resolve => this.setTimeout(() => resolve(), ms)));
     }
 
@@ -214,12 +213,11 @@ class ApgInfo extends utils.Adapter {
             this.log.debug('Marketprice jDay1: ' + JSON.stringify(jDay1));
             this.log.debug('Marketprice jDay1Tr: ' + JSON.stringify(jDay1Tr));
 
-            await jsonExplorer.TraverseJson(jDay0, 'marketprice.today', true, true);
-            await jsonExplorer.TraverseJson(jDay0Tr, 'marketprice.belowThreshold.today', true, true);
-            await jsonExplorer.TraverseJson(jDay1, 'marketprice.tomorrow', true, true);
-            await jsonExplorer.TraverseJson(jDay1Tr, 'marketprice.belowThreshold.tomorrow', true, true);
+            await jsonExplorer.traverseJson(jDay0, 'marketprice.today', true, true);
+            await jsonExplorer.traverseJson(jDay0Tr, 'marketprice.belowThreshold.today', true, true);
+            await jsonExplorer.traverseJson(jDay1, 'marketprice.tomorrow', true, true);
+            await jsonExplorer.traverseJson(jDay1Tr, 'marketprice.belowThreshold.tomorrow', true, true);
 
-            await this.sleep(500); //needed before strting check
             await jsonExplorer.checkExpire('marketprice.*');
 
             // check for outdated states to be deleted
@@ -302,14 +300,13 @@ class ApgInfo extends utils.Adapter {
             this.log.debug('Peak jDay4: ' + JSON.stringify(jDay4));
             this.log.debug('Peak jDayAll: ' + JSON.stringify(jDayAll));
 
-            await jsonExplorer.TraverseJson(jDay0, 'peakTime.today', true, true);
-            await jsonExplorer.TraverseJson(jDay1, 'peakTime.today+1', true, true);
-            await jsonExplorer.TraverseJson(jDay2, 'peakTime.today+2', true, true);
-            await jsonExplorer.TraverseJson(jDay3, 'peakTime.today+3', true, true);
-            await jsonExplorer.TraverseJson(jDay4, 'peakTime.today+4', true, true);
-            await jsonExplorer.TraverseJson(jDayAll, 'peakTime.allDays', true, true);
+            await jsonExplorer.traverseJson(jDay0, 'peakTime.today', true, true);
+            await jsonExplorer.traverseJson(jDay1, 'peakTime.today+1', true, true);
+            await jsonExplorer.traverseJson(jDay2, 'peakTime.today+2', true, true);
+            await jsonExplorer.traverseJson(jDay3, 'peakTime.today+3', true, true);
+            await jsonExplorer.traverseJson(jDay4, 'peakTime.today+4', true, true);
+            await jsonExplorer.traverseJson(jDayAll, 'peakTime.allDays', true, true);
 
-            await this.sleep(500); //needed before strting check
             await jsonExplorer.checkExpire('peakTime.*');
 
             // check for outdated states to be deleted
