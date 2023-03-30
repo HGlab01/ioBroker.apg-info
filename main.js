@@ -56,7 +56,7 @@ class ApgInfo extends utils.Adapter {
 
         const delay = Math.floor(Math.random() * 30000);
         this.log.info(`Delay execution by ${delay}ms to better spread API calls`);
-        await this.sleep(delay);
+        await jsonExplorer.sleep(delay);
 
         await jsonExplorer.setLastStartTime();
         let resultPeakHours = await this.ExecuteRequestPeakHours();
@@ -81,13 +81,6 @@ class ApgInfo extends utils.Adapter {
         } catch (e) {
             callback();
         }
-    }
-
-    /**
-    * @param {number} ms
-    */
-    sleep(ms) {
-        return /** @type {Promise<void>} */(new Promise(resolve => this.setTimeout(() => resolve(), ms)));
     }
 
     /*
