@@ -1,141 +1,159 @@
 {
-  "common": {
-    "name": "apg-info",
-    "version": "0.0.1-alpha.5",
-    "news": {
-      "0.0.1-alpha.5": {
-        "en": "alpha version",
-        "de": "alpha version",
-        "ru": "альфа версия",
-        "pt": "versão alfa",
-        "nl": "alfa versie",
-        "fr": "version alpha",
-        "it": "versione alfa",
-        "es": "versión alpha",
-        "pl": "wersja alfa",
-        "uk": "альфа версія",
-        "zh-cn": "目录"
-      },
-      "0.0.1-alpha.4": {
-        "en": "alpha version",
-        "de": "alpha version",
-        "ru": "альфа версия",
-        "pt": "versão alfa",
-        "nl": "alfa versie",
-        "fr": "version alpha",
-        "it": "versione alfa",
-        "es": "versión alpha",
-        "pl": "wersja alfa",
-        "uk": "альфа версія",
-        "zh-cn": "目录"
-      },
-      "0.0.1-alpha.3": {
-        "en": "alpha version",
-        "de": "alpha version",
-        "ru": "альфа версия",
-        "pt": "versão alfa",
-        "nl": "alfa versie",
-        "fr": "version alpha",
-        "it": "versione alfa",
-        "es": "versión alpha",
-        "pl": "wersja alfa",
-        "uk": "альфа версія",
-        "zh-cn": "目录"
-      },
-      "0.0.1-alpha.2": {
-        "en": "alpha version",
-        "de": "alpha version",
-        "ru": "альфа версия",
-        "pt": "versão alfa",
-        "nl": "alfa versie",
-        "fr": "version alpha",
-        "it": "versione alfa",
-        "es": "versión alpha",
-        "pl": "wersja alfa",
-        "uk": "альфа версія",
-        "zh-cn": "目录"
-      },
-      "0.0.1-alpha.1": {
-        "en": "First alpha version",
-        "de": "Erste Alpha-Version",
-        "ru": "Первая альфа версия",
-        "pt": "Primeira versão alfa",
-        "nl": "Eerste alfa versie",
-        "fr": "Première version alpha",
-        "it": "Prima versione alfa",
-        "es": "Primera versión alfa",
-        "pl": "Pierwsza wersja alfa",
-        "uk": "Перший альфа-версія",
-        "zh-cn": "第一页"
-      },
-      "0.0.1-alpha.0": {
-        "en": "First alpha version",
-        "de": "Erste Alpha-Version",
-        "ru": "Первая альфа версия",
-        "pt": "Primeira versão alfa",
-        "nl": "Eerste alfa versie",
-        "fr": "Première version alpha",
-        "it": "Prima versione alfa",
-        "es": "Primera versión alfa",
-        "pl": "Pierwsza wersja alfa",
-        "uk": "Перший альфа-версія",
-        "zh-cn": "第一页"
-      }
+    "common": {
+        "name": "apg-info",
+        "version": "0.0.1-alpha.5",
+        "news": {
+            "0.0.1-alpha.5": {
+                "en": "alpha version",
+                "de": "alpha version",
+                "ru": "альфа версия",
+                "pt": "versão alfa",
+                "nl": "alfa versie",
+                "fr": "version alpha",
+                "it": "versione alfa",
+                "es": "versión alpha",
+                "pl": "wersja alfa",
+                "uk": "альфа версія",
+                "zh-cn": "目录"
+            },
+            "0.0.1-alpha.4": {
+                "en": "alpha version",
+                "de": "alpha version",
+                "ru": "альфа версия",
+                "pt": "versão alfa",
+                "nl": "alfa versie",
+                "fr": "version alpha",
+                "it": "versione alfa",
+                "es": "versión alpha",
+                "pl": "wersja alfa",
+                "uk": "альфа версія",
+                "zh-cn": "目录"
+            },
+            "0.0.1-alpha.3": {
+                "en": "alpha version",
+                "de": "alpha version",
+                "ru": "альфа версия",
+                "pt": "versão alfa",
+                "nl": "alfa versie",
+                "fr": "version alpha",
+                "it": "versione alfa",
+                "es": "versión alpha",
+                "pl": "wersja alfa",
+                "uk": "альфа версія",
+                "zh-cn": "目录"
+            },
+            "0.0.1-alpha.2": {
+                "en": "alpha version",
+                "de": "alpha version",
+                "ru": "альфа версия",
+                "pt": "versão alfa",
+                "nl": "alfa versie",
+                "fr": "version alpha",
+                "it": "versione alfa",
+                "es": "versión alpha",
+                "pl": "wersja alfa",
+                "uk": "альфа версія",
+                "zh-cn": "目录"
+            },
+            "0.0.1-alpha.1": {
+                "en": "First alpha version",
+                "de": "Erste Alpha-Version",
+                "ru": "Первая альфа версия",
+                "pt": "Primeira versão alfa",
+                "nl": "Eerste alfa versie",
+                "fr": "Première version alpha",
+                "it": "Prima versione alfa",
+                "es": "Primera versión alfa",
+                "pl": "Pierwsza wersja alfa",
+                "uk": "Перший альфа-версія",
+                "zh-cn": "第一页"
+            },
+            "0.0.1-alpha.0": {
+                "en": "First alpha version",
+                "de": "Erste Alpha-Version",
+                "ru": "Первая альфа версия",
+                "pt": "Primeira versão alfa",
+                "nl": "Eerste alfa versie",
+                "fr": "Première version alpha",
+                "it": "Prima versione alfa",
+                "es": "Primera versión alfa",
+                "pl": "Pierwsza wersja alfa",
+                "uk": "Перший альфа-версія",
+                "zh-cn": "第一页"
+            }
+        },
+        "titleLang": {
+            "en": "Austrian Power Grid (APG) Info",
+            "de": "Austrian Power Grid (APG) Informationen",
+            "ru": "Информация об Австрийской энергосистеме (APG)",
+            "pt": "Informações da rede elétrica austríaca (APG)",
+            "nl": "Oostenrijkse Power Grid (APG) Info",
+            "fr": "Infos sur le réseau électrique autrichien (APG)",
+            "it": "Informazioni sulla rete elettrica austriaca (APG).",
+            "es": "Información de la red eléctrica austriaca (APG)",
+            "pl": "Informacje o austriackiej sieci energetycznej (APG).",
+            "uk": "Інформація про австрійську електромережу (APG).",
+            "zh-cn": "奥地利电网 (APG) 信息"
+        },
+        "desc": {
+            "en": "Austrian Power Grid (APG) Info",
+            "de": "Austrian Power Grid (APG) Informationen",
+            "ru": "Информация об Австрийской энергосистеме (APG)",
+            "pt": "Informações da rede elétrica austríaca (APG)",
+            "nl": "Oostenrijkse Power Grid (APG) Info",
+            "fr": "Infos sur le réseau électrique autrichien (APG)",
+            "it": "Informazioni sulla rete elettrica austriaca (APG).",
+            "es": "Información de la red eléctrica austriaca (APG)",
+            "pl": "Informacje o austriackiej sieci energetycznej (APG).",
+            "uk": "Інформація про австрійську електромережу (APG).",
+            "zh-cn": "奥地利电网 (APG) 信息"
+        },
+        "authors": [
+            "HGlab01 <iobroker.followthesun@gmail.com>"
+        ],
+        "keywords": [
+            "APG",
+            "Austrian Power Grid",
+            "Stromspitzen",
+            "Powermonitor",
+            "Spitzenzeiten",
+            "Hochlast",
+            "Day ahead preis",
+            "PHELIX-AT Day-Ahead",
+            "EPEX Spot AT",
+            "Strompreis"
+        ],
+        "license": "MIT",
+        "platform": "Javascript/Node.js",
+        "main": "main.js",
+        "icon": "apg-info.png",
+        "enabled": true,
+        "extIcon": "https://raw.githubusercontent.com/HGlab01/ioBroker.apg-info/main/admin/apg-info.png",
+        "readme": "https://github.com/HGlab01/ioBroker.apg-info/blob/main/README.md",
+        "loglevel": "info",
+        "mode": "schedule",
+        "schedule": "14 1 0,14 * * *",
+        "allowInit": true,
+        "type": "general",
+        "compact": true,
+        "connectionType": "local",
+        "dataSource": "poll",
+        "materialize": true,
+        "adminUI": {
+            "config": "json",
+            "tab": "materialize"
+        },
+        "supportCustoms": false,
+        "dependencies": [
+            {
+                "js-controller": ">=4.0.0"
+            }
+        ],
+        "plugins": {}
     },
-    "titleLang": {
-      "en": "Austrian Power Grid (APG) Info",
-      "de": "Austrian Power Grid (APG) Informationen"
+    "native": {
+        "threshold": 10
     },
-    "desc": {
-      "en": "Austrian Power Grid (APG) Info",
-      "de": "Austrian Power Grid (APG) Informationen"
-    },
-    "authors": [
-      "HGlab01 <iobroker.followthesun@gmail.com>"
-    ],
-    "keywords": [
-      "APG",
-      "Austrian Power Grid",
-      "Stromspitzen",
-      "Powermonitor",
-      "Spitzenzeiten",
-      "Hochlast",
-      "Day ahead preis",
-      "PHELIX-AT Day-Ahead",
-      "EPEX Spot AT",
-      "Strompreis"
-    ],
-    "license": "MIT",
-    "platform": "Javascript/Node.js",
-    "main": "main.js",
-    "icon": "apg-info.png",
-    "enabled": true,
-    "extIcon": "https://raw.githubusercontent.com/HGlab01/ioBroker.apg-info/main/admin/apg-info.png",
-    "readme": "https://github.com/HGlab01/ioBroker.apg-info/blob/main/README.md",
-    "loglevel": "info",
-    "mode": "schedule",
-    "schedule": "14 1 0,14 * * *",
-    "allowInit": true,
-    "type": "general",
-    "compact": true,
-    "connectionType": "local",
-    "dataSource": "poll",
-    "materialize": true,
-    "adminUI": {
-      "config": "json",
-      "tab": "materialize"
-    },
-    "supportCustoms": false,
-    "dependencies": [
-      {
-        "js-controller": ">=4.0.0"
-      }
-    ],
-    "plugins": {}
-  },
-  "native": {
-    "threshold": 10
-  },
-  "objects": [],
-  "instanceObjects": []
+    "objects": [],
+    "instanceObjects": []
 }

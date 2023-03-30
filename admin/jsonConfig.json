@@ -4,7 +4,19 @@
     "items": {
         "threshold": {
             "type": "number",
-            "label": "Threshold market price (€ct/kWh)",
+            "label": {
+                    "en": "Threshold market price (€ct/kWh)",
+                    "de": "Schwellenmarktpreis (€ct/kWh)",
+                    "ru": "Порог рыночная цена (€ct/kWh)",
+                    "pt": "Preço de mercado limiar (€ct/kWh)",
+                    "nl": "Dreig de marktprijs",
+                    "fr": "Prix du marché seuil (€ct/kWh)",
+                    "it": "Prezzo di mercato (€ct/kWh)",
+                    "es": "Precio del mercado de propiedad (€ct/kWh)",
+                    "pl": "Cena rynkowa (ok",
+                    "uk": "Потрібна ціна ринку (€ct/kWh)",
+                    "zh-cn": "市场价格(ct/kWh)"
+            },
             "min": 0,
             "step": 0.1,
             "newLine": true
