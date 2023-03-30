@@ -1,10 +1,12 @@
 {
-    "i18n": false,
+    "i18n": true,
     "type": "panel",
     "items": {
         "threshold": {
             "type": "number",
-            "label": "Threshold market price (€ct/kWh)",
+            "label": {
+                "en": "Threshold market price (€ct/kWh)"
+            },
             "min": 0,
             "step": 0.1,
             "newLine": true
