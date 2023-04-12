@@ -13,7 +13,7 @@
 [![NPM](https://nodei.co/npm/iobroker.apg-info.png?downloads=true)](https://nodei.co/npm/iobroker.apg-info/)
 
 ## apg-info adapter for ioBroker
-This adapter provides the peak-times for the Austrian Power Grid, where power consumption shall be avoided. In addition the adapter provides the PHELIX-AT Day-Ahead (EPEX Spot) prices for Austria.  
+This adapter provides the peak-times for the Austrian Power Grid, where power consumption shall be avoided. In addition the adapter provides the PHELIX-AT Day-Ahead (EPEX Spot) prices for Austria.
 
 **This adapter uses Sentry libraries to automatically report exceptions and code errors to the developers.** For more details and for information how to disable the error reporting see [Sentry-Plugin Documentation](https://github.com/ioBroker/plugin-sentry#plugin-sentry)!
 
@@ -51,6 +51,9 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+#### Disclaimer apg-powermonitor
+More about the security of supply & all data, facts and figures regarding the world of electricity and the energy transition can be found at www.apg-powermonitor.at.
 
 
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FHGlab01%2FioBroker.apg-info.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FHGlab01%2FioBroker.apg-info?ref=badge_large)
