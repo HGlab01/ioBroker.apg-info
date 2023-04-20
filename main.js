@@ -170,7 +170,7 @@ class ApgInfo extends utils.Adapter {
 
             let day0 = await cleanDate(new Date());
             let day1 = await addDays(day0, 1);
-            let jDay0 = {}, jDay1 = {}, jDay0Tr = {}, jDay1Tr = {};
+            let jDay0 = {}, jDay1 = {}, jDay0BelowThreshold = {}, jDay1BelowThreshold = {}, jDay0AboveThreshold = {}, jDay1AboveThreshold = {};
             let iHour = 0;
             let sHour = '';
 
@@ -192,29 +192,35 @@ class ApgInfo extends utils.Adapter {
                     let marketprice = Math.round(result.data[idS].marketprice / 10 * 1000) / 1000;
                     if (dateToCheck.getTime() == day0.getTime()) {
                         jDay0[sHour] = marketprice;
-                        if (marketprice < threshold) jDay0Tr[sHour] = marketprice;
+                        if (marketprice < threshold) jDay0BelowThreshold[sHour] = marketprice;
+                        else jDay0AboveThreshold[sHour] = marketprice;
                     }
                     else if (dateToCheck.getTime() == day1.getTime()) {
                         jDay1[sHour] = marketprice;
-                        if (marketprice < threshold) jDay1Tr[sHour] = marketprice;
+                        if (marketprice < threshold) jDay1BelowThreshold[sHour] = marketprice;
+                        else jDay1AboveThreshold[sHour] = marketprice;
                     }
                     iHour++;
                 } while (iHour <= (endHour - 1))
             }
             this.log.debug('Marketprice jDay0: ' + JSON.stringify(jDay0));
-            this.log.debug('Marketprice jDay0Tr: ' + JSON.stringify(jDay0Tr));
+            this.log.debug('Marketprice jDay0BelowThreshold: ' + JSON.stringify(jDay0BelowThreshold));
+            this.log.debug('Marketprice jDay0AboveThreshold: ' + JSON.stringify(jDay0AboveThreshold));
             this.log.debug('Marketprice jDay1: ' + JSON.stringify(jDay1));
-            this.log.debug('Marketprice jDay1Tr: ' + JSON.stringify(jDay1Tr));
+            this.log.debug('Marketprice jDay1AboveThreshold: ' + JSON.stringify(jDay1AboveThreshold));
+            this.log.debug('Marketprice jDay1BelowThreshold: ' + JSON.stringify(jDay1BelowThreshold));
 
             await jsonExplorer.traverseJson(jDay0, 'marketprice.today', true, true);
-            await jsonExplorer.traverseJson(jDay0Tr, 'marketprice.belowThreshold.today', true, true);
+            await jsonExplorer.traverseJson(jDay0BelowThreshold, 'marketprice.belowThreshold.today', true, true);
+            await jsonExplorer.traverseJson(jDay0AboveThreshold, 'marketprice.aboveThreshold.today', true, true);
             await jsonExplorer.traverseJson(jDay1, 'marketprice.tomorrow', true, true);
-            await jsonExplorer.traverseJson(jDay1Tr, 'marketprice.belowThreshold.tomorrow', true, true);
+            await jsonExplorer.traverseJson(jDay1BelowThreshold, 'marketprice.belowThreshold.tomorrow', true, true);
+            await jsonExplorer.traverseJson(jDay1AboveThreshold, 'marketprice.aboveThreshold.tomorrow', true, true);
 
             await jsonExplorer.checkExpire('marketprice.*');
 
             // check for outdated states to be deleted
-            let statesToDelete = await this.getStatesAsync('marketprice.belowThreshold.*');
+            let statesToDelete = await this.getStatesAsync('marketprice.*Threshold.*');
             for (const idS in statesToDelete) {
                 let state = await this.getStateAsync(idS);
                 if (state != null && state.val == null) {
