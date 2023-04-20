@@ -170,7 +170,7 @@ class ApgInfo extends utils.Adapter {
 
             let day0 = await cleanDate(new Date());
             let day1 = await addDays(day0, 1);
-            let jDay0 = {}, jDay1 = {}, jDay0BelowThreshold = {}, jDay1BelowThreshold = {},jDay0AboveThreshold = {}, jDay1AboveThreshold = {};
+            let jDay0 = {}, jDay1 = {}, jDay0BelowThreshold = {}, jDay1BelowThreshold = {}, jDay0AboveThreshold = {}, jDay1AboveThreshold = {};
             let iHour = 0;
             let sHour = '';
 
