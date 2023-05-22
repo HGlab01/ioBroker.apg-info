@@ -175,7 +175,7 @@ class ApgInfo extends utils.Adapter {
             let sHour = '';
 
             for (const idS in result.data) {
-                if (!result.data[idS].marketprice) {
+                if (!result.data[idS].marketprice && result.data[idS].marketprice != 0) {
                     this.log.error('No marketprice found in marketprice-result!')
                     return 'error';
                 }
