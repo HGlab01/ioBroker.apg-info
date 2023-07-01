@@ -1,98 +1,20 @@
 {
   "common": {
     "name": "apg-info",
-    "version": "0.0.1-alpha.6",
+    "version": "0.0.1-alpha.7",
     "news": {
-      "0.0.1-alpha.6": {
-        "en": "alpha version",
-        "de": "alpha version",
-        "ru": "альфа версия",
-        "pt": "versão alfa",
-        "nl": "alfa versie",
-        "fr": "version alpha",
-        "it": "versione alfa",
-        "es": "versión alpha",
-        "pl": "wersja alfa",
-        "uk": "альфа версія",
-        "zh-cn": "目录"
-      },
-      "0.0.1-alpha.5": {
-        "en": "alpha version",
-        "de": "alpha version",
-        "ru": "альфа версия",
-        "pt": "versão alfa",
-        "nl": "alfa versie",
-        "fr": "version alpha",
-        "it": "versione alfa",
-        "es": "versión alpha",
-        "pl": "wersja alfa",
-        "uk": "альфа версія",
-        "zh-cn": "目录"
-      },
-      "0.0.1-alpha.4": {
-        "en": "alpha version",
-        "de": "alpha version",
-        "ru": "альфа версия",
-        "pt": "versão alfa",
-        "nl": "alfa versie",
-        "fr": "version alpha",
-        "it": "versione alfa",
-        "es": "versión alpha",
-        "pl": "wersja alfa",
-        "uk": "альфа версія",
-        "zh-cn": "目录"
-      },
-      "0.0.1-alpha.3": {
-        "en": "alpha version",
-        "de": "alpha version",
-        "ru": "альфа версия",
-        "pt": "versão alfa",
-        "nl": "alfa versie",
-        "fr": "version alpha",
-        "it": "versione alfa",
-        "es": "versión alpha",
-        "pl": "wersja alfa",
-        "uk": "альфа версія",
-        "zh-cn": "目录"
-      },
-      "0.0.1-alpha.2": {
-        "en": "alpha version",
-        "de": "alpha version",
-        "ru": "альфа версия",
-        "pt": "versão alfa",
-        "nl": "alfa versie",
-        "fr": "version alpha",
-        "it": "versione alfa",
-        "es": "versión alpha",
-        "pl": "wersja alfa",
-        "uk": "альфа версія",
-        "zh-cn": "目录"
-      },
-      "0.0.1-alpha.1": {
-        "en": "First alpha version",
-        "de": "Erste Alpha-Version",
-        "ru": "Первая альфа версия",
-        "pt": "Primeira versão alfa",
-        "nl": "Eerste alfa versie",
-        "fr": "Première version alpha",
-        "it": "Prima versione alfa",
-        "es": "Primera versión alfa",
-        "pl": "Pierwsza wersja alfa",
-        "uk": "Перший альфа-версія",
-        "zh-cn": "第一页"
-      },
-      "0.0.1-alpha.0": {
-        "en": "First alpha version",
-        "de": "Erste Alpha-Version",
-        "ru": "Первая альфа версия",
-        "pt": "Primeira versão alfa",
-        "nl": "Eerste alfa versie",
-        "fr": "Première version alpha",
-        "it": "Prima versione alfa",
-        "es": "Primera versión alfa",
-        "pl": "Pierwsza wersja alfa",
-        "uk": "Перший альфа-версія",
-        "zh-cn": "第一页"
+      "0.0.1-alpha.7": {
+        "en": "preparing first release",
+        "de": "vorbereitung der ersten veröffentlichung",
+        "ru": "подготовка первого релиза",
+        "pt": "preparando a primeira versão",
+        "nl": "eerste vrijlating voorbereiden",
+        "fr": "préparer la première version",
+        "it": "preparazione del primo rilascio",
+        "es": "preparación de la primera liberación",
+        "pl": "pierwsze wydanie",
+        "uk": "підготовка першого випуску",
+        "zh-cn": "首次释放"
       }
     },
     "titleLang": {
