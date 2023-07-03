@@ -1,22 +1,9 @@
 {
   "common": {
     "name": "apg-info",
-    "version": "0.0.1-alpha.8",
+    "version": "0.0.1-alpha.9",
     "news": {
-      "0.0.1-alpha.8": {
-        "en": "preparing first release",
-        "de": "vorbereitung der ersten veröffentlichung",
-        "ru": "подготовка первого релиза",
-        "pt": "preparando a primeira versão",
-        "nl": "eerste vrijlating voorbereiden",
-        "fr": "préparer la première version",
-        "it": "preparazione del primo rilascio",
-        "es": "preparación de la primera liberación",
-        "pl": "pierwsze wydanie",
-        "uk": "підготовка першого випуску",
-        "zh-cn": "首次释放"
-      },
-      "0.0.1-alpha.7": {
+      "0.0.1-alpha.9": {
         "en": "preparing first release",
         "de": "vorbereitung der ersten veröffentlichung",
         "ru": "подготовка первого релиза",
