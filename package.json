@@ -7,8 +7,7 @@
   },
   "license": "MIT",
   "engines": {
-    "node": ">=14.16.0",
-    "npm": ">=6.0.0"
+    "node": ">=16"
   },
   "main": "main.js",
   "repository": {
