@@ -67,10 +67,6 @@ class ApgInfo extends utils.Adapter {
         } else {
             this.terminate ? this.terminate(0) : process.exit(0);
         }
-        
-        huhu();
-        // !!!!!!!!!!!!!
-        this.sendSentry('HALLO');
     }
 
     /**
