@@ -26,8 +26,8 @@ This adapter provides the peak-times for the Austrian Power Grid, where power co
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### 0.0.1-alpha.11 (2023-09-11)
-* (HGlab01) preparing first release
+### 0.0.1 (2023-09-11)
+* (HGlab01) first release
 
 ## License
 MIT License
