@@ -375,7 +375,6 @@ async function cleanDate(date) {
  * @param {Date} date origin date
  * @param {number} numberOfDays number of days which origin date shall be added (positive and negative allowes)
  */
-
 async function addDays(date, numberOfDays) {
     const oneDayTime = 1000 * 60 * 60 * 24;
     const oneHourAndOneMinute = 1000 * 60 * 61;
