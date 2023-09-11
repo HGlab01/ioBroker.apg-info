@@ -67,7 +67,7 @@
     "readme": "https://github.com/HGlab01/ioBroker.apg-info/blob/main/README.md",
     "loglevel": "info",
     "mode": "schedule",
-    "schedule": "14 1 0,14 * * *",
+    "schedule": "14 1 0,14,15,16 * * *",
     "allowInit": true,
     "type": "general",
     "compact": true,
@@ -84,7 +84,11 @@
         "js-controller": ">=4.0.0"
       }
     ],
-    "plugins": {}
+    "plugins": {
+      "sentry": {
+        "dsn": "https:// 1f45724db478423cbf801d0b297de116 @sentry.iobroker.net/235"
+      }
+    }
   },
   "native": {
     "threshold": 10

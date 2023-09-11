@@ -60,9 +60,6 @@
     "sinon": "^15.0.0",
     "sinon-chai": "^3.5.0"
   },
-  "optionalDependencies": {
-    "fsevents": "^2.3.2"
-  },
   "scripts": {
     "lint": "eslint",
     "test": "npm run test:js && npm run test:package",
