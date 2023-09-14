@@ -173,6 +173,7 @@ class ApgInfo extends utils.Adapter {
             let jDay0 = {}, jDay1 = {}, jDay0BelowThreshold = {}, jDay1BelowThreshold = {}, jDay0AboveThreshold = {}, jDay1AboveThreshold = {};
             let iHour = 0;
             let sHour = '';
+            let days0Above = 0, days0Below = 0, days1Above = 0, days1Below = 0;
 
             for (const idS in result.data) {
                 if (!result.data[idS].marketprice && result.data[idS].marketprice != 0) {
@@ -192,17 +193,34 @@ class ApgInfo extends utils.Adapter {
                     let marketprice = Math.round(result.data[idS].marketprice / 10 * 1000) / 1000;
                     if (dateToCheck.getTime() == day0.getTime()) {
                         jDay0[sHour] = marketprice;
-                        if (marketprice < threshold) jDay0BelowThreshold[sHour] = marketprice;
-                        else jDay0AboveThreshold[sHour] = marketprice;
+                        if (marketprice < threshold) {
+                            jDay0BelowThreshold[sHour] = marketprice;
+                            days0Below++;
+                        }
+                        else {
+                            jDay0AboveThreshold[sHour] = marketprice;
+                            days0Above++;
+                        }
                     }
                     else if (dateToCheck.getTime() == day1.getTime()) {
                         jDay1[sHour] = marketprice;
-                        if (marketprice < threshold) jDay1BelowThreshold[sHour] = marketprice;
-                        else jDay1AboveThreshold[sHour] = marketprice;
+                        if (marketprice < threshold) {
+                            jDay1BelowThreshold[sHour] = marketprice;
+                            days1Below++;
+                        }
+                        else {
+                            jDay1AboveThreshold[sHour] = marketprice;
+                            days1Above++;
+                        }
                     }
                     iHour++;
                 } while (iHour <= (endHour - 1))
             }
+            jDay0BelowThreshold.numberOfHours = days0Below;
+            jDay0AboveThreshold.numberOfHours = days0Above;
+            jDay1BelowThreshold.numberOfHours = days1Below;
+            jDay1AboveThreshold.numberOfHours = days1Above;
+
             this.log.debug('Marketprice jDay0: ' + JSON.stringify(jDay0));
             this.log.debug('Marketprice jDay0BelowThreshold: ' + JSON.stringify(jDay0BelowThreshold));
             this.log.debug('Marketprice jDay0AboveThreshold: ' + JSON.stringify(jDay0AboveThreshold));
