@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "apg-info",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "news": {
+      "0.0.2": {
+        "en": "add number of days below/above treshold\nadd states sorted by price",
+        "de": "anzahl der tage unterhalb/oben\nadd-state nach preis sortiert",
+        "ru": "добавить количество дней ниже / выше трекхолда\nдобавить государства сортировать по цене",
+        "pt": "adicionar número de dias abaixo / above treshold\nadicionar estados classificados por preço",
+        "nl": "vertaling:\nvertaling:",
+        "fr": "ajouter le nombre de jours ci-dessous/au-dessus du seuil\najouter des états triés par prix",
+        "it": "aggiungere il numero di giorni sotto/sopra treshold\naggiungere stati ordinati per prezzo",
+        "es": "añadir número de días abajo/arriba\nañadir estados ordenados por tarifa",
+        "pl": "liczba dni poniżej/above treshold\ndodać stany posortowane przez ceny",
+        "uk": "додати кількість днів нижче/вище\nдодавати штати, сортовані за ціною",
+        "zh-cn": "下文/博韦·克里夫增加几天\n价格增加"
+      },
       "0.0.1": {
         "en": "first release",
         "de": "erste veröffentlichung",
