@@ -173,6 +173,7 @@ class ApgInfo extends utils.Adapter {
             let jDay0 = {}, jDay1 = {}, jDay0BelowThreshold = {}, jDay1BelowThreshold = {}, jDay0AboveThreshold = {}, jDay1AboveThreshold = {};
             let iHour = 0;
             let sHour = '';
+            let days0Above = 0, days0Below = 0, days1Above = 0, days1Below = 0;
 
             for (const idS in result.data) {
                 if (!result.data[idS].marketprice && result.data[idS].marketprice != 0) {
@@ -192,17 +193,41 @@ class ApgInfo extends utils.Adapter {
                     let marketprice = Math.round(result.data[idS].marketprice / 10 * 1000) / 1000;
                     if (dateToCheck.getTime() == day0.getTime()) {
                         jDay0[sHour] = marketprice;
-                        if (marketprice < threshold) jDay0BelowThreshold[sHour] = marketprice;
-                        else jDay0AboveThreshold[sHour] = marketprice;
+                        if (marketprice < threshold) {
+                            jDay0BelowThreshold[sHour] = marketprice;
+                            days0Below++;
+                        }
+                        else {
+                            jDay0AboveThreshold[sHour] = marketprice;
+                            days0Above++;
+                        }
                     }
                     else if (dateToCheck.getTime() == day1.getTime()) {
                         jDay1[sHour] = marketprice;
-                        if (marketprice < threshold) jDay1BelowThreshold[sHour] = marketprice;
-                        else jDay1AboveThreshold[sHour] = marketprice;
+                        if (marketprice < threshold) {
+                            jDay1BelowThreshold[sHour] = marketprice;
+                            days1Below++;
+                        }
+                        else {
+                            jDay1AboveThreshold[sHour] = marketprice;
+                            days1Above++;
+                        }
                     }
                     iHour++;
                 } while (iHour <= (endHour - 1))
             }
+            
+            //put data into an array to be sorted in a later step
+            let arrBelow0 = Object.keys(jDay0BelowThreshold).map((key) => [key, jDay0BelowThreshold[key]]);
+            let arrBelow1 = Object.keys(jDay1BelowThreshold).map((key) => [key, jDay1BelowThreshold[key]]);
+            let arrAll0 = Object.keys(jDay0).map((key) => [key, jDay0[key]]);
+            let arrAll1 = Object.keys(jDay1).map((key) => [key, jDay1[key]]);
+
+            jDay0BelowThreshold.numberOfHours = days0Below;
+            jDay0AboveThreshold.numberOfHours = days0Above;
+            jDay1BelowThreshold.numberOfHours = days1Below;
+            jDay1AboveThreshold.numberOfHours = days1Above;
+
             this.log.debug('Marketprice jDay0: ' + JSON.stringify(jDay0));
             this.log.debug('Marketprice jDay0BelowThreshold: ' + JSON.stringify(jDay0BelowThreshold));
             this.log.debug('Marketprice jDay0AboveThreshold: ' + JSON.stringify(jDay0AboveThreshold));
@@ -216,6 +241,31 @@ class ApgInfo extends utils.Adapter {
             await jsonExplorer.traverseJson(jDay1, 'marketprice.tomorrow', true, true);
             await jsonExplorer.traverseJson(jDay1BelowThreshold, 'marketprice.belowThreshold.tomorrow', true, true);
             await jsonExplorer.traverseJson(jDay1AboveThreshold, 'marketprice.aboveThreshold.tomorrow', true, true);
+
+            //no it is time to sort by prcie
+            arrBelow0.sort(compareSecondColumn);
+            arrBelow1.sort(compareSecondColumn);
+            arrAll0.sort(compareSecondColumn);
+            arrAll1.sort(compareSecondColumn);
+
+            //prepare sorted Array to create states
+            let sortedHours0 = [], sortedHours1 = [],sortedHoursAll0 = [], sortedHoursAll1 = [];
+            for (const idS in arrBelow0) {
+                sortedHours0[idS] = [arrBelow0[idS][0], arrBelow0[idS][1]];
+            }
+            for (const idS in arrBelow1) {
+                sortedHours1[idS] = [arrBelow1[idS][0], arrBelow1[idS][1]];
+            }
+            for (const idS in arrAll0) {
+                sortedHoursAll0[idS] = [arrAll0[idS][0], arrAll0[idS][1]];
+            }
+            for (const idS in arrAll1) {
+                sortedHoursAll1[idS] = [arrAll1[idS][0], arrAll1[idS][1]];
+            }
+            await jsonExplorer.traverseJson(sortedHours0, 'marketprice.belowThreshold.today_sorted', true, true);
+            await jsonExplorer.traverseJson(sortedHours1, 'marketprice.belowThreshold.tomorrow_sorted', true, true);
+            await jsonExplorer.traverseJson(sortedHoursAll0, 'marketprice.today_sorted', true, true);
+            await jsonExplorer.traverseJson(sortedHoursAll1, 'marketprice.tomorrow_sorted', true, true);
 
             await jsonExplorer.checkExpire('marketprice.*');
 
@@ -277,8 +327,10 @@ class ApgInfo extends utils.Adapter {
                 this.log.debug(result.StatusInfos[idS].utc);
 
                 iHour = new Date(result.StatusInfos[idS].utc).getHours();
-                if (iHour < 10) sHour = '0' + String(iHour);
-                else sHour = String(iHour);
+
+                if (iHour < 9) sHour = 'from_0' + String(iHour) + '_to_' + '0' + String(iHour + 1);
+                else if (iHour == 9) sHour = 'from_0' + String(iHour) + '_to_' + String(iHour + 1);
+                else sHour = 'from_' + String(iHour) + '_to_' + String(iHour + 1);
 
                 let dateToCheck = await cleanDate(new Date(result.StatusInfos[idS].utc));
                 if (dateToCheck.getTime() == day0.getTime()) jDay0[sHour] = new Date(result.StatusInfos[idS].utc).getTime();
@@ -382,3 +434,20 @@ async function addDays(date, numberOfDays) {
     let targetDate = new Date(originDate.getTime() + oneDayTime * numberOfDays + oneHourAndOneMinute); //oneHourAndOneMinute to cover Zeitumstellung
     return (await cleanDate(targetDate));
 }
+
+function compareSecondColumn(a, b) {
+    if (a[1] === b[1]) {
+        return 0;
+    }
+    else {
+        return (a[1] < b[1]) ? -1 : 1;
+    }
+}
+
+const constructObject = arr => {
+    return arr.reduce((acc, val) => {
+        const [key, value] = val;
+        acc[key] = value;
+        return acc;
+    }, {});
+};
