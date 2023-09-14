@@ -216,9 +216,12 @@ class ApgInfo extends utils.Adapter {
                     iHour++;
                 } while (iHour <= (endHour - 1))
             }
-            let arr0 = [], arr1 = [];
-            arr0 = Object.keys(jDay0BelowThreshold).map((key) => [key, jDay0BelowThreshold[key]]);
-            arr1 = Object.keys(jDay1BelowThreshold).map((key) => [key, jDay1BelowThreshold[key]]);
+            
+            //put data into an array to be sorted in a later step
+            let arrBelow0 = Object.keys(jDay0BelowThreshold).map((key) => [key, jDay0BelowThreshold[key]]);
+            let arrBelow1 = Object.keys(jDay1BelowThreshold).map((key) => [key, jDay1BelowThreshold[key]]);
+            let arrAll0 = Object.keys(jDay0).map((key) => [key, jDay0[key]]);
+            let arrAll1 = Object.keys(jDay1).map((key) => [key, jDay1[key]]);
 
             jDay0BelowThreshold.numberOfHours = days0Below;
             jDay0AboveThreshold.numberOfHours = days0Above;
@@ -239,18 +242,30 @@ class ApgInfo extends utils.Adapter {
             await jsonExplorer.traverseJson(jDay1BelowThreshold, 'marketprice.belowThreshold.tomorrow', true, true);
             await jsonExplorer.traverseJson(jDay1AboveThreshold, 'marketprice.aboveThreshold.tomorrow', true, true);
 
-            arr0.sort(compareSecondColumn);
-            arr1.sort(compareSecondColumn);
+            //no it is time to sort by prcie
+            arrBelow0.sort(compareSecondColumn);
+            arrBelow1.sort(compareSecondColumn);
+            arrAll0.sort(compareSecondColumn);
+            arrAll1.sort(compareSecondColumn);
 
-            let sortedHours0 = [], sortedHours1 = [];
-            for (const idS in arr0) {
-                sortedHours0[idS] = [arr0[idS][0], arr0[idS][1]];
+            //prepare sorted Array to create states
+            let sortedHours0 = [], sortedHours1 = [],sortedHoursAll0 = [], sortedHoursAll1 = [];
+            for (const idS in arrBelow0) {
+                sortedHours0[idS] = [arrBelow0[idS][0], arrBelow0[idS][1]];
             }
-            for (const idS in arr1) {
-                sortedHours1[idS] = [arr1[idS][0], arr1[idS][1]];
+            for (const idS in arrBelow1) {
+                sortedHours1[idS] = [arrBelow1[idS][0], arrBelow1[idS][1]];
+            }
+            for (const idS in arrAll0) {
+                sortedHoursAll0[idS] = [arrAll0[idS][0], arrAll0[idS][1]];
+            }
+            for (const idS in arrAll1) {
+                sortedHoursAll1[idS] = [arrAll1[idS][0], arrAll1[idS][1]];
             }
             await jsonExplorer.traverseJson(sortedHours0, 'marketprice.belowThreshold.today_sorted', true, true);
             await jsonExplorer.traverseJson(sortedHours1, 'marketprice.belowThreshold.tomorrow_sorted', true, true);
+            await jsonExplorer.traverseJson(sortedHoursAll0, 'marketprice.today_sorted', true, true);
+            await jsonExplorer.traverseJson(sortedHoursAll1, 'marketprice.tomorrow_sorted', true, true);
 
             await jsonExplorer.checkExpire('marketprice.*');
 
