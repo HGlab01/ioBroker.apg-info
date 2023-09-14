@@ -216,6 +216,10 @@ class ApgInfo extends utils.Adapter {
                     iHour++;
                 } while (iHour <= (endHour - 1))
             }
+            let arr0 = [], arr1 = [];
+            arr0 = Object.keys(jDay0BelowThreshold).map((key) => [key, jDay0BelowThreshold[key]]);
+            arr1 = Object.keys(jDay1BelowThreshold).map((key) => [key, jDay1BelowThreshold[key]]);
+
             jDay0BelowThreshold.numberOfHours = days0Below;
             jDay0AboveThreshold.numberOfHours = days0Above;
             jDay1BelowThreshold.numberOfHours = days1Below;
@@ -234,6 +238,19 @@ class ApgInfo extends utils.Adapter {
             await jsonExplorer.traverseJson(jDay1, 'marketprice.tomorrow', true, true);
             await jsonExplorer.traverseJson(jDay1BelowThreshold, 'marketprice.belowThreshold.tomorrow', true, true);
             await jsonExplorer.traverseJson(jDay1AboveThreshold, 'marketprice.aboveThreshold.tomorrow', true, true);
+
+            arr0.sort(compareSecondColumn);
+            arr1.sort(compareSecondColumn);
+
+            let sortedHours0 = [], sortedHours1 = [];
+            for (const idS in arr0) {
+                sortedHours0[idS] = [arr0[idS][0], arr0[idS][1]];
+            }
+            for (const idS in arr1) {
+                sortedHours1[idS] = [arr1[idS][0], arr1[idS][1]];
+            }
+            await jsonExplorer.traverseJson(sortedHours0, 'marketprice.belowThreshold.today_sorted', true, true);
+            await jsonExplorer.traverseJson(sortedHours1, 'marketprice.belowThreshold.tomorrow_sorted', true, true);
 
             await jsonExplorer.checkExpire('marketprice.*');
 
@@ -295,8 +312,10 @@ class ApgInfo extends utils.Adapter {
                 this.log.debug(result.StatusInfos[idS].utc);
 
                 iHour = new Date(result.StatusInfos[idS].utc).getHours();
-                if (iHour < 10) sHour = '0' + String(iHour);
-                else sHour = String(iHour);
+
+                if (iHour < 9) sHour = 'from_0' + String(iHour) + '_to_' + '0' + String(iHour + 1);
+                else if (iHour == 9) sHour = 'from_0' + String(iHour) + '_to_' + String(iHour + 1);
+                else sHour = 'from_' + String(iHour) + '_to_' + String(iHour + 1);
 
                 let dateToCheck = await cleanDate(new Date(result.StatusInfos[idS].utc));
                 if (dateToCheck.getTime() == day0.getTime()) jDay0[sHour] = new Date(result.StatusInfos[idS].utc).getTime();
@@ -400,3 +419,20 @@ async function addDays(date, numberOfDays) {
     let targetDate = new Date(originDate.getTime() + oneDayTime * numberOfDays + oneHourAndOneMinute); //oneHourAndOneMinute to cover Zeitumstellung
     return (await cleanDate(targetDate));
 }
+
+function compareSecondColumn(a, b) {
+    if (a[1] === b[1]) {
+        return 0;
+    }
+    else {
+        return (a[1] < b[1]) ? -1 : 1;
+    }
+}
+
+const constructObject = arr => {
+    return arr.reduce((acc, val) => {
+        const [key, value] = val;
+        acc[key] = value;
+        return acc;
+    }, {});
+};
