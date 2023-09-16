@@ -242,13 +242,13 @@ class ApgInfo extends utils.Adapter {
             await jsonExplorer.traverseJson(jDay1BelowThreshold, 'marketprice.belowThreshold.tomorrow', true, true);
             await jsonExplorer.traverseJson(jDay1AboveThreshold, 'marketprice.aboveThreshold.tomorrow', true, true);
 
-            //no it is time to sort by prcie
+            //now it is time to sort by prcie
             arrBelow0.sort(compareSecondColumn);
             arrBelow1.sort(compareSecondColumn);
             arrAll0.sort(compareSecondColumn);
             arrAll1.sort(compareSecondColumn);
 
-            //prepare sorted Array to create states
+            //prepare sorted arrays to create states
             let sortedHours0 = [], sortedHours1 = [], sortedHoursAll0 = [], sortedHoursAll1 = [], sortedHours0Short = [], sortedHours1Short = [];
             for (const idS in arrBelow0) {
                 sortedHours0[idS] = [arrBelow0[idS][0], arrBelow0[idS][1]];
