@@ -30,6 +30,9 @@
     "EPEX Spot AT",
     "Strompreis"
   ],
+  "engines": {
+    "node": ">=16"
+  },
   "dependencies": {
     "@esm2cjs/is-online": "^10.0.0",
     "@iobroker/adapter-core": "^3.0.3",
