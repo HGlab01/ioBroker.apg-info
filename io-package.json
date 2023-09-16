@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "apg-info",
-    "version": "0.0.2",
+    "version": "0.0.3-alpha.0",
     "news": {
+      "0.0.3-alpha.0": {
+        "en": "add point in times sorted as array for cheapest",
+        "de": "fügen sie punkt in zeiten sortiert als array für günstig",
+        "ru": "добавить точку в раз сортируется как массив для самых дешевых",
+        "pt": "add point in times classificados como array para mais barato",
+        "nl": "voeg punt in tijden als array voor goedkoop",
+        "fr": "ajouter le point dans les temps triés comme tableau pour le moins cher",
+        "it": "aggiungere punto in tempi ordinati come array per più economico",
+        "es": "añadir punto en tiempos ordenados como array para más barato",
+        "pl": "wykorzystywana jest jako tablica dla najtaniejszych",
+        "uk": "додати точку в рази, сортовані як масив для найдешевших",
+        "zh-cn": "有时增加最廉价的幅度"
+      },
       "0.0.2": {
         "en": "add number of days below/above treshold\nadd states sorted by price",
         "de": "anzahl der tage unterhalb/oben\nadd-state nach preis sortiert",
