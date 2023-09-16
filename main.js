@@ -10,6 +10,9 @@ const utils = require('@iobroker/adapter-core');
 
 // Load your modules here, e.g.:
 const axios = require('axios');
+const { registerInterceptor } = require('axios-cached-dns-resolve');
+registerInterceptor(axios);
+
 const jsonExplorer = require('iobroker-jsonexplorer');
 const stateAttr = require(`${__dirname}/lib/stateAttr.js`); // Load attribute library
 const isOnline = require('@esm2cjs/is-online').default;
