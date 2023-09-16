@@ -34,7 +34,6 @@
     "@esm2cjs/is-online": "^10.0.0",
     "@iobroker/adapter-core": "^3.0.3",
     "axios": "^1.5.0",
-    "axios-cached-dns-resolve": "^3.3.0",
     "iobroker-jsonexplorer": "0.1.12"
   },
   "deprecated": false,
