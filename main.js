@@ -251,7 +251,8 @@ class ApgInfo extends utils.Adapter {
 
             //prepare sorted arrays to create states
             let sortedHours0 = [], sortedHours1 = [], sortedHoursAll0 = [], sortedHoursAll1 = [];
-            let sortedHours0Short = [], sortedHours1Short = [], sortedHours0ShortAll = [],sortedHours1ShortAll = [];
+            let sortedHours0Short = [], sortedHours1Short = [], sortedHours0ShortAll = [], sortedHours1ShortAll = [];
+            let priceSum0 = 0, priceSum1 = 0;
             for (const idS in arrBelow0) {
                 sortedHours0[idS] = [arrBelow0[idS][0], arrBelow0[idS][1]];
                 sortedHours0Short[idS] = Number(arrBelow0[idS][0].substring(0, 2));
@@ -263,11 +264,19 @@ class ApgInfo extends utils.Adapter {
             for (const idS in arrAll0) {
                 sortedHoursAll0[idS] = [arrAll0[idS][0], arrAll0[idS][1]];
                 sortedHours0ShortAll[idS] = Number(arrAll0[idS][0].substring(0, 2));
+                priceSum0 = priceSum0 + arrAll0[idS][1];
             }
             for (const idS in arrAll1) {
                 sortedHoursAll1[idS] = [arrAll1[idS][0], arrAll1[idS][1]];
                 sortedHours1ShortAll[idS] = Number(arrAll1[idS][0].substring(0, 2));
+                priceSum1 = priceSum1 + arrAll1[idS][1];
             }
+            let price0Avg, price1Avg;
+            if (priceSum0 == 0) price0Avg = null;
+            else price0Avg = Math.round(priceSum0 / 24 * 1000) / 1000;
+            if (priceSum1 == 0) price1Avg = null;
+            else price1Avg = Math.round(priceSum1 / 24 * 1000) / 1000;
+
             await jsonExplorer.traverseJson(sortedHours0, 'marketprice.belowThreshold.today_sorted', true, true);
             await jsonExplorer.traverseJson(sortedHours1, 'marketprice.belowThreshold.tomorrow_sorted', true, true);
             await jsonExplorer.traverseJson(sortedHoursAll0, 'marketprice.today_sorted', true, true);
@@ -276,6 +285,8 @@ class ApgInfo extends utils.Adapter {
             await jsonExplorer.stateSetCreate('marketprice.belowThreshold.tomorrow_sorted.short', 'tomorrow sorted short', JSON.stringify(sortedHours1Short));
             await jsonExplorer.stateSetCreate('marketprice.today_sorted.short', 'today sorted short', JSON.stringify(sortedHours0ShortAll));
             await jsonExplorer.stateSetCreate('marketprice.tomorrow_sorted.short', 'tomorrow sorted short', JSON.stringify(sortedHours1ShortAll));
+            await jsonExplorer.stateSetCreate('marketprice.today.average', 'average', price0Avg);
+            await jsonExplorer.stateSetCreate('marketprice.tomorrow.average', 'average', price1Avg);
 
             await jsonExplorer.checkExpire('marketprice.*');
 
