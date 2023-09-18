@@ -250,7 +250,8 @@ class ApgInfo extends utils.Adapter {
             arrAll1.sort(compareSecondColumn);
 
             //prepare sorted arrays to create states
-            let sortedHours0 = [], sortedHours1 = [], sortedHoursAll0 = [], sortedHoursAll1 = [], sortedHours0Short = [], sortedHours1Short = [];
+            let sortedHours0 = [], sortedHours1 = [], sortedHoursAll0 = [], sortedHoursAll1 = [];
+            let sortedHours0Short = [], sortedHours1Short = [], sortedHours0ShortAll = [],sortedHours1ShortAll = [];
             for (const idS in arrBelow0) {
                 sortedHours0[idS] = [arrBelow0[idS][0], arrBelow0[idS][1]];
                 sortedHours0Short[idS] = Number(arrBelow0[idS][0].substring(0, 2));
@@ -261,9 +262,11 @@ class ApgInfo extends utils.Adapter {
             }
             for (const idS in arrAll0) {
                 sortedHoursAll0[idS] = [arrAll0[idS][0], arrAll0[idS][1]];
+                sortedHours0ShortAll[idS] = Number(arrAll0[idS][0].substring(0, 2));
             }
             for (const idS in arrAll1) {
                 sortedHoursAll1[idS] = [arrAll1[idS][0], arrAll1[idS][1]];
+                sortedHours1ShortAll[idS] = Number(arrAll1[idS][0].substring(0, 2));
             }
             await jsonExplorer.traverseJson(sortedHours0, 'marketprice.belowThreshold.today_sorted', true, true);
             await jsonExplorer.traverseJson(sortedHours1, 'marketprice.belowThreshold.tomorrow_sorted', true, true);
@@ -271,6 +274,8 @@ class ApgInfo extends utils.Adapter {
             await jsonExplorer.traverseJson(sortedHoursAll1, 'marketprice.tomorrow_sorted', true, true);
             await jsonExplorer.stateSetCreate('marketprice.belowThreshold.today_sorted.short', 'today sorted short', JSON.stringify(sortedHours0Short));
             await jsonExplorer.stateSetCreate('marketprice.belowThreshold.tomorrow_sorted.short', 'tomorrow sorted short', JSON.stringify(sortedHours1Short));
+            await jsonExplorer.stateSetCreate('marketprice.today_sorted.short', 'today sorted short', JSON.stringify(sortedHours0ShortAll));
+            await jsonExplorer.stateSetCreate('marketprice.tomorrow_sorted.short', 'tomorrow sorted short', JSON.stringify(sortedHours1ShortAll));
 
             await jsonExplorer.checkExpire('marketprice.*');
 
