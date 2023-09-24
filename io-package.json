@@ -1,8 +1,34 @@
 {
   "common": {
     "name": "apg-info",
-    "version": "0.0.2",
+    "version": "0.0.3-alpha.1",
     "news": {
+      "0.0.3-alpha.1": {
+        "en": "add point in times sorted as array\nadd average price",
+        "de": "fügen sie punkt in zeiten sortiert als array\ndurchschnittlicher preis",
+        "ru": "добавить точку в раз сортируется как массив\nдобавить среднюю цену",
+        "pt": "add point in times classificados como array\nadicionar preço médio",
+        "nl": "voeg punt in tijden als array\nvertaling:",
+        "fr": "ajouter le point dans les temps triés comme tableau\nprix moyen",
+        "it": "aggiungere punto in tempi ordinati come array\naggiungere prezzo medio",
+        "es": "añadir punto en los tiempos ordenados como matriz\nañadir precio promedio",
+        "pl": "wykorzystywać punkt czasowy jako tablica\nśrednia cena",
+        "uk": "додати точку в час сортування як масив\nдодати середню ціну",
+        "zh-cn": "a. 有时增加的幅度\n增加平均价格"
+      },
+      "0.0.3-alpha.0": {
+        "en": "add point in times sorted as array for cheapest",
+        "de": "fügen sie punkt in zeiten sortiert als array für günstig",
+        "ru": "добавить точку в раз сортируется как массив для самых дешевых",
+        "pt": "add point in times classificados como array para mais barato",
+        "nl": "voeg punt in tijden als array voor goedkoop",
+        "fr": "ajouter le point dans les temps triés comme tableau pour le moins cher",
+        "it": "aggiungere punto in tempi ordinati come array per più economico",
+        "es": "añadir punto en tiempos ordenados como array para más barato",
+        "pl": "wykorzystywana jest jako tablica dla najtaniejszych",
+        "uk": "додати точку в рази, сортовані як масив для найдешевших",
+        "zh-cn": "有时增加最廉价的幅度"
+      },
       "0.0.2": {
         "en": "add number of days below/above treshold\nadd states sorted by price",
         "de": "anzahl der tage unterhalb/oben\nadd-state nach preis sortiert",
