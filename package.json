@@ -1,6 +1,6 @@
 {
   "name": "iobroker.apg-info",
-  "version": "0.0.3-alpha.1",
+  "version": "0.0.3",
   "author": {
     "name": "HGlab01",
     "email": "iobroker.followthesun@gmail.com"
@@ -30,9 +30,6 @@
     "EPEX Spot AT",
     "Strompreis"
   ],
-  "engines": {
-    "node": ">=16"
-  },
   "dependencies": {
     "@esm2cjs/is-online": "^10.0.0",
     "@iobroker/adapter-core": "^3.0.3",

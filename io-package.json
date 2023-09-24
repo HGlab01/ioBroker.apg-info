@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "apg-info",
-    "version": "0.0.3-alpha.1",
+    "version": "0.0.3",
     "news": {
+      "0.0.3": {
+        "en": "add point in times sorted as array\nadd average price\nfix bug IOBROKER-APG-INFO-2 notified by sentry",
+        "de": "fügen sie punkt in zeiten sortiert als array\ndurchschnittlicher preis\nfehler beheben IOBROKER-APG-INFO-2 notiert von sentry",
+        "ru": "добавить точку в раз сортируется как массив\nдобавить среднюю цену\nисправить баг IOBROKER-APG-INFO-2 уведомление по отосланию",
+        "pt": "add point in times classificados como array\nadicionar preço médio\ncorrigir bug IOBROKER-APG-INFO-2 notificado por sentry",
+        "nl": "voeg punt in tijden als array\nvertaling:\nvertaling:",
+        "fr": "ajouter le point dans les temps triés comme tableau\nprix moyen\ncorrection du bug IOBROKER-APG-INFO-2 notifié par sentry",
+        "it": "aggiungere punto in tempi ordinati come array\naggiungere prezzo medio\nfix bug IOBROKER-APG-INFO-2 notificato da mittente",
+        "es": "añadir punto en los tiempos ordenados como matriz\nañadir precio promedio\ncorrección error IOBROKER-APG-INFO-2 notificado por centry",
+        "pl": "wykorzystywać punkt czasowy jako tablica\nśrednia cena\niOBROKER-APG-INFO-2 (ang.)",
+        "uk": "додати точку в час сортування як масив\nдодати середню ціну\nвиправлено помилку IOBROKER-APG-INFO-2, позначений відправником",
+        "zh-cn": "a. 有时增加的幅度\n增加平均价格\nfix Bug IPOKER-APC-INFO-2 发出的发信"
+      },
       "0.0.3-alpha.1": {
         "en": "add point in times sorted as array\nadd average price",
         "de": "fügen sie punkt in zeiten sortiert als array\ndurchschnittlicher preis",
@@ -69,19 +82,6 @@
         "zh-cn": "首次释放"
       },
       "0.0.1-alpha.10": {
-        "en": "preparing first release",
-        "de": "vorbereitung der ersten veröffentlichung",
-        "ru": "подготовка первого релиза",
-        "pt": "preparando a primeira versão",
-        "nl": "eerste vrijlating voorbereiden",
-        "fr": "préparer la première version",
-        "it": "preparazione del primo rilascio",
-        "es": "preparación de la primera liberación",
-        "pl": "pierwsze wydanie",
-        "uk": "підготовка першого випуску",
-        "zh-cn": "首次释放"
-      },
-      "0.0.1-alpha.9": {
         "en": "preparing first release",
         "de": "vorbereitung der ersten veröffentlichung",
         "ru": "подготовка первого релиза",
