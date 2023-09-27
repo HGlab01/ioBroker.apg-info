@@ -26,6 +26,10 @@ This adapter provides the peak-times for the Austrian Power Grid, where power co
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
+### 0.0.4-alpha.0 (2023-09-27)
+* (HGlab01) switch date provider for prices to EXAA
+* support DE market in addiotion to AT
+
 ### 0.0.3 (2023-09-24)
 * (HGlab01) add point in times sorted as array
 * (HGlab01) add average price

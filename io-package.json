@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "apg-info",
-    "version": "0.0.3",
+    "version": "0.0.4-alpha.0",
     "news": {
+      "0.0.4-alpha.0": {
+        "en": "switch date provider for prices to EXAA\nsupport DE market in addiotion to AT",
+        "de": "terminanbieter für Preise auf EXAA\nunterstützung des DE-Marktes in Ergänzung zu AT",
+        "ru": "переключатель даты поставщика для цен на EXAA\nподдержать рынок DE в зависимости от AT",
+        "pt": "fornecedor de data de mudança para preços para EXAA\napoiar o mercado DE em adição à AT",
+        "nl": "vertaling:\nondersteuningsmarkt in aanvulling tot ATT",
+        "fr": "fournisseur de date de commutation pour les prix à EXAA\nsoutenir le marché DE en addiotion à AT",
+        "it": "switch date provider per i prezzi a EXAA\nsostenere il mercato DE in adios ad AT",
+        "es": "proveedor de fecha de cambio para precios a EXAA\nsoporte DE mercado en adición a AT",
+        "pl": "data dostępu do EXAA\nwymaganie DE w dodatkach do AT",
+        "uk": "постачальник дата-продажу за цінами на EXAA\nпідтримка ринку DE в додатку до AT",
+        "zh-cn": "价格转换日期\n支持DE市场增减AT"
+      },
       "0.0.3": {
         "en": "add point in times sorted as array\nadd average price\nfix bug IOBROKER-APG-INFO-2 notified by sentry",
         "de": "fügen sie punkt in zeiten sortiert als array\ndurchschnittlicher preis\nfehler beheben IOBROKER-APG-INFO-2 notiert von sentry",
@@ -69,19 +82,6 @@
         "zh-cn": "首次释放"
       },
       "0.0.1-alpha.11": {
-        "en": "preparing first release",
-        "de": "vorbereitung der ersten veröffentlichung",
-        "ru": "подготовка первого релиза",
-        "pt": "preparando a primeira versão",
-        "nl": "eerste vrijlating voorbereiden",
-        "fr": "préparer la première version",
-        "it": "preparazione del primo rilascio",
-        "es": "preparación de la primera liberación",
-        "pl": "pierwsze wydanie",
-        "uk": "підготовка першого випуску",
-        "zh-cn": "首次释放"
-      },
-      "0.0.1-alpha.10": {
         "en": "preparing first release",
         "de": "vorbereitung der ersten veröffentlichung",
         "ru": "подготовка первого релиза",
