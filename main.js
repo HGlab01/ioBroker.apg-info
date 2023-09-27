@@ -444,7 +444,7 @@ class ApgInfo extends utils.Adapter {
                 }
             }
         } catch (error) {
-            this.log.error(`Error in function sendSentry(): ${error}`);
+            this.log.error(`Error in function sendSentry() main.js: ${error}`);
         }
     }
 }
