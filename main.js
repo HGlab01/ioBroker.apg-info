@@ -55,7 +55,7 @@ class ApgInfo extends utils.Adapter {
             this.log.debug('Internet connection detected. Everything fine!');
         }
 
-        const delay = Math.floor(Math.random() * 30000);
+        const delay = Math.floor(Math.random() * 25000);
         this.log.info(`Delay execution by ${delay}ms to better spread API calls`);
         await jsonExplorer.sleep(delay);
 
@@ -129,13 +129,19 @@ class ApgInfo extends utils.Adapter {
 
     /**
      * Retrieves marketdata from REST-API
+     * @param {boolean} [tomorrow]
      */
-    async getDataDayAhead() {
-        let start = (await cleanDate(new Date())).getTime();
-        let end = start + 1000 * 60 * 60 * 24 * 3;
-        let uri = `https://api.awattar.at/v1/marketdata?start=${start}&end=${end}`;
+    async getDataDayAhead(tomorrow = false, country = 'at') {
+        const day0 = await cleanDate(new Date());
+        const day1 = await addDays(day0, 1);
+        let day = new Date();
+        if (tomorrow) day = day1;
+        else day = day0;
+        const dateStringToday = `${day.getFullYear()}-${day.getMonth() + 1}-${day.getDate()}`;
+        const uri = `https://www.exaa.at/data/trading-results?delivery_day=${dateStringToday}&market=${country}&auction=market_coupling`;
         this.log.debug(`API-Call ${uri}`);
         console.log(`API-Call ${uri}`);
+
         return new Promise((resolve, reject) => {
             // @ts-ignore
             axios.get(uri)
@@ -145,7 +151,8 @@ class ApgInfo extends utils.Adapter {
                     } else {
                         this.log.debug(`Response in getDataDayAhead(): [${response.status}] ${JSON.stringify(response.data)}`);
                         console.log(`Response in getDataDayAhead(): [${response.status}] ${JSON.stringify(response.data)}`);
-                        resolve(response.data);
+                        if (response.data.data) resolve(response.data.data.h);
+                        else resolve(null);
                     }
                 })
                 .catch(error => {
@@ -160,63 +167,86 @@ class ApgInfo extends utils.Adapter {
      */
     async ExecuteRequestDayAhead() {
         try {
-            let result = await this.getDataDayAhead();
-            this.log.debug(`Day ahead result is: ${JSON.stringify(result.data)}`);
+            this.log.info('ExecuteRequestDayAhead() called');
+            let prices0 = await this.getDataDayAhead(false, 'at');
+            this.log.debug(`Day ahead result for today is: ${JSON.stringify(prices0)}`);
+            let prices1 = await this.getDataDayAhead(true, 'at');
+            this.log.debug(`Day ahead result for tomorrow is: ${JSON.stringify(prices1)}`);
 
-            if (!result.data) {
-                this.log.error('No data found in marketprice-result!')
+            if (!prices0) {
+                this.log.error('No marketprice found in marketprice-result!')
                 return 'error';
             }
-            await jsonExplorer.TraverseJson(result.data, 'marketprice.details', true, true);
+            await jsonExplorer.TraverseJson(prices0, 'marketprice.details.today', true, true);
 
-            let day0 = await cleanDate(new Date());
-            let day1 = await addDays(day0, 1);
+            if (prices1) await jsonExplorer.TraverseJson(prices1, 'marketprice.details.tomorrow', true, true);
+
             let jDay0 = {}, jDay1 = {}, jDay0BelowThreshold = {}, jDay1BelowThreshold = {}, jDay0AboveThreshold = {}, jDay1AboveThreshold = {};
-            let iHour = 0;
-            let sHour = '';
             let days0Above = 0, days0Below = 0, days1Above = 0, days1Below = 0;
 
-            for (const idS in result.data) {
-                if (!result.data[idS].marketprice && result.data[idS].marketprice != 0) {
-                    this.log.error('No marketprice found in marketprice-result!')
+            //manage today (day0)
+            for (const idS in prices0) {
+                if (!prices0[idS].Price) {
+                    this.log.error('No marketprice found in marketprice-result for today!')
                     return 'error';
                 }
-                this.log.debug(result.data[idS].marketprice);
 
-                iHour = new Date(result.data[idS].start_timestamp).getHours();
-                let endHour = new Date(result.data[idS].end_timestamp).getHours();
-                do { //if range is more than one hour
-                    if (iHour < 9) sHour = '0' + String(iHour) + '_to_' + '0' + String(iHour + 1);
-                    else if (iHour == 9) sHour = '0' + String(iHour) + '_to_' + String(iHour + 1);
-                    else sHour = String(iHour) + '_to_' + String(iHour + 1);
+                let product = prices0[idS].Product;
+                let marketprice = Math.round(Number(prices0[idS].Price) / 10 * 1000) / 1000;
+                this.log.debug('Marketprice for product ' + product + ' is ' + marketprice);
 
-                    let dateToCheck = await cleanDate(new Date(result.data[idS].start_timestamp));
-                    let marketprice = Math.round(result.data[idS].marketprice / 10 * 1000) / 1000;
-                    if (dateToCheck.getTime() == day0.getTime()) {
-                        jDay0[sHour] = marketprice;
-                        if (marketprice < threshold) {
-                            jDay0BelowThreshold[sHour] = marketprice;
-                            days0Below++;
-                        }
-                        else {
-                            jDay0AboveThreshold[sHour] = marketprice;
-                            days0Above++;
-                        }
-                    }
-                    else if (dateToCheck.getTime() == day1.getTime()) {
-                        jDay1[sHour] = marketprice;
-                        if (marketprice < threshold) {
-                            jDay1BelowThreshold[sHour] = marketprice;
-                            days1Below++;
-                        }
-                        else {
-                            jDay1AboveThreshold[sHour] = marketprice;
-                            days1Above++;
-                        }
-                    }
-                    iHour++;
-                } while (iHour <= (endHour - 1))
+                let sEndHour = product.substring(1, 3);
+                let iEndHour = Number(sEndHour);
+                let iBeginHour = iEndHour - 1;
+                let sBeginHour = String(iBeginHour);
+                const pad = '00';
+                sBeginHour = pad.substring(0, pad.length - sBeginHour.length) + sBeginHour;
+
+                let range = sBeginHour + '_to_' + sEndHour;
+
+                jDay0[range] = marketprice;
+                if (marketprice < threshold) {
+                    jDay0BelowThreshold[range] = marketprice;
+                    days0Below++;
+                }
+                else {
+                    jDay0AboveThreshold[range] = marketprice;
+                    days0Above++;
+                }
             }
+            this.log.debug('Day0 looks like ' + JSON.stringify(jDay0));
+
+            //manage tomorrow (day1)
+            for (const idS in prices1) {
+                if (!prices1[idS].Price) {
+                    this.log.error('No marketprice found in marketprice-result for tomorrow!')
+                    return 'error';
+                }
+
+                let product = prices1[idS].Product;
+                let marketprice = Math.round(Number(prices1[idS].Price) / 10 * 1000) / 1000;
+                this.log.debug('Marketprice for product ' + product + ' is ' + marketprice);
+
+                let sEndHour = product.substring(1, 3);
+                let iEndHour = Number(sEndHour);
+                let iBeginHour = iEndHour - 1;
+                let sBeginHour = String(iBeginHour);
+                const pad = '00';
+                sBeginHour = pad.substring(0, pad.length - sBeginHour.length) + sBeginHour;
+
+                let range = sBeginHour + '_to_' + sEndHour;
+
+                jDay1[range] = marketprice;
+                if (marketprice < threshold) {
+                    jDay1BelowThreshold[range] = marketprice;
+                    days1Below++;
+                }
+                else {
+                    jDay1AboveThreshold[range] = marketprice;
+                    days1Above++;
+                }
+            }
+            this.log.debug('Day1 looks like ' + JSON.stringify(jDay1));
 
             //put data into an array to be sorted in a later step
             let arrBelow0 = Object.keys(jDay0BelowThreshold).map((key) => [key, jDay0BelowThreshold[key]]);

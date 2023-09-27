@@ -145,7 +145,7 @@
     "readme": "https://github.com/HGlab01/ioBroker.apg-info/blob/main/README.md",
     "loglevel": "info",
     "mode": "schedule",
-    "schedule": "14 1 0,14,15,16 * * *",
+    "schedule": "5 1/10 0,12 * * *",
     "allowInit": true,
     "type": "general",
     "compact": true,
