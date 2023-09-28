@@ -133,7 +133,10 @@
       "Hochlast",
       "Day ahead preis",
       "PHELIX-AT Day-Ahead",
-      "EPEX Spot AT",
+      "PHELIX-DE Day-Ahead",
+      "EPEX Spot",
+      "Strompreis",
+      "EXAA",
       "Strompreis"
     ],
     "license": "MIT",

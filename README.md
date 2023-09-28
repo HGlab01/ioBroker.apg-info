@@ -13,7 +13,7 @@
 [![NPM](https://nodei.co/npm/iobroker.apg-info.png?downloads=true)](https://nodei.co/npm/iobroker.apg-info/)
 
 ## apg-info adapter for ioBroker
-This adapter provides the peak-times for the Austrian Power Grid, where power consumption shall be avoided. In addition the adapter provides the PHELIX-AT Day-Ahead (EPEX Spot) prices for Austria.
+This adapter provides the peak-times for the Austrian Power Grid, where power consumption shall be avoided. In addition the adapter provides the PHELIX-AT Day-Ahead (EPEX Spot) prices for Austria and Germany (configure in Adapter settngs).
 
 **This adapter uses Sentry libraries to automatically report exceptions and code errors to the developers.** For more details and for information how to disable the error reporting see [Sentry-Plugin Documentation](https://github.com/ioBroker/plugin-sentry#plugin-sentry)!
 
@@ -27,7 +27,7 @@ This adapter provides the peak-times for the Austrian Power Grid, where power co
     ### __WORK IN PROGRESS__
 -->
 ### 0.0.4-alpha.1 (2023-09-28)
-* (HGlab01) switch date provider for prices to EXAA
+* (HGlab01) switch data provider for prices to EXAA
 * (HGlab01) support DE market in addiotion to AT market
 
 ### 0.0.3 (2023-09-24)

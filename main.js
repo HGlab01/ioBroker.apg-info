@@ -147,7 +147,7 @@ class ApgInfo extends utils.Adapter {
         else day = day0;
         const dateStringToday = `${day.getFullYear()}-${day.getMonth() + 1}-${day.getDate()}`;
         const uri = `https://www.exaa.at/data/trading-results?delivery_day=${dateStringToday}&market=${country}&auction=market_coupling`;
-        this.log.info(`API-Call ${uri}`);
+        this.log.debug(`API-Call ${uri}`);
         console.log(`API-Call ${uri}`);
 
         return new Promise((resolve, reject) => {
@@ -176,7 +176,6 @@ class ApgInfo extends utils.Adapter {
      */
     async ExecuteRequestDayAhead(country) {
         try {
-            this.log.info('ExecuteRequestDayAhead() called');
             let prices0 = await this.getDataDayAhead(false, country);
             this.log.debug(`Day ahead result for today is: ${JSON.stringify(prices0)}`);
             let prices1 = await this.getDataDayAhead(true, country);
