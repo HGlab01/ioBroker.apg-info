@@ -40,11 +40,18 @@ class ApgInfo extends utils.Adapter {
      * Is called when databases are connected and adapter received configuration.
      */
     async onReady() {
+        let country = '';
         // Initialize adapter
         this.log.info('Started with JSON-Explorer version ' + jsonExplorer.version);
 
         if (this.config.threshold) threshold = this.config.threshold;
         else this.log.info('Market price threshold not found and set to 10');
+
+        if (this.config.country) country = this.config.country;
+        else {
+            this.log.error('Country for market not found. Please confifure in Config');
+            this.terminate ? this.terminate(utils.EXIT_CODES.UNCAUGHT_EXCEPTION) : process.exit(0);
+        }
 
         if (await isOnline() == false) {
             this.log.error('No internet connection detected');
@@ -61,7 +68,7 @@ class ApgInfo extends utils.Adapter {
 
         await jsonExplorer.setLastStartTime();
         let resultPeakHours = await this.ExecuteRequestPeakHours();
-        let resultDayAhead = await this.ExecuteRequestDayAhead();
+        let resultDayAhead = await this.ExecuteRequestDayAhead(country);
 
         if (resultPeakHours == 'error' || resultDayAhead == 'error') {
             this.terminate ? this.terminate(utils.EXIT_CODES.UNCAUGHT_EXCEPTION) : process.exit(0);
@@ -129,9 +136,10 @@ class ApgInfo extends utils.Adapter {
 
     /**
      * Retrieves marketdata from REST-API
-     * @param {boolean} [tomorrow]
+     * @param {boolean} tomorrow
+     * @param {string} country country of the market
      */
-    async getDataDayAhead(tomorrow = false, country = 'at') {
+    async getDataDayAhead(tomorrow, country) {
         const day0 = await cleanDate(new Date());
         const day1 = await addDays(day0, 1);
         let day = new Date();
@@ -139,7 +147,7 @@ class ApgInfo extends utils.Adapter {
         else day = day0;
         const dateStringToday = `${day.getFullYear()}-${day.getMonth() + 1}-${day.getDate()}`;
         const uri = `https://www.exaa.at/data/trading-results?delivery_day=${dateStringToday}&market=${country}&auction=market_coupling`;
-        this.log.debug(`API-Call ${uri}`);
+        this.log.info(`API-Call ${uri}`);
         console.log(`API-Call ${uri}`);
 
         return new Promise((resolve, reject) => {
@@ -164,13 +172,14 @@ class ApgInfo extends utils.Adapter {
 
     /**
      * Handles json-object and creates states for market prices
+     * @param {string} country
      */
-    async ExecuteRequestDayAhead() {
+    async ExecuteRequestDayAhead(country) {
         try {
             this.log.info('ExecuteRequestDayAhead() called');
-            let prices0 = await this.getDataDayAhead(false, 'at');
+            let prices0 = await this.getDataDayAhead(false, country);
             this.log.debug(`Day ahead result for today is: ${JSON.stringify(prices0)}`);
-            let prices1 = await this.getDataDayAhead(true, 'at');
+            let prices1 = await this.getDataDayAhead(true, country);
             this.log.debug(`Day ahead result for tomorrow is: ${JSON.stringify(prices1)}`);
 
             if (!prices0) {
