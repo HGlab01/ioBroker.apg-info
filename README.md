@@ -28,7 +28,7 @@ This adapter provides the peak-times for the Austrian Power Grid, where power co
 -->
 ### 0.0.4-alpha.1 (2023-09-28)
 * (HGlab01) switch data provider for prices to EXAA
-* (HGlab01) support DE market in addiotion to AT market
+* (HGlab01) support DE market prices in addiotion to AT prices
 
 ### 0.0.3 (2023-09-24)
 * (HGlab01) add point in times sorted as array
