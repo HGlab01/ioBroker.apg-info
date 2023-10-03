@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "apg-info",
-    "version": "0.0.4-alpha.1",
+    "version": "0.0.4",
     "news": {
+      "0.0.4": {
+        "en": "switch data provider for prices to EXAA\nsupport DE market prices in addiotion to AT prices",
+        "de": "switch Data Provider für Preise auf EXAA\nunterstützung von DE-Marktpreisen in Ergänzung zu AT-Preisen",
+        "ru": "переключите поставщик данных для цен на EXAA\nподдержка DE рыночных цен при добавлении к AT ценам",
+        "pt": "mudar o fornecedor de dados para preços para EXAA\napoiar preços de mercado DE em adição aos preços de AT",
+        "nl": "vertaling:\nvertaling:",
+        "fr": "fournisseur de données de commutation pour les prix à EXAA\nsoutenir les prix du marché DE en addiotion aux prix AT",
+        "it": "passare il fornitore di dati per i prezzi a EXAA\nsostenere i prezzi del mercato DE in adesione ai prezzi AT",
+        "es": "cambiar el proveedor de datos para precios a EXAA\nsoporte DE precios de mercado en adiciones a precios de AT",
+        "pl": "przełączanie danych za ceny\nceny DE w dodatkach do cen AT",
+        "uk": "переключити провайдера даних за цінами на EXAA\nпідтримка DE ринкових цін в додатку на ціни",
+        "zh-cn": "a. 价格转换数据提供方向EXA\n支持DE市场价格以增加AT价格"
+      },
       "0.0.4-alpha.1": {
         "en": "switch date provider for prices to EXAA\nsupport DE market in addiotion to AT market",
         "de": "terminanbieter für Preise auf EXAA\nunterstützung des DE-Marktes bei der Ergänzung zum AT-Markt",
@@ -80,24 +93,11 @@
         "pl": "liczba dni poniżej/above treshold\ndodać stany posortowane przez ceny",
         "uk": "додати кількість днів нижче/вище\nдодавати штати, сортовані за ціною",
         "zh-cn": "下文/博韦·克里夫增加几天\n价格增加"
-      },
-      "0.0.1": {
-        "en": "first release",
-        "de": "erste veröffentlichung",
-        "ru": "первый релиз",
-        "pt": "primeiro lançamento",
-        "nl": "eerste vrijlating",
-        "fr": "première version",
-        "it": "primo rilascio",
-        "es": "primera liberación",
-        "pl": "pierwsze wydanie",
-        "uk": "перший реліз",
-        "zh-cn": "首次释放"
       }
     },
     "titleLang": {
-      "en": "Austrian Power Grid (APG) Info",
-      "de": "Austrian Power Grid (APG) Informationen",
+      "en": "Power Grid (APG) Info (AT+DE)",
+      "de": "Power Grid (APG) Info (AT+DE)",
       "ru": "Информация об Австрийской энергосистеме (APG)",
       "pt": "Informações da rede elétrica austríaca (APG)",
       "nl": "Oostenrijkse Power Grid (APG) Info",
@@ -109,8 +109,8 @@
       "zh-cn": "奥地利电网 (APG) 信息"
     },
     "desc": {
-      "en": "Austrian Power Grid (APG) Info",
-      "de": "Austrian Power Grid (APG) Informationen",
+      "en": "Power Grid (APG) Info for Austria (Österreich) and Germany (Deutschland)",
+      "de": "Power Grid (APG) Info for Austria (Österreich) and Germany (Deutschland)",
       "ru": "Информация об Австрийской энергосистеме (APG)",
       "pt": "Informações da rede elétrica austríaca (APG)",
       "nl": "Oostenrijkse Power Grid (APG) Info",
