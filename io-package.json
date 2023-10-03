@@ -1,8 +1,34 @@
 {
   "common": {
     "name": "apg-info",
-    "version": "0.0.3",
+    "version": "0.0.4-alpha.1",
     "news": {
+      "0.0.4-alpha.1": {
+        "en": "switch date provider for prices to EXAA\nsupport DE market in addiotion to AT market",
+        "de": "terminanbieter für Preise auf EXAA\nunterstützung des DE-Marktes bei der Ergänzung zum AT-Markt",
+        "ru": "переключатель даты поставщика для цен на EXAA\nподдерживать рынок DE в зависимости от рынка AT",
+        "pt": "fornecedor de data de mudança para preços para EXAA\napoiar o mercado DE em adição ao mercado AT",
+        "nl": "vertaling:\nondersteuning van de markt voor de markt",
+        "fr": "fournisseur de date de commutation pour les prix à EXAA\nsoutenir le marché DE en addiotion sur le marché AT",
+        "it": "switch date provider per i prezzi a EXAA\nsostenere il mercato DE in adizione al mercato AT",
+        "es": "proveedor de fecha de cambio para precios a EXAA\nsoporte DE mercado en adición al mercado AT",
+        "pl": "data dostępu do EXAA\nwsparcie DE w dodatkach na rynek AT",
+        "uk": "постачальник дата-продажу за цінами на EXAA\nпідтримка ринку DE на ринку",
+        "zh-cn": "价格转换日期\nb. 支持中小企业市场"
+      },
+      "0.0.4-alpha.0": {
+        "en": "switch date provider for prices to EXAA\nsupport DE market in addiotion to AT",
+        "de": "terminanbieter für Preise auf EXAA\nunterstützung des DE-Marktes in Ergänzung zu AT",
+        "ru": "переключатель даты поставщика для цен на EXAA\nподдержать рынок DE в зависимости от AT",
+        "pt": "fornecedor de data de mudança para preços para EXAA\napoiar o mercado DE em adição à AT",
+        "nl": "vertaling:\nondersteuningsmarkt in aanvulling tot ATT",
+        "fr": "fournisseur de date de commutation pour les prix à EXAA\nsoutenir le marché DE en addiotion à AT",
+        "it": "switch date provider per i prezzi a EXAA\nsostenere il mercato DE in adios ad AT",
+        "es": "proveedor de fecha de cambio para precios a EXAA\nsoporte DE mercado en adición a AT",
+        "pl": "data dostępu do EXAA\nwymaganie DE w dodatkach do AT",
+        "uk": "постачальник дата-продажу за цінами на EXAA\nпідтримка ринку DE в додатку до AT",
+        "zh-cn": "价格转换日期\n支持DE市场增减AT"
+      },
       "0.0.3": {
         "en": "add point in times sorted as array\nadd average price\nfix bug IOBROKER-APG-INFO-2 notified by sentry",
         "de": "fügen sie punkt in zeiten sortiert als array\ndurchschnittlicher preis\nfehler beheben IOBROKER-APG-INFO-2 notiert von sentry",
@@ -67,32 +93,6 @@
         "pl": "pierwsze wydanie",
         "uk": "перший реліз",
         "zh-cn": "首次释放"
-      },
-      "0.0.1-alpha.11": {
-        "en": "preparing first release",
-        "de": "vorbereitung der ersten veröffentlichung",
-        "ru": "подготовка первого релиза",
-        "pt": "preparando a primeira versão",
-        "nl": "eerste vrijlating voorbereiden",
-        "fr": "préparer la première version",
-        "it": "preparazione del primo rilascio",
-        "es": "preparación de la primera liberación",
-        "pl": "pierwsze wydanie",
-        "uk": "підготовка першого випуску",
-        "zh-cn": "首次释放"
-      },
-      "0.0.1-alpha.10": {
-        "en": "preparing first release",
-        "de": "vorbereitung der ersten veröffentlichung",
-        "ru": "подготовка первого релиза",
-        "pt": "preparando a primeira versão",
-        "nl": "eerste vrijlating voorbereiden",
-        "fr": "préparer la première version",
-        "it": "preparazione del primo rilascio",
-        "es": "preparación de la primera liberación",
-        "pl": "pierwsze wydanie",
-        "uk": "підготовка першого випуску",
-        "zh-cn": "首次释放"
       }
     },
     "titleLang": {
@@ -133,7 +133,10 @@
       "Hochlast",
       "Day ahead preis",
       "PHELIX-AT Day-Ahead",
-      "EPEX Spot AT",
+      "PHELIX-DE Day-Ahead",
+      "EPEX Spot",
+      "Strompreis",
+      "EXAA",
       "Strompreis"
     ],
     "license": "MIT",
@@ -145,7 +148,7 @@
     "readme": "https://github.com/HGlab01/ioBroker.apg-info/blob/main/README.md",
     "loglevel": "info",
     "mode": "schedule",
-    "schedule": "14 1 0,14,15,16 * * *",
+    "schedule": "5 0,48 0,12 * * *",
     "allowInit": true,
     "type": "general",
     "compact": true,
@@ -169,7 +172,8 @@
     }
   },
   "native": {
-    "threshold": 10
+    "threshold": 10,
+    "country": "at"
   },
   "objects": [],
   "instanceObjects": []
