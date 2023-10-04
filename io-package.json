@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "apg-info",
-    "version": "0.0.6-alpha.0",
+    "version": "0.0.6",
     "news": {
+      "0.0.6": {
+        "en": "fix \"TypeError: Cannot read properties of undefined (reading 'Warning')\"",
+        "de": "fix \"TypeError: Kann die Eigenschaften von undefinierten (Lesen von Warnungen) nicht lesen",
+        "ru": "исправить \"TypeError: Не можете читать свойства неопределенных (читая Предупреждение\")",
+        "pt": "corrigir \"TypeError: Não é possível ler propriedades de indefinido (ler aviso)",
+        "nl": "ik kan geen eigenschappen lezen van onbepaalde (lezen Warning)",
+        "fr": "corriger \"TypeError: Cannot read properties of undefined (reading Warning\")",
+        "it": "fix \"TypeError: Non possono leggere le proprietà di undefined (lettura Warning)",
+        "es": "corrija \"TypeError: No se pueden leer las propiedades de undefinido (Leer Advertencia)",
+        "pl": "metacritic: Cannot read properties of undefined (reading Warning) (ang.)",
+        "uk": "фіксація \"ТипError: Не можна прочитати властивості не визначених (попередження прочитання)",
+        "zh-cn": "fix “TypeError: Cannot宣读了未界定的财产(准备的战争)"
+      },
       "0.0.6-alpha.0": {
         "en": "fix \"Error in function sendSentry(): \"TypeError: Cannot read properties of undefined (reading 'Warning')\"",
         "de": "fix \"Fehler in Funktion sendSentry:)( \"TypeError: Kann Eigenschaften von undefinierten (Lesen Warnung) nicht lesen",
@@ -80,19 +93,6 @@
         "pl": "wykorzystywać punkt czasowy jako tablica\nśrednia cena\niOBROKER-APG-INFO-2 (ang.)",
         "uk": "додати точку в час сортування як масив\nдодати середню ціну\nвиправлено помилку IOBROKER-APG-INFO-2, позначений відправником",
         "zh-cn": "a. 有时增加的幅度\n增加平均价格\nfix Bug IPOKER-APC-INFO-2 发出的发信"
-      },
-      "0.0.3-alpha.1": {
-        "en": "add point in times sorted as array\nadd average price",
-        "de": "fügen sie punkt in zeiten sortiert als array\ndurchschnittlicher preis",
-        "ru": "добавить точку в раз сортируется как массив\nдобавить среднюю цену",
-        "pt": "add point in times classificados como array\nadicionar preço médio",
-        "nl": "voeg punt in tijden als array\nvertaling:",
-        "fr": "ajouter le point dans les temps triés comme tableau\nprix moyen",
-        "it": "aggiungere punto in tempi ordinati come array\naggiungere prezzo medio",
-        "es": "añadir punto en los tiempos ordenados como matriz\nañadir precio promedio",
-        "pl": "wykorzystywać punkt czasowy jako tablica\nśrednia cena",
-        "uk": "додати точку в час сортування як масив\nдодати середню ціну",
-        "zh-cn": "a. 有时增加的幅度\n增加平均价格"
       }
     },
     "titleLang": {
@@ -131,7 +131,7 @@
       "Powermonitor",
       "Spitzenzeiten",
       "Hochlast",
-      "Day ahead preis",
+      "Day ahead",
       "PHELIX-AT Day-Ahead",
       "PHELIX-DE Day-Ahead",
       "EPEX Spot",
