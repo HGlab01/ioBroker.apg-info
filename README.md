@@ -26,6 +26,9 @@ This adapter provides the peak-times for the Austrian Power Grid, where power co
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
+### 0.0.7-alpha.0 (2023-10-06)
+* (HGlab01) Bump json-explorer to 0.1.14-alpha
+
 ### 0.0.6 (2023-10-04)
 * (HGlab01) fix "TypeError: Cannot read properties of undefined (reading 'Warning')"
 
@@ -41,9 +44,6 @@ This adapter provides the peak-times for the Austrian Power Grid, where power co
 ### 0.0.2 (2023-09-14)
 * (HGlab01) add number of days below/above treshold
 * (HGlab01) add states sorted by price
-
-### 0.0.1 (2023-09-11)
-* (HGlab01) first release
 
 ## License
 MIT License

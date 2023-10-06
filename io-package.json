@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "apg-info",
-    "version": "0.0.6",
+    "version": "0.0.7-alpha.0",
     "news": {
+      "0.0.7-alpha.0": {
+        "en": "Bump json-explorer to 0.1.14-alpha",
+        "de": "Stoßdämpfer auf 0,1.14-alpha",
+        "ru": "Bump json-explorer до 0.1.14-alpha",
+        "pt": "Bump json-explorer para 0.1.14-alpha",
+        "nl": "Bump Json-explorer tot 0.1.14-alfa",
+        "fr": "Bump json-explorer à 0,1.14-alpha",
+        "it": "Bump json-explorer a 0.1.14-alpha",
+        "es": "Bump json-explorer to 0.1.14-alpha",
+        "pl": "Bump json-explorer to 0.1.14-alfa",
+        "uk": "Bump json-explorer до 0.1.14-alpha",
+        "zh-cn": "Bump json-explorer to0.1.14-alpha"
+      },
       "0.0.6": {
         "en": "fix \"TypeError: Cannot read properties of undefined (reading 'Warning')\"",
         "de": "fix \"TypeError: Kann die Eigenschaften von undefinierten (Lesen von Warnungen) nicht lesen",
@@ -80,19 +93,6 @@
         "pl": "data dostępu do EXAA\nwymaganie DE w dodatkach do AT",
         "uk": "постачальник дата-продажу за цінами на EXAA\nпідтримка ринку DE в додатку до AT",
         "zh-cn": "价格转换日期\n支持DE市场增减AT"
-      },
-      "0.0.3": {
-        "en": "add point in times sorted as array\nadd average price\nfix bug IOBROKER-APG-INFO-2 notified by sentry",
-        "de": "fügen sie punkt in zeiten sortiert als array\ndurchschnittlicher preis\nfehler beheben IOBROKER-APG-INFO-2 notiert von sentry",
-        "ru": "добавить точку в раз сортируется как массив\nдобавить среднюю цену\nисправить баг IOBROKER-APG-INFO-2 уведомление по отосланию",
-        "pt": "add point in times classificados como array\nadicionar preço médio\ncorrigir bug IOBROKER-APG-INFO-2 notificado por sentry",
-        "nl": "voeg punt in tijden als array\nvertaling:\nvertaling:",
-        "fr": "ajouter le point dans les temps triés comme tableau\nprix moyen\ncorrection du bug IOBROKER-APG-INFO-2 notifié par sentry",
-        "it": "aggiungere punto in tempi ordinati come array\naggiungere prezzo medio\nfix bug IOBROKER-APG-INFO-2 notificato da mittente",
-        "es": "añadir punto en los tiempos ordenados como matriz\nañadir precio promedio\ncorrección error IOBROKER-APG-INFO-2 notificado por centry",
-        "pl": "wykorzystywać punkt czasowy jako tablica\nśrednia cena\niOBROKER-APG-INFO-2 (ang.)",
-        "uk": "додати точку в час сортування як масив\nдодати середню ціну\nвиправлено помилку IOBROKER-APG-INFO-2, позначений відправником",
-        "zh-cn": "a. 有时增加的幅度\n增加平均价格\nfix Bug IPOKER-APC-INFO-2 发出的发信"
       }
     },
     "titleLang": {
