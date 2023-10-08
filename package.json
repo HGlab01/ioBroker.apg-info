@@ -1,6 +1,6 @@
 {
   "name": "iobroker.apg-info",
-  "version": "0.0.6",
+  "version": "0.0.7-alpha.0",
   "author": {
     "name": "HGlab01",
     "email": "iobroker.followthesun@gmail.com"
@@ -37,7 +37,7 @@
     "@esm2cjs/is-online": "^10.0.0",
     "@iobroker/adapter-core": "^3.0.3",
     "axios": "^1.5.1",
-    "iobroker-jsonexplorer": "0.1.13"
+    "iobroker-jsonexplorer": "0.1.14"
   },
   "deprecated": false,
   "description": "APG Info",
