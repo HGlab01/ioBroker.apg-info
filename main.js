@@ -63,7 +63,7 @@ class ApgInfo extends utils.Adapter {
             this.log.debug('Internet connection detected. Everything fine!');
         }
 
-        const delay = Math.floor(Math.random() * 25000);
+        const delay = Math.floor(Math.random() * 1); //25000
         this.log.info(`Delay execution by ${delay}ms to better spread API calls`);
         await jsonExplorer.sleep(delay);
 
@@ -141,8 +141,8 @@ class ApgInfo extends utils.Adapter {
      * @param {string} country country of the market
      */
     async getDataDayAhead(tomorrow, country) {
-        const day0 = await cleanDate(new Date());
-        const day1 = await addDays(day0, 1);
+        const day0 = cleanDate(new Date());
+        const day1 = addDays(day0, 1);
         let day = new Date();
         if (tomorrow) day = day1;
         else day = day0;
@@ -268,6 +268,8 @@ class ApgInfo extends utils.Adapter {
             jDay1BelowThreshold.numberOfHours = days1Below;
             jDay1AboveThreshold.numberOfHours = days1Above;
 
+            this.createChart(arrAll0, arrAll1);
+
             this.log.debug('Marketprice jDay0: ' + JSON.stringify(jDay0));
             this.log.debug('Marketprice jDay0BelowThreshold: ' + JSON.stringify(jDay0BelowThreshold));
             this.log.debug('Marketprice jDay0AboveThreshold: ' + JSON.stringify(jDay0AboveThreshold));
@@ -369,11 +371,11 @@ class ApgInfo extends utils.Adapter {
                 return 'error';
             }
 
-            let day0 = await cleanDate(new Date());
-            let day1 = await addDays(day0, 1);
-            let day2 = await addDays(day0, 2);
-            let day3 = await addDays(day0, 3);
-            let day4 = await addDays(day0, 4);
+            let day0 = cleanDate(new Date());
+            let day1 = addDays(day0, 1);
+            let day2 = addDays(day0, 2);
+            let day3 = addDays(day0, 3);
+            let day4 = addDays(day0, 4);
             let jDay0 = {}, jDay1 = {}, jDay2 = {}, jDay3 = {}, jDay4 = {}, jDayAll = {};
             let iHour = 0;
             let sHour = '';
@@ -392,7 +394,7 @@ class ApgInfo extends utils.Adapter {
                 else if (iHour == 9) sHour = 'from_0' + String(iHour) + '_to_' + String(iHour + 1);
                 else sHour = 'from_' + String(iHour) + '_to_' + String(iHour + 1);
 
-                let dateToCheck = await cleanDate(new Date(result.StatusInfos[idS].utc));
+                let dateToCheck = cleanDate(new Date(result.StatusInfos[idS].utc));
                 if (dateToCheck.getTime() == day0.getTime()) jDay0[sHour] = new Date(result.StatusInfos[idS].utc).getTime();
                 else if (dateToCheck.getTime() == day1.getTime()) jDay1[sHour] = new Date(result.StatusInfos[idS].utc).getTime();
                 else if (dateToCheck.getTime() == day2.getTime()) jDay2[sHour] = new Date(result.StatusInfos[idS].utc).getTime();
@@ -438,6 +440,62 @@ class ApgInfo extends utils.Adapter {
         }
     }
 
+    calcDate(i, tomorrow = false) {
+        let date = cleanDate(new Date());
+        if (tomorrow) date = addDays(date, 1);
+        date.setHours(i);
+        return date.getTime();
+    }
+
+    async createChart(arrayToday, arrayTomorrow) {
+        let todayData = [];
+        let tomorrowData = [];
+        let chart = {};
+
+        let todayMin = 1000, tomorrowMin = 1000;
+        let todayMax = 0, tomorrowMax = 0;
+
+        for (const idS in arrayToday) {
+            todayData[idS] = { "y": arrayToday[idS][1], "t": this.calcDate(idS) };
+            todayMin = Math.min(todayMin, Number(arrayToday[idS][1]));
+            todayMax = Math.max(todayMax, Number(arrayToday[idS][1]));
+        }
+        for (const idS in arrayTomorrow) {
+            tomorrowData[idS] = { "y": arrayTomorrow[idS][1], "t": this.calcDate(idS, true) };
+            tomorrowMin = Math.min(tomorrowMin, Number(arrayTomorrow[idS][1]));
+            tomorrowMax = Math.max(tomorrowMax, Number(arrayTomorrow[idS][1]));
+        }
+
+        let allMin = Math.min(todayMin, tomorrowMin);
+        let allMax = Math.max(todayMax, tomorrowMax);
+        allMax = Math.ceil(allMax*1.1/5)*5;
+
+        todayData[24] = { "y": todayData[23].y, "t": todayData[23].t + 60 * 60 * 1000 };
+        tomorrowData[24] = { "y": tomorrowData[23].y, "t": tomorrowData[23].t + 60 * 60 * 1000 };
+
+        chart.graphs = [];
+        chart.graphs[0] = {};
+        chart.graphs[0].type = "line";
+        chart.graphs[0].color = "lightgray";
+        chart.graphs[0].line_steppedLine = true;
+        chart.graphs[0].xAxis_timeFormats = { "hour": "HH" };
+        chart.graphs[0].xAxis_time_unit = "hour";
+        chart.graphs[0].yAxis_min = Math.min(0, allMin);
+        chart.graphs[0].yAxis_max = allMax;
+        chart.graphs[0].datalabel_show = 'auto';
+        chart.graphs[0].datalabel_minDigits = 2;
+        chart.graphs[0].datalabel_maxDigits = 2;
+        chart.graphs[0].xAxis_bounds = 'data';
+        chart.graphs[0].line_pointSize = 0;
+        chart.graphs[0].datalabel_fontSize = 10;
+        chart.graphs[0].datalabel_color = 'black';
+        chart.graphs[0].line_UseFillColor = true;
+
+        chart.graphs[0].data = todayData;
+        await jsonExplorer.stateSetCreate('marketprice.today.jsonChart', 'jsonChart', JSON.stringify(chart));
+        chart.graphs[0].data = tomorrowData;
+        await jsonExplorer.stateSetCreate('marketprice.tomorrow.jsonChart', 'jsonChart', JSON.stringify(chart));
+    }
 
     /**
      * Handles sentry message
@@ -474,11 +532,8 @@ if (module.parent) {
  * sets time to 00:00:00.00000
  * @param {Date} date date to be changed
  */
-async function cleanDate(date) {
-    date.setHours(0);
-    date.setMinutes(0);
-    date.setSeconds(0);
-    date.setMilliseconds(0);
+function cleanDate(date) {
+    date.setHours(0, 0, 0, 0);
     return date;
 }
 
@@ -487,12 +542,12 @@ async function cleanDate(date) {
  * @param {Date} date origin date
  * @param {number} numberOfDays number of days which origin date shall be added (positive and negative allowes)
  */
-async function addDays(date, numberOfDays) {
+function addDays(date, numberOfDays) {
     const oneDayTime = 1000 * 60 * 60 * 24;
     const oneHourAndOneMinute = 1000 * 60 * 61;
-    let originDate = await cleanDate(date);
+    let originDate = cleanDate(date);
     let targetDate = new Date(originDate.getTime() + oneDayTime * numberOfDays + oneHourAndOneMinute); //oneHourAndOneMinute to cover Zeitumstellung
-    return (await cleanDate(targetDate));
+    return (cleanDate(targetDate));
 }
 
 function compareSecondColumn(a, b) {
