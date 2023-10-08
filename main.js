@@ -467,7 +467,7 @@ class ApgInfo extends utils.Adapter {
 
         let allMin = Math.min(todayMin, tomorrowMin);
         let allMax = Math.max(todayMax, tomorrowMax);
-        allMax = Math.ceil(allMax*1.1/10)*10;
+        allMax = Math.ceil(allMax*1.1/5)*5;
 
         todayData[24] = { "y": todayData[23].y, "t": todayData[23].t + 60 * 60 * 1000 };
         tomorrowData[24] = { "y": tomorrowData[23].y, "t": tomorrowData[23].t + 60 * 60 * 1000 };
