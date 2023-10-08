@@ -451,19 +451,23 @@ class ApgInfo extends utils.Adapter {
         let tomorrowData = [];
         let chart = {};
 
-        let todayMin = 1000;
-        let tomorrowMin = 1000;
+        let todayMin = 1000, tomorrowMin = 1000;
+        let todayMax = 0, tomorrowMax = 0;
 
         for (const idS in arrayToday) {
             todayData[idS] = { "y": arrayToday[idS][1], "t": this.calcDate(idS) };
             todayMin = Math.min(todayMin, Number(arrayToday[idS][1]));
+            todayMax = Math.max(todayMax, Number(arrayToday[idS][1]));
         }
         for (const idS in arrayTomorrow) {
             tomorrowData[idS] = { "y": arrayTomorrow[idS][1], "t": this.calcDate(idS, true) };
             tomorrowMin = Math.min(tomorrowMin, Number(arrayTomorrow[idS][1]));
+            tomorrowMax = Math.max(tomorrowMax, Number(arrayTomorrow[idS][1]));
         }
 
         let allMin = Math.min(todayMin, tomorrowMin);
+        let allMax = Math.max(todayMax, tomorrowMax);
+        allMax = Math.ceil(allMax*1.1/10)*10;
 
         todayData[24] = { "y": todayData[23].y, "t": todayData[23].t + 60 * 60 * 1000 };
         tomorrowData[24] = { "y": tomorrowData[23].y, "t": tomorrowData[23].t + 60 * 60 * 1000 };
@@ -476,6 +480,7 @@ class ApgInfo extends utils.Adapter {
         chart.graphs[0].xAxis_timeFormats = { "hour": "HH" };
         chart.graphs[0].xAxis_time_unit = "hour";
         chart.graphs[0].yAxis_min = Math.min(0, allMin);
+        chart.graphs[0].yAxis_max = allMax;
         chart.graphs[0].datalabel_show = 'auto';
         chart.graphs[0].datalabel_minDigits = 2;
         chart.graphs[0].datalabel_maxDigits = 2;
