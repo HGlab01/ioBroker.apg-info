@@ -14,7 +14,7 @@
 
 ## apg-info adapter for ioBroker
 This adapter provides the peak-times for the Austrian Power Grid, where power consumption shall be avoided. In addition the adapter provides the PHELIX Day-Ahead (EPEX Spot) prices for Austria and Germany (configure in Adapter settngs).
-[..].marketprice.today.jsonChart and [..].marketprice.tomorrow.jsonChart can be used with  
+[..].marketprice.today.jsonChart and [..].marketprice.tomorrow.jsonChart can be used with https://github.com/Scrounger/ioBroker.vis-materialdesign#json-chart.
 
 **This adapter uses Sentry libraries to automatically report exceptions and code errors to the developers.** For more details and for information how to disable the error reporting see [Sentry-Plugin Documentation](https://github.com/ioBroker/plugin-sentry#plugin-sentry)!
 
