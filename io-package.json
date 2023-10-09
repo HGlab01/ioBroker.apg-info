@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "apg-info",
-    "version": "0.0.7-alpha.0",
+    "version": "0.0.7-alpha.1",
     "news": {
+      "0.0.7-alpha.1": {
+        "en": "Bump json-explorer to 0.1.14\nadd jsonChart-json for market prices",
+        "de": "Stoßdämpfer bis 0,1.14\nhinzufügen von json Schaubild für Marktpreise",
+        "ru": "Bump json-explorer до 0.1.14\nдобавить json Chart-json по рыночным ценам",
+        "pt": "Bump json-explorer para 0.1.14\nadicionar json Chart-json para preços de mercado",
+        "nl": "Bump Json-explorer tot 0.1.14\nvoeg Json toe Chart-Json voor marktprijzen",
+        "fr": "Bump json-explorer à 0,1.14\najouter json Graphique-json pour les prix du marché",
+        "it": "Bump json-explorer a 0.1.14\naggiungere json Grafico-json per i prezzi di mercato",
+        "es": "Bump json-explorer to 0.1.14\nañadir json Chart-json para los precios del mercado",
+        "pl": "Bump json-explorer do 0,1.14\ndodać Chartjson za ceny rynkowe",
+        "uk": "Bump json-explorer до 0.1.14\nдодати json Графік роботи на ринку",
+        "zh-cn": "Bump json-explorer to 014\n增 编 市场价格图表"
+      },
       "0.0.7-alpha.0": {
         "en": "Bump json-explorer to 0.1.14-alpha",
         "de": "Stoßdämpfer auf 0,1.14-alpha",
@@ -80,19 +93,6 @@
         "pl": "data dostępu do EXAA\nwsparcie DE w dodatkach na rynek AT",
         "uk": "постачальник дата-продажу за цінами на EXAA\nпідтримка ринку DE на ринку",
         "zh-cn": "价格转换日期\nb. 支持中小企业市场"
-      },
-      "0.0.4-alpha.0": {
-        "en": "switch date provider for prices to EXAA\nsupport DE market in addiotion to AT",
-        "de": "terminanbieter für Preise auf EXAA\nunterstützung des DE-Marktes in Ergänzung zu AT",
-        "ru": "переключатель даты поставщика для цен на EXAA\nподдержать рынок DE в зависимости от AT",
-        "pt": "fornecedor de data de mudança para preços para EXAA\napoiar o mercado DE em adição à AT",
-        "nl": "vertaling:\nondersteuningsmarkt in aanvulling tot ATT",
-        "fr": "fournisseur de date de commutation pour les prix à EXAA\nsoutenir le marché DE en addiotion à AT",
-        "it": "switch date provider per i prezzi a EXAA\nsostenere il mercato DE in adios ad AT",
-        "es": "proveedor de fecha de cambio para precios a EXAA\nsoporte DE mercado en adición a AT",
-        "pl": "data dostępu do EXAA\nwymaganie DE w dodatkach do AT",
-        "uk": "постачальник дата-продажу за цінами на EXAA\nпідтримка ринку DE в додатку до AT",
-        "zh-cn": "价格转换日期\n支持DE市场增减AT"
       }
     },
     "titleLang": {
