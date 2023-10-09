@@ -13,7 +13,8 @@
 [![NPM](https://nodei.co/npm/iobroker.apg-info.png?downloads=true)](https://nodei.co/npm/iobroker.apg-info/)
 
 ## apg-info adapter for ioBroker
-This adapter provides the peak-times for the Austrian Power Grid, where power consumption shall be avoided. In addition the adapter provides the PHELIX Day-Ahead (EPEX Spot) prices for Austria and Germany (configure in Adapter settngs).
+This adapter provides the peak-times for the Austrian Power Grid, where power consumption shall be avoided. In addition the adapter provides the PHELIX Day-Ahead (EPEX Spot) prices for Austria and Germany (configure in Adapter settngs).<br>
+`[..].marketprice.today.jsonChart` and `[..].marketprice.tomorrow.jsonChart` can be used with https://github.com/Scrounger/ioBroker.vis-materialdesign#json-chart.  
 
 **This adapter uses Sentry libraries to automatically report exceptions and code errors to the developers.** For more details and for information how to disable the error reporting see [Sentry-Plugin Documentation](https://github.com/ioBroker/plugin-sentry#plugin-sentry)!
 
@@ -28,6 +29,7 @@ This adapter provides the peak-times for the Austrian Power Grid, where power co
 -->
 ### __WORK IN PROGRESS__
 * (HGlab01) Bump json-explorer to 0.1.14
+* (HGlab01) add jsonChart-json for market prices
 
 ### 0.0.6 (2023-10-04)
 * (HGlab01) fix "TypeError: Cannot read properties of undefined (reading 'Warning')"
