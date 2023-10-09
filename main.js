@@ -63,7 +63,7 @@ class ApgInfo extends utils.Adapter {
             this.log.debug('Internet connection detected. Everything fine!');
         }
 
-        const delay = Math.floor(Math.random() * 1); //25000
+        const delay = Math.floor(Math.random() * 25000); //25000
         this.log.info(`Delay execution by ${delay}ms to better spread API calls`);
         await jsonExplorer.sleep(delay);
 
