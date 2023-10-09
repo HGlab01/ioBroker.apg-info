@@ -468,10 +468,11 @@ class ApgInfo extends utils.Adapter {
 
         let allMin = Math.min(todayMin, tomorrowMin);
         let allMax = Math.max(todayMax, tomorrowMax);
-        allMax = Math.ceil(allMax*1.1/5)*5;
+        allMax = Math.ceil(allMax * 1.1 / 5) * 5;
 
-        todayData[24] = { "y": todayData[23].y, "t": todayData[23].t + 60 * 60 * 1000 };
-        tomorrowData[24] = { "y": tomorrowData[23].y, "t": tomorrowData[23].t + 60 * 60 * 1000 };
+        if (todayData[23] && todayData[23].y && todayData[23].t) todayData[24] = { "y": todayData[23].y, "t": todayData[23].t + 60 * 60 * 1000 };
+
+        if (tomorrowData[23] && tomorrowData[23].y && tomorrowData[23].t) tomorrowData[24] = { "y": tomorrowData[23].y, "t": tomorrowData[23].t + 60 * 60 * 1000 };
 
         chart.graphs = [];
         chart.graphs[0] = {};
@@ -486,7 +487,8 @@ class ApgInfo extends utils.Adapter {
         chart.graphs[0].datalabel_minDigits = 2;
         chart.graphs[0].datalabel_maxDigits = 2;
         chart.graphs[0].xAxis_bounds = 'data';
-        chart.graphs[0].line_pointSize = 0;
+        chart.graphs[0].line_pointSize = 5;
+        chart.graphs[0].line_PointColor = 'rgba(0, 0, 0, 0)';
         chart.graphs[0].datalabel_fontSize = 10;
         chart.graphs[0].datalabel_color = 'black';
         chart.graphs[0].line_UseFillColor = true;
