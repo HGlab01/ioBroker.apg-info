@@ -137,7 +137,9 @@
       "EPEX Spot",
       "Strompreis",
       "EXAA",
-      "Strompreis"
+      "Strompreis",
+      "Awattar",
+      "Spotty"
     ],
     "license": "MIT",
     "platform": "Javascript/Node.js",
