@@ -36,3 +36,6 @@ maintenance/**
 
 # npm package files
 iobroker*.tgz
+
+# Info files
+z_*.json

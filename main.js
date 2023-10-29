@@ -15,6 +15,7 @@ const jsonExplorer = require('iobroker-jsonexplorer');
 const stateAttr = require(`${__dirname}/lib/stateAttr.js`); // Load attribute library
 const isOnline = require('@esm2cjs/is-online').default;
 const { version } = require('./package.json');
+//const jToday = require('./z_TimeChange.json');
 //global variables
 let threshold = 10;
 
@@ -178,8 +179,10 @@ class ApgInfo extends utils.Adapter {
     async ExecuteRequestDayAhead(country) {
         try {
             let prices0 = await this.getDataDayAhead(false, country);
+            //let prices0 = jToday;
             this.log.debug(`Day ahead result for today is: ${JSON.stringify(prices0)}`);
             let prices1 = await this.getDataDayAhead(true, country);
+            //let prices1 = jToday;
             this.log.debug(`Day ahead result for tomorrow is: ${JSON.stringify(prices1)}`);
 
             if (!prices0) {

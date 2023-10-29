@@ -1,0 +1,227 @@
+[
+    {
+        "Product": "H01",
+        "ProductText": "hEXA01",
+        "Price": "49.06",
+        "BuyVolume": "1007.5",
+        "SellVolume": "64.3",
+        "TotalVol": "1007.5",
+        "AuctionDay": "2023-10-28"
+    },
+    {
+        "Product": "H02",
+        "ProductText": "hEXA02",
+        "Price": "18.8",
+        "BuyVolume": "989",
+        "SellVolume": "67.5",
+        "TotalVol": "989",
+        "AuctionDay": "2023-10-28"
+    },
+    {
+        "Product": "H04",
+        "ProductText": "hEXA04",
+        "Price": "5.33",
+        "BuyVolume": "1050.9",
+        "SellVolume": "52.3",
+        "TotalVol": "1050.9",
+        "AuctionDay": "2023-10-28"
+    },
+    {
+        "Product": "H05",
+        "ProductText": "hEXA05",
+        "Price": "5.69",
+        "BuyVolume": "1056.6",
+        "SellVolume": "65.4",
+        "TotalVol": "1056.6",
+        "AuctionDay": "2023-10-28"
+    },
+    {
+        "Product": "H06",
+        "ProductText": "hEXA06",
+        "Price": "5.73",
+        "BuyVolume": "1093.9",
+        "SellVolume": "64.6",
+        "TotalVol": "1093.9",
+        "AuctionDay": "2023-10-28"
+    },
+    {
+        "Product": "H07",
+        "ProductText": "hEXA07",
+        "Price": "41.67",
+        "BuyVolume": "1183.5",
+        "SellVolume": "76.9",
+        "TotalVol": "1183.5",
+        "AuctionDay": "2023-10-28"
+    },
+    {
+        "Product": "H08",
+        "ProductText": "hEXA08",
+        "Price": "28.69",
+        "BuyVolume": "1418.2",
+        "SellVolume": "135.9",
+        "TotalVol": "1418.2",
+        "AuctionDay": "2023-10-28"
+    },
+    {
+        "Product": "H09",
+        "ProductText": "hEXA09",
+        "Price": "5.67",
+        "BuyVolume": "1475.7",
+        "SellVolume": "228.1",
+        "TotalVol": "1475.7",
+        "AuctionDay": "2023-10-28"
+    },
+    {
+        "Product": "H10",
+        "ProductText": "hEXA10",
+        "Price": "5.46",
+        "BuyVolume": "1556",
+        "SellVolume": "335",
+        "TotalVol": "1556",
+        "AuctionDay": "2023-10-28"
+    },
+    {
+        "Product": "H11",
+        "ProductText": "hEXA11",
+        "Price": "6.91",
+        "BuyVolume": "1509.2",
+        "SellVolume": "427.3",
+        "TotalVol": "1509.2",
+        "AuctionDay": "2023-10-28"
+    },
+    {
+        "Product": "H12",
+        "ProductText": "hEXA12",
+        "Price": "7.02",
+        "BuyVolume": "1478.5",
+        "SellVolume": "478.7",
+        "TotalVol": "1478.5",
+        "AuctionDay": "2023-10-28"
+    },
+    {
+        "Product": "H13",
+        "ProductText": "hEXA13",
+        "Price": "4.58",
+        "BuyVolume": "1436.5",
+        "SellVolume": "478.2",
+        "TotalVol": "1436.5",
+        "AuctionDay": "2023-10-28"
+    },
+    {
+        "Product": "H14",
+        "ProductText": "hEXA14",
+        "Price": "5.57",
+        "BuyVolume": "1333.5",
+        "SellVolume": "427.4",
+        "TotalVol": "1333.5",
+        "AuctionDay": "2023-10-28"
+    },
+    {
+        "Product": "H15",
+        "ProductText": "hEXA15",
+        "Price": "12.94",
+        "BuyVolume": "1293.2",
+        "SellVolume": "336.8",
+        "TotalVol": "1293.2",
+        "AuctionDay": "2023-10-28"
+    },
+    {
+        "Product": "H16",
+        "ProductText": "hEXA16",
+        "Price": "48.08",
+        "BuyVolume": "1277.8",
+        "SellVolume": "225.6",
+        "TotalVol": "1277.8",
+        "AuctionDay": "2023-10-28"
+    },
+    {
+        "Product": "H17",
+        "ProductText": "hEXA17",
+        "Price": "76.05",
+        "BuyVolume": "1366.5",
+        "SellVolume": "126.3",
+        "TotalVol": "1366.5",
+        "AuctionDay": "2023-10-28"
+    },
+    {
+        "Product": "H18",
+        "ProductText": "hEXA18",
+        "Price": "78.54",
+        "BuyVolume": "1322.5",
+        "SellVolume": "73.1",
+        "TotalVol": "1322.5",
+        "AuctionDay": "2023-10-28"
+    },
+    {
+        "Product": "H19",
+        "ProductText": "hEXA19",
+        "Price": "90.82",
+        "BuyVolume": "725.3",
+        "SellVolume": "56.4",
+        "TotalVol": "725.3",
+        "AuctionDay": "2023-10-28"
+    },
+    {
+        "Product": "H20",
+        "ProductText": "hEXA20",
+        "Price": "87.07",
+        "BuyVolume": "901.8",
+        "SellVolume": "53.3",
+        "TotalVol": "901.8",
+        "AuctionDay": "2023-10-28"
+    },
+    {
+        "Product": "H21",
+        "ProductText": "hEXA21",
+        "Price": "75.75",
+        "BuyVolume": "1486.7",
+        "SellVolume": "88.1",
+        "TotalVol": "1486.7",
+        "AuctionDay": "2023-10-28"
+    },
+    {
+        "Product": "H22",
+        "ProductText": "hEXA22",
+        "Price": "66.98",
+        "BuyVolume": "1475.7",
+        "SellVolume": "74",
+        "TotalVol": "1475.7",
+        "AuctionDay": "2023-10-28"
+    },
+    {
+        "Product": "H23",
+        "ProductText": "hEXA23",
+        "Price": "55.1",
+        "BuyVolume": "1489.6",
+        "SellVolume": "57.1",
+        "TotalVol": "1489.6",
+        "AuctionDay": "2023-10-28"
+    },
+    {
+        "Product": "H24",
+        "ProductText": "hEXA24",
+        "Price": "43.9",
+        "BuyVolume": "1388",
+        "SellVolume": "19.3",
+        "TotalVol": "1388",
+        "AuctionDay": "2023-10-28"
+    },
+    {
+        "Product": "H03a",
+        "ProductText": "hEXA03a",
+        "Price": "6.64",
+        "BuyVolume": "1010.4",
+        "SellVolume": "52.1",
+        "TotalVol": "1010.4",
+        "AuctionDay": "2023-10-28"
+    },
+    {
+        "Product": "H03b",
+        "ProductText": "hEXA03b",
+        "Price": "5.88",
+        "BuyVolume": "1029.9",
+        "SellVolume": "52.1",
+        "TotalVol": "1029.9",
+        "AuctionDay": "2023-10-28"
+    }
+]
