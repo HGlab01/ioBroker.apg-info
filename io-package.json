@@ -150,7 +150,7 @@
     "readme": "https://github.com/HGlab01/ioBroker.apg-info/blob/main/README.md",
     "loglevel": "info",
     "mode": "schedule",
-    "schedule": "5 0,48 0,12 * * *",
+    "schedule": "5 0 0,13 * * *",
     "allowInit": true,
     "type": "general",
     "compact": true,
@@ -164,7 +164,7 @@
     "supportCustoms": false,
     "dependencies": [
       {
-        "js-controller": ">=4.0.0"
+        "js-controller": ">=5.0.0"
       }
     ],
     "plugins": {
