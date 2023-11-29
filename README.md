@@ -29,7 +29,7 @@ This adapter provides the peak-times for the Austrian Power Grid, where power co
 -->
 ### 0.1.0-alpha.0 (2023-11-28)
 * (HGlab01) first minor release
-* (HGlab01) Node v18 or higher
+* (HGlab01) NodeJS 18 or higher
 * (HGlab01) ioBroker host (js-controller) 5.0 or higher
 
 ### 0.0.7 (2023-10-11)
