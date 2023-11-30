@@ -1,5 +1,5 @@
 ![Logo](admin/apg-info.png)
-# ioBroker.apg-info
+# ioBroker.apg-info 
 
 [![NPM version](http://img.shields.io/npm/v/iobroker.apg-info.svg)](https://www.npmjs.com/package/iobroker.apg-info)
 ![Number of Installations (stable)](http://iobroker.live/badges/apg-info-stable.svg)
