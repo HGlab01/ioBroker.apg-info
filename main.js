@@ -10,6 +10,7 @@ const utils = require('@iobroker/adapter-core');
 
 // Load your modules here, e.g.:
 const axios = require('axios');
+const https = require('https');
 
 const jsonExplorer = require('iobroker-jsonexplorer');
 const stateAttr = require(`${__dirname}/lib/stateAttr.js`); // Load attribute library
@@ -64,7 +65,7 @@ class ApgInfo extends utils.Adapter {
             this.log.debug('Internet connection detected. Everything fine!');
         }
 
-        const delay = Math.floor(Math.random() * 25000); //25000
+        const delay = Math.floor(Math.random() * 1); //25000
         this.log.info(`Delay execution by ${delay}ms to better spread API calls`);
         await jsonExplorer.sleep(delay);
 
@@ -149,12 +150,16 @@ class ApgInfo extends utils.Adapter {
         else day = day0;
         const dateStringToday = `${day.getFullYear()}-${day.getMonth() + 1}-${day.getDate()}`;
         const uri = `https://www.exaa.at/data/trading-results?delivery_day=${dateStringToday}&market=${country}&auction=market_coupling`;
-        this.log.debug(`API-Call ${uri}`);
+        this.log.info(`API-Call ${uri}`);
         console.log(`API-Call ${uri}`);
+
+        const httpsAgent = new https.Agent({
+            rejectUnauthorized: false,
+          });
 
         return new Promise((resolve, reject) => {
             // @ts-ignore
-            axios.get(uri)
+            axios.get(uri, { httpsAgent })
                 .then((response) => {
                     if (!response || !response.data) {
                         throw new Error(`getDataDayAhead(): Respone empty for URL ${uri} with status code ${response.status}`);
