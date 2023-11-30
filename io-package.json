@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "apg-info",
-    "version": "0.1.0-alpha.0",
+    "version": "0.1.0-alpha.1",
     "news": {
+      "0.1.0-alpha.1": {
+        "en": "first minor release\nNode.js 18 or higher\nioBroker host (js-controller) 5.0 or higher\nBump axios to 1.6.2\nfix 'unable to verify the first certificate'",
+        "de": "erste kleinere veröffentlichung\nNode.js 18 oder höher\nioBroker host (js-controller) 5.0 oder höher\nBump axios zu 1.6.2\n\"unfähig, das erste zertifikat zu überprüfen '",
+        "ru": "первый незначительный релиз\nNode.js 18 или выше\nioBroker host (js-controller) 5.0 или выше\nBump осье до 1.6.2\nисправить 'невозможно проверить первый сертификат « »",
+        "pt": "primeiro lançamento menor\nNode.js 18 ou superior\nhospedeiro ioBroker (js-controller) 5.0 ou superior\nBump axios para 1.6.2\ncorrigir 'unable para verificar o primeiro certificado '",
+        "nl": "eerste kleine vrijlating\n18 of hoger\nioBroker gastheer (js-controller) 5,0 of hoger\nBump Axios naar 1.6.2\nkan niet het eerste certificaat controleren '",
+        "fr": "première libération mineure\nNode.js 18 ou plus\nioBroker host (js-controller) 5.0 ou supérieur\nAxyose de bouillon à 1.6.2\nfix 'incapable de vérifier le premier certificat '",
+        "it": "primo rilascio minore\nNode.js 18 o superiore\nioBroker host (js-controller) 5.0 o superiore\nAssio di bump a 1.6.2\nfix 'in grado di verificare il primo certificato '",
+        "es": "primera liberación menor\nNode.js 18 o superior\nioBroker host (js-controller) 5.0 o superior\nAxios de bomba a 1.6.2\nfijar 'incapaz de verificar el primer certificado '",
+        "pl": "pierwsze niewielkie wydanie\n18 lub więcej\nioBroker host (js-controller) 5.0 lub wyższe\nBump axios to 1.6.2 (ang.)\numożliwia to uniknięcie pierwszego certyfikatu. '",
+        "uk": "перший незначний реліз\nNode.js 18 або вище\nioBroker host (js-controller) 5.0 або вище\nБампер аксіос до 1.6.2\nвиправити 'не вдалося перевірити перший сертифікат р",
+        "zh-cn": "首批未成年人释放\n第18条或以上\nio Broker收容(控制员)5.0或更高。\nBumpxios to 1.6.2\nf 无法核实第一次证明 评 注"
+      },
       "0.1.0-alpha.0": {
         "en": "first minor release\nNode v18 or higher\nioBroker host (js-controller) 5.0 or higher",
         "de": "erste kleinere veröffentlichung\nNode v18 oder höher\nioBroker host (js-controller) 5.0 oder höher",
@@ -80,19 +93,6 @@
         "pl": "reakcja „Error in function sendSentry:”. TypeError: Cannot read properties of undefined (reading Warning) (ang.)",
         "uk": "фіксація \"Охорона в функції sendSentry:)( \"ТипError: Не можна прочитати властивості невизнаного (попередження прочитання)",
         "zh-cn": "fix “功能发送证书:(2) “TypeError: Cannot宣读了未界定的财产(准备的战争)"
-      },
-      "0.0.5": {
-        "en": "switch data provider for prices to EXAA\nsupport DE market prices in addiotion to AT prices",
-        "de": "switch Data Provider für Preise auf EXAA\nunterstützung von DE-Marktpreisen in Ergänzung zu AT-Preisen",
-        "ru": "переключите поставщик данных для цен на EXAA\nподдержка DE рыночных цен при добавлении к AT ценам",
-        "pt": "mudar o fornecedor de dados para preços para EXAA\napoiar preços de mercado DE em adição aos preços de AT",
-        "nl": "vertaling:\nvertaling:",
-        "fr": "fournisseur de données de commutation pour les prix à EXAA\nsoutenir les prix du marché DE en addiotion aux prix AT",
-        "it": "passare il fornitore di dati per i prezzi a EXAA\nsostenere i prezzi del mercato DE in adesione ai prezzi AT",
-        "es": "cambiar el proveedor de datos para precios a EXAA\nsoporte DE precios de mercado en adiciones a precios de AT",
-        "pl": "przełączanie danych za ceny\nceny DE w dodatkach do cen AT",
-        "uk": "переключити провайдера даних за цінами на EXAA\nпідтримка DE ринкових цін в додатку на ціни",
-        "zh-cn": "a. 价格转换数据提供方向EXA\n支持DE市场价格以增加AT价格"
       }
     },
     "titleLang": {
