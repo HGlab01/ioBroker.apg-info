@@ -154,7 +154,7 @@ class ApgInfo extends utils.Adapter {
         console.log(`API-Call ${uri}`);
 
         const httpsAgent = new https.Agent({
-            rejectUnauthorized: false,
+            rejectUnauthorized: true,
         });
 
         return new Promise((resolve, reject) => {
@@ -190,7 +190,7 @@ class ApgInfo extends utils.Adapter {
             let day1 = addDays(day0, 1);
             start = day1.getTime();
             day1.setHours(23, 59, 59);
-            end = day1.getTime();
+            end = day1.getTime() + 2000;
         } else {
             start = day0.getTime();
             day0.setHours(23, 59, 59);
@@ -241,15 +241,11 @@ class ApgInfo extends utils.Adapter {
                 this.log.info(`No prices from Exaa for today, let's try Awattar`);
                 prices0Awattar = await this.getDataDayAheadAwattar(false, country);
                 this.log.debug(`Day ahead result for today is: ${JSON.stringify(prices0Awattar.data)}`);
-                //this.log.error('No marketprice found in marketprice-result!')
-                //return 'error';
             }
             if (!prices1Exaa && now.getTime() > twelve30.getTime()) {
                 this.log.info(`No prices from Exaa for tomorrow, let's try Awattar`);
                 prices1Awattar = await this.getDataDayAheadAwattar(true, country);
                 this.log.debug(`Day ahead result for tomorrow is: ${JSON.stringify(prices1Awattar.data)}`);
-                //this.log.error('No marketprice found in marketprice-result!')
-                //return 'error';
             }
 
             //Convert Awattar-structure to Exaa-structure for today
@@ -291,7 +287,9 @@ class ApgInfo extends utils.Adapter {
             }
 
             if (prices0) await jsonExplorer.TraverseJson(prices0, 'marketprice.details.today', true, true);
+            else await jsonExplorer.TraverseJson(null, 'marketprice.details.today', true, true);
             if (prices1) await jsonExplorer.TraverseJson(prices1, 'marketprice.details.tomorrow', true, true);
+            else await jsonExplorer.TraverseJson(null, 'marketprice.details.tomorrow', true, true);
 
             let jDay0 = {}, jDay1 = {}, jDay0BelowThreshold = {}, jDay1BelowThreshold = {}, jDay0AboveThreshold = {}, jDay1AboveThreshold = {};
             let days0Above = 0, days0Below = 0, days1Above = 0, days1Below = 0;
