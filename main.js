@@ -242,7 +242,7 @@ class ApgInfo extends utils.Adapter {
                 //this.log.error('No marketprice found in marketprice-result!')
                 //return 'error';
             }
-            if (!prices1Exaa && (new Date()).getHours() > 12) {
+            if (!prices1Exaa && (new Date()).getHours() >= 12) {
                 this.log.info(`No prices from Exaa for tomorrow, let's try Awattar`);
                 prices1Awattar = await this.getDataDayAheadAwattar(true, country);
                 this.log.debug(`Day ahead result for tomorrow is: ${JSON.stringify(prices1Awattar.data)}`);
