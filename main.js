@@ -231,21 +231,27 @@ class ApgInfo extends utils.Adapter {
         twelve30.setHours(12, 30);
 
         try {
-            let prices0Awattar, prices1Awattar;
-            let prices0Exaa = await this.getDataDayAheadExaa(false, country);
-            this.log.debug(`Day ahead result for today is: ${JSON.stringify(prices0Exaa)}`);
-            let prices1Exaa = await this.getDataDayAheadExaa(true, country);
-            this.log.debug(`Day ahead result for tomorrow is: ${JSON.stringify(prices1Exaa)}`);
+            let prices0Awattar, prices1Awattar, prices0Exaa, prices1Exaa;
 
-            if (!prices0Exaa) {
-                this.log.info(`No prices from Exaa for today, let's try Awattar`);
-                prices0Awattar = await this.getDataDayAheadAwattar(false, country);
-                this.log.debug(`Day ahead result for today is: ${JSON.stringify(prices0Awattar.data)}`);
-            }
-            if (!prices1Exaa && now.getTime() > twelve30.getTime()) {
-                this.log.info(`No prices from Exaa for tomorrow, let's try Awattar`);
+            prices0Awattar = await this.getDataDayAheadAwattar(false, country);
+            this.log.debug(`Day ahead result for Awattar today is: ${JSON.stringify(prices0Awattar.data)}`);
+
+            if (now.getTime() > twelve30.getTime()) {
                 prices1Awattar = await this.getDataDayAheadAwattar(true, country);
-                this.log.debug(`Day ahead result for tomorrow is: ${JSON.stringify(prices1Awattar.data)}`);
+                this.log.debug(`Day ahead result for Awattar tomorrow is: ${JSON.stringify(prices1Awattar.data)}`);
+            }
+
+            if (!prices0Awattar || !prices0Awattar.data || !prices0Awattar.data[0]) {
+                this.log.info(`No prices from Awattar for today, let's try Exaa`);
+                prices0Exaa = await this.getDataDayAheadExaa(false, country);
+                this.log.debug(`Day ahead result for Exaa today is: ${JSON.stringify(prices0Exaa)}`);
+                if (!prices0Exaa) this.log.warn('No market data for todwy');
+            }
+
+            if (!prices1Awattar || !prices1Awattar.data || !prices1Awattar.data[0] && now.getTime() > twelve30.getTime()) {
+                this.log.info(`No prices from Awattar for tomorrow, let's try Exaa`);
+                prices1Exaa = await this.getDataDayAheadExaa(true, country);
+                this.log.debug(`Day ahead result for Exaa tomorrow is: ${JSON.stringify(prices1Exaa)}`);
             }
 
             //Convert Awattar-structure to Exaa-structure for today
@@ -253,7 +259,7 @@ class ApgInfo extends utils.Adapter {
             if (prices0Exaa) {
                 prices0 = prices0Exaa;
             } else {
-                if (prices0Awattar && prices0Awattar.data) {
+                if (prices0Awattar && prices0Awattar.data && prices0Awattar.data[0]) {
                     for (const idS in prices0Awattar.data) {
                         prices0[idS] = {};
                         prices0[idS].Price = prices0Awattar.data[idS].marketprice;
@@ -272,7 +278,7 @@ class ApgInfo extends utils.Adapter {
             if (prices1Exaa) {
                 prices1 = prices1Exaa;
             } else {
-                if (prices1Awattar && prices1Awattar.data) {
+                if (prices1Awattar && prices1Awattar.data && prices1Awattar.data[0]) {
                     for (const idS in prices1Awattar.data) {
                         prices1[idS] = {};
                         prices1[idS].Price = prices1Awattar.data[idS].marketprice;
