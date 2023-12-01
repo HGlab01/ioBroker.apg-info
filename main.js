@@ -226,13 +226,14 @@ class ApgInfo extends utils.Adapter {
      * @param {string} country
      */
     async ExecuteRequestDayAhead(country) {
+        const now = new Date();
+        let twelve30 = now;
+        twelve30.setHours(12, 30);
         try {
             let prices0Awattar, prices1Awattar;
             let prices0Exaa = await this.getDataDayAheadExaa(false, country);
-            //let prices0 = jToday;
             this.log.debug(`Day ahead result for today is: ${JSON.stringify(prices0Exaa)}`);
             let prices1Exaa = await this.getDataDayAheadExaa(true, country);
-            //let prices1 = jToday;
             this.log.debug(`Day ahead result for tomorrow is: ${JSON.stringify(prices1Exaa)}`);
 
             if (!prices0Exaa) {
@@ -242,7 +243,7 @@ class ApgInfo extends utils.Adapter {
                 //this.log.error('No marketprice found in marketprice-result!')
                 //return 'error';
             }
-            if (!prices1Exaa && (new Date()).getHours() >= 12) {
+            if (!prices1Exaa && now > twelve30) {
                 this.log.info(`No prices from Exaa for tomorrow, let's try Awattar`);
                 prices1Awattar = await this.getDataDayAheadAwattar(true, country);
                 this.log.debug(`Day ahead result for tomorrow is: ${JSON.stringify(prices1Awattar.data)}`);
