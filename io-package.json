@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "apg-info",
-    "version": "0.1.0-alpha.2",
+    "version": "0.1.0-alpha.3",
     "news": {
+      "0.1.0-alpha.3": {
+        "en": "first minor release\nNode.js 18 or higher\nioBroker host (js-controller) 5.0 or higher\nBump axios to 1.6.2\nfix 'unable to verify the first certificate'\nuse both providers (Exaa and Awattar) for market prices",
+        "de": "erste kleinere veröffentlichung\nNode.js 18 oder höher\nioBroker host (js-controller) 5.0 oder höher\nBump axios zu 1.6.2\n\"unfähig, das erste zertifikat zu überprüfen '\nbeide Anbieter (Exaa und Awattar) für Marktpreise nutzen",
+        "ru": "первый незначительный релиз\nNode.js 18 или выше\nioBroker host (js-controller) 5.0 или выше\nBump осье до 1.6.2\nисправить 'невозможно проверить первый сертификат « »\nиспользовать оба поставщика (Exaa и Awattar) для рыночных цен",
+        "pt": "primeiro lançamento menor\nNode.js 18 ou superior\nhospedeiro ioBroker (js-controller) 5.0 ou superior\nBump axios para 1.6.2\ncorrigir 'unable para verificar o primeiro certificado '\nusar ambos os provedores (Exaa e Awattar) para preços de mercado",
+        "nl": "eerste kleine vrijlating\n18 of hoger\nioBroker gastheer (js-controller) 5,0 of hoger\nBump Axios naar 1.6.2\nkan niet het eerste certificaat controleren '\ngebruik beide voorzieningen voor de marktprijzen",
+        "fr": "première libération mineure\nNode.js 18 ou plus\nioBroker host (js-controller) 5.0 ou supérieur\nAxyose de bouillon à 1.6.2\nfix 'incapable de vérifier le premier certificat '\nutiliser les deux fournisseurs (Exaa et Awattar) pour les prix du marché",
+        "it": "primo rilascio minore\nNode.js 18 o superiore\nioBroker host (js-controller) 5.0 o superiore\nAssio di bump a 1.6.2\nfix 'in grado di verificare il primo certificato '\nutilizzare entrambi i fornitori (Exaa e Awattar) per i prezzi di mercato",
+        "es": "primera liberación menor\nNode.js 18 o superior\nioBroker host (js-controller) 5.0 o superior\nAxios de bomba a 1.6.2\nfijar 'incapaz de verificar el primer certificado '\nutilizar ambos proveedores (Exaa y Awattar) para los precios del mercado",
+        "pl": "pierwsze niewielkie wydanie\n18 lub więcej\nioBroker host (js-controller) 5.0 lub wyższe\nBump axios to 1.6.2 (ang.)\numożliwia to uniknięcie pierwszego certyfikatu. '\nużywają obu dostawców (Exaa i Awatar) do ceny rynkowej",
+        "uk": "перший незначний реліз\nNode.js 18 або вище\nioBroker host (js-controller) 5.0 або вище\nБампер аксіос до 1.6.2\nвиправити 'не вдалося перевірити перший сертифікат р\nвикористовувати як постачальників (Exaa і Awattar) для ринкових цін",
+        "zh-cn": "首批未成年人释放\n第18条或以上\nio Broker收容(控制员)5.0或更高。\nBumpxios to 1.6.2\nf 无法核实第一次证明 评 注\n利用市场价格的供应者(外加和亚瓦拉)"
+      },
       "0.1.0-alpha.2": {
         "en": "first minor release\nNode.js 18 or higher\nioBroker host (js-controller) 5.0 or higher\nBump axios to 1.6.2\nfix 'unable to verify the first certificate'",
         "de": "erste kleinere veröffentlichung\nNode.js 18 oder höher\nioBroker host (js-controller) 5.0 oder höher\nBump axios zu 1.6.2\n\"unfähig, das erste zertifikat zu überprüfen '",
@@ -80,19 +93,6 @@
         "pl": "Bump json-explorer to 0.1.14-alfa",
         "uk": "Bump json-explorer до 0.1.14-alpha",
         "zh-cn": "Bump json-explorer to0.1.14-alpha"
-      },
-      "0.0.6": {
-        "en": "fix \"TypeError: Cannot read properties of undefined (reading 'Warning')\"",
-        "de": "fix \"TypeError: Kann die Eigenschaften von undefinierten (Lesen von Warnungen) nicht lesen",
-        "ru": "исправить \"TypeError: Не можете читать свойства неопределенных (читая Предупреждение\")",
-        "pt": "corrigir \"TypeError: Não é possível ler propriedades de indefinido (ler aviso)",
-        "nl": "ik kan geen eigenschappen lezen van onbepaalde (lezen Warning)",
-        "fr": "corriger \"TypeError: Cannot read properties of undefined (reading Warning\")",
-        "it": "fix \"TypeError: Non possono leggere le proprietà di undefined (lettura Warning)",
-        "es": "corrija \"TypeError: No se pueden leer las propiedades de undefinido (Leer Advertencia)",
-        "pl": "metacritic: Cannot read properties of undefined (reading Warning) (ang.)",
-        "uk": "фіксація \"ТипError: Не можна прочитати властивості не визначених (попередження прочитання)",
-        "zh-cn": "fix “TypeError: Cannot宣读了未界定的财产(准备的战争)"
       }
     },
     "titleLang": {

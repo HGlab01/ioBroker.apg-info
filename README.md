@@ -27,12 +27,13 @@ This adapter provides the peak-times for the Austrian Power Grid, where power co
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### 0.1.0-alpha.2 (2023-11-30)
+### 0.1.0-alpha.3 (2023-12-01)
 * (HGlab01) first minor release
 * (HGlab01) Node.js 18 or higher
 * (HGlab01) ioBroker host (js-controller) 5.0 or higher
 * (HGlab01) Bump axios to 1.6.2
 * (HGlab01) fix 'unable to verify the first certificate'
+* (HGlab01) use both providers (Exaa and Awattar) for market prices
 
 ### 0.0.7 (2023-10-11)
 * (HGlab01) Bump json-explorer to 0.1.14
