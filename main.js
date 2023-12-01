@@ -227,8 +227,9 @@ class ApgInfo extends utils.Adapter {
      */
     async ExecuteRequestDayAhead(country) {
         const now = new Date();
-        let twelve30 = now;
+        let twelve30 = new Date();
         twelve30.setHours(12, 30);
+
         try {
             let prices0Awattar, prices1Awattar;
             let prices0Exaa = await this.getDataDayAheadExaa(false, country);
@@ -243,7 +244,7 @@ class ApgInfo extends utils.Adapter {
                 //this.log.error('No marketprice found in marketprice-result!')
                 //return 'error';
             }
-            if (!prices1Exaa && now > twelve30) {
+            if (!prices1Exaa && now.getTime() > twelve30.getTime()) {
                 this.log.info(`No prices from Exaa for tomorrow, let's try Awattar`);
                 prices1Awattar = await this.getDataDayAheadAwattar(true, country);
                 this.log.debug(`Day ahead result for tomorrow is: ${JSON.stringify(prices1Awattar.data)}`);
