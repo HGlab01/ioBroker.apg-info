@@ -137,11 +137,11 @@ class ApgInfo extends utils.Adapter {
     }
 
     /**
-     * Retrieves marketdata from REST-API
+     * Retrieves marketdata from REST-API from Exaa
      * @param {boolean} tomorrow
      * @param {string} country country of the market
      */
-    async getDataDayAhead(tomorrow, country) {
+    async getDataDayAheadExaa(tomorrow, country) {
         const day0 = cleanDate(new Date());
         const day1 = addDays(day0, 1);
         let day = new Date();
@@ -166,32 +166,131 @@ class ApgInfo extends utils.Adapter {
                     }
                 })
                 .catch(error => {
-                    console.error('Error in getDataDayAhead(): ' + error);
+                    console.error('Error in getDataDayAheadExaa(): ' + error);
                     reject(error);
                 })
         })
     }
 
     /**
+     * Retrieves marketdata from REST-API from Awattar
+     * @param {boolean} tomorrow
+     * @param {string} country country of the market
+     */
+    async getDataDayAheadAwattar(tomorrow, country) {
+        const day0 = cleanDate(new Date());
+        let start = 0;
+        let end = 0;
+        if (tomorrow) {
+            let day1 = addDays(day0, 1);
+            start = day1.getTime();
+            day1.setHours(23, 59, 59);
+            end = day1.getTime() + 2000;
+        } else {
+            start = day0.getTime();
+            day0.setHours(23, 59, 59);
+            end = day0.getTime() + 2000;
+        }
+        let uri = '';
+        if (country == 'at') uri = `https://api.awattar.at/v1/marketdata?start=${start}&end=${end}`;
+        else uri = `https://api.awattar.de/v1/marketdata?start=${start}&end=${end}`;
+        this.log.debug(`API-Call ${uri}`);
+        console.log(`API-Call ${uri}`);
+        return new Promise((resolve, reject) => {
+            // @ts-ignore
+            axios.get(uri)
+                .then((response) => {
+                    if (!response || !response.data) {
+                        throw new Error(`getDataDayAhead(): Respone empty for URL ${uri} with status code ${response.status}`);
+                    } else {
+                        this.log.debug(`Response in getDataDayAhead(): [${response.status}] ${JSON.stringify(response.data)}`);
+                        console.log(`Response in getDataDayAhead(): [${response.status}] ${JSON.stringify(response.data)}`);
+                        resolve(response.data);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error in getDataDayAheadAwattar(): ' + error);
+                    reject(error);
+                })
+        })
+    }
+
+
+    /**
      * Handles json-object and creates states for market prices
      * @param {string} country
      */
     async ExecuteRequestDayAhead(country) {
+        const now = new Date();
+        let twelve30 = new Date();
+        twelve30.setHours(12, 30);
+
         try {
-            let prices0 = await this.getDataDayAhead(false, country);
-            //let prices0 = jToday;
-            this.log.debug(`Day ahead result for today is: ${JSON.stringify(prices0)}`);
-            let prices1 = await this.getDataDayAhead(true, country);
-            //let prices1 = jToday;
-            this.log.debug(`Day ahead result for tomorrow is: ${JSON.stringify(prices1)}`);
+            let prices0Awattar, prices1Awattar, prices0Exaa, prices1Exaa;
 
-            if (!prices0) {
-                this.log.error('No marketprice found in marketprice-result!')
-                return 'error';
+            prices0Awattar = await this.getDataDayAheadAwattar(false, country);
+            this.log.debug(`Day ahead result for Awattar today is: ${JSON.stringify(prices0Awattar.data)}`);
+
+            if (now.getTime() > twelve30.getTime()) {
+                prices1Awattar = await this.getDataDayAheadAwattar(true, country);
+                this.log.debug(`Day ahead result for Awattar tomorrow is: ${JSON.stringify(prices1Awattar.data)}`);
             }
-            await jsonExplorer.TraverseJson(prices0, 'marketprice.details.today', true, true);
 
+            if (!prices0Awattar || !prices0Awattar.data || !prices0Awattar.data[0]) {
+                this.log.info(`No prices from Awattar for today, let's try Exaa`);
+                prices0Exaa = await this.getDataDayAheadExaa(false, country);
+                this.log.debug(`Day ahead result for Exaa today is: ${JSON.stringify(prices0Exaa)}`);
+                if (!prices0Exaa) this.log.warn('No market data for todwy');
+            }
+
+            if (!prices1Awattar || !prices1Awattar.data || !prices1Awattar.data[0] && now.getTime() > twelve30.getTime()) {
+                this.log.info(`No prices from Awattar for tomorrow, let's try Exaa`);
+                prices1Exaa = await this.getDataDayAheadExaa(true, country);
+                this.log.debug(`Day ahead result for Exaa tomorrow is: ${JSON.stringify(prices1Exaa)}`);
+            }
+
+            //Convert Awattar-structure to Exaa-structure for today
+            let prices0 = [];
+            if (prices0Exaa) {
+                prices0 = prices0Exaa;
+            } else {
+                if (prices0Awattar && prices0Awattar.data && prices0Awattar.data[0]) {
+                    for (const idS in prices0Awattar.data) {
+                        prices0[idS] = {};
+                        prices0[idS].Price = prices0Awattar.data[idS].marketprice;
+                        let start = new Date(prices0Awattar.data[idS].start_timestamp);
+                        let iHour = start.getHours() + 1;
+                        let sHour = String(iHour);
+                        const pad = '00';
+                        sHour = pad.substring(0, pad.length - sHour.length) + sHour;
+                        prices0[idS].Product = 'H' + sHour;
+                    }
+                }
+            }
+
+            //Convert Awattar-structure to Exaa-structure for tomorrow
+            let prices1 = [];
+            if (prices1Exaa) {
+                prices1 = prices1Exaa;
+            } else {
+                if (prices1Awattar && prices1Awattar.data && prices1Awattar.data[0]) {
+                    for (const idS in prices1Awattar.data) {
+                        prices1[idS] = {};
+                        prices1[idS].Price = prices1Awattar.data[idS].marketprice;
+                        let start = new Date(prices1Awattar.data[idS].start_timestamp);
+                        let iHour = start.getHours() + 1;
+                        let sHour = String(iHour);
+                        const pad = '00';
+                        sHour = pad.substring(0, pad.length - sHour.length) + sHour;
+                        prices1[idS].Product = 'H' + sHour;
+                    }
+                }
+            }
+
+            if (prices0) await jsonExplorer.TraverseJson(prices0, 'marketprice.details.today', true, true);
+            else await jsonExplorer.TraverseJson(null, 'marketprice.details.today', true, true);
             if (prices1) await jsonExplorer.TraverseJson(prices1, 'marketprice.details.tomorrow', true, true);
+            else await jsonExplorer.TraverseJson(null, 'marketprice.details.tomorrow', true, true);
 
             let jDay0 = {}, jDay1 = {}, jDay0BelowThreshold = {}, jDay1BelowThreshold = {}, jDay0AboveThreshold = {}, jDay1AboveThreshold = {};
             let days0Above = 0, days0Below = 0, days1Above = 0, days1Below = 0;
