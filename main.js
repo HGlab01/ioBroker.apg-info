@@ -10,7 +10,6 @@ const utils = require('@iobroker/adapter-core');
 
 // Load your modules here, e.g.:
 const axios = require('axios');
-const https = require('https');
 
 const jsonExplorer = require('iobroker-jsonexplorer');
 const stateAttr = require(`${__dirname}/lib/stateAttr.js`); // Load attribute library
@@ -153,13 +152,9 @@ class ApgInfo extends utils.Adapter {
         this.log.debug(`API-Call ${uri}`);
         console.log(`API-Call ${uri}`);
 
-        const httpsAgent = new https.Agent({
-            rejectUnauthorized: true,
-        });
-
         return new Promise((resolve, reject) => {
             // @ts-ignore
-            axios.get(uri, { httpsAgent })
+            axios.get(uri)
                 .then((response) => {
                     if (!response || !response.data) {
                         throw new Error(`getDataDayAhead(): Respone empty for URL ${uri} with status code ${response.status}`);
