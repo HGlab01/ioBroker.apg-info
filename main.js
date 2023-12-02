@@ -171,7 +171,7 @@ class ApgInfo extends utils.Adapter {
                     }
                 })
                 .catch(error => {
-                    console.error('Error in getDataDayAhead(): ' + error);
+                    console.error('Error in getDataDayAheadExaa(): ' + error);
                     reject(error);
                 })
         })
@@ -214,7 +214,7 @@ class ApgInfo extends utils.Adapter {
                     }
                 })
                 .catch(error => {
-                    console.error('Error in getDataDayAhead(): ' + error);
+                    console.error('Error in getDataDayAheadAwattar(): ' + error);
                     reject(error);
                 })
         })
