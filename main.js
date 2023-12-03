@@ -230,23 +230,22 @@ class ApgInfo extends utils.Adapter {
 
             prices0Awattar = await this.getDataDayAheadAwattar(false, country);
             this.log.debug(`Day ahead result for Awattar today is: ${JSON.stringify(prices0Awattar.data)}`);
-
-            if (now.getTime() > twelve30.getTime()) {
-                prices1Awattar = await this.getDataDayAheadAwattar(true, country);
-                this.log.debug(`Day ahead result for Awattar tomorrow is: ${JSON.stringify(prices1Awattar.data)}`);
-            }
-
             if (!prices0Awattar || !prices0Awattar.data || !prices0Awattar.data[0]) {
                 this.log.info(`No prices from Awattar for today, let's try Exaa`);
                 prices0Exaa = await this.getDataDayAheadExaa(false, country);
                 this.log.debug(`Day ahead result for Exaa today is: ${JSON.stringify(prices0Exaa)}`);
-                if (!prices0Exaa) this.log.warn('No market data for todwy');
+                if (!prices0Exaa) this.log.warn('No market data for today');
             }
 
-            if (!prices1Awattar || !prices1Awattar.data || !prices1Awattar.data[0] && now.getTime() > twelve30.getTime()) {
-                this.log.info(`No prices from Awattar for tomorrow, let's try Exaa`);
-                prices1Exaa = await this.getDataDayAheadExaa(true, country);
-                this.log.debug(`Day ahead result for Exaa tomorrow is: ${JSON.stringify(prices1Exaa)}`);
+            //Check tomorrow only after 12.30
+            if (now.getTime() > twelve30.getTime()) {
+                prices1Awattar = await this.getDataDayAheadAwattar(true, country);
+                this.log.debug(`Day ahead result for Awattar tomorrow is: ${JSON.stringify(prices1Awattar.data)}`);
+                if (!prices1Awattar || !prices1Awattar.data || !prices1Awattar.data[0] && now.getTime() > twelve30.getTime()) {
+                    this.log.info(`No prices from Awattar for tomorrow, let's try Exaa`);
+                    prices1Exaa = await this.getDataDayAheadExaa(true, country);
+                    this.log.debug(`Day ahead result for Exaa tomorrow is: ${JSON.stringify(prices1Exaa)}`);
+                }
             }
 
             //Convert Awattar-structure to Exaa-structure for today
