@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "apg-info",
-    "version": "0.1.0-alpha.5",
+    "version": "0.1.0",
     "news": {
+      "0.1.0": {
+        "en": "first minor release\nNode.js 18 or higher\nioBroker host (js-controller) 5.0 or higher\nBump axios to 1.6.2\nuse both providers (Awattar and Exaa) for market prices",
+        "de": "erste kleinere veröffentlichung\nNode.js 18 oder höher\nioBroker host (js-controller) 5.0 oder höher\nBump axios zu 1.6.2\nbeide Anbieter (Awattar und Exaa) für Marktpreise nutzen",
+        "ru": "первый незначительный релиз\nNode.js 18 или выше\nioBroker host (js-controller) 5.0 или выше\nBump осье до 1.6.2\nиспользовать оба провайдера (Awattar и Exaa) для рыночных цен",
+        "pt": "primeiro lançamento menor\nNode.js 18 ou superior\nhospedeiro ioBroker (js-controller) 5.0 ou superior\nBump axios para 1.6.2\nusar ambos os provedores (Awattar e Exaa) para preços de mercado",
+        "nl": "eerste kleine vrijlating\n18 of hoger\nioBroker gastheer (js-controller) 5,0 of hoger\nBump Axios naar 1.6.2\ngebruik beide providers (Awattar en Exaaa voor de marktprijzen",
+        "fr": "première libération mineure\nNode.js 18 ou plus\nioBroker host (js-controller) 5.0 ou supérieur\nAxyose de bouillon à 1.6.2\nutiliser les deux fournisseurs (Awattar et Exaa) pour les prix du marché",
+        "it": "primo rilascio minore\nNode.js 18 o superiore\nioBroker host (js-controller) 5.0 o superiore\nAssio di bump a 1.6.2\nutilizzare entrambi i fornitori (Awattar e Exaa) per i prezzi di mercato",
+        "es": "primera liberación menor\nNode.js 18 o superior\nioBroker host (js-controller) 5.0 o superior\nAxios de bomba a 1.6.2\nutilizar ambos proveedores (Awattar y Exaa) para los precios del mercado",
+        "pl": "pierwsze niewielkie wydanie\n18 lub więcej\nioBroker host (js-controller) 5.0 lub wyższe\nBump axios to 1.6.2 (ang.)\nużywają obu dostawców (Awatar i Exaaaa) do cen rynkowych",
+        "uk": "перший незначний реліз\nNode.js 18 або вище\nioBroker host (js-controller) 5.0 або вище\nБампер аксіос до 1.6.2\nвикористовувати як постачальників (Awattar і Exaa) для ринкових цін",
+        "zh-cn": "首批未成年人释放\n第18条或以上\nio Broker收容(控制员)5.0或更高。\nBumpxios to 1.6.2\n对市场价格的供应者(Awanar和Exaa)"
+      },
       "0.1.0-alpha.5": {
         "en": "first minor release\nNode.js 18 or higher\nioBroker host (js-controller) 5.0 or higher\nBump axios to 1.6.2\nuse both providers (Exaa and Awattar) for market prices",
         "de": "erste kleinere veröffentlichung\nNode.js 18 oder höher\nioBroker host (js-controller) 5.0 oder höher\nBump axios zu 1.6.2\nbeide Anbieter (Exaa und Awattar) für Marktpreise nutzen",
@@ -80,19 +93,6 @@
         "pl": "pierwsze niewielkie wydanie\nW 18 lub więcej\nioBroker host (js-controller) 5.0 lub wyższe",
         "uk": "перший незначний реліз\nNode v18 або вище\nioBroker host (js-controller) 5.0 або вище",
         "zh-cn": "首批未成年人释放\n第18条\nio Broker收容(控制员)5.0或更高。"
-      },
-      "0.0.7": {
-        "en": "Bump json-explorer to 0.1.14\nadd jsonChart-json for market prices",
-        "de": "Stoßdämpfer bis 0,1.14\nhinzufügen von json Schaubild für Marktpreise",
-        "ru": "Bump json-explorer до 0.1.14\nдобавить json Chart-json по рыночным ценам",
-        "pt": "Bump json-explorer para 0.1.14\nadicionar json Chart-json para preços de mercado",
-        "nl": "Bump Json-explorer tot 0.1.14\nvoeg Json toe Chart-Json voor marktprijzen",
-        "fr": "Bump json-explorer à 0,1.14\najouter json Graphique-json pour les prix du marché",
-        "it": "Bump json-explorer a 0.1.14\naggiungere json Grafico-json per i prezzi di mercato",
-        "es": "Bump json-explorer to 0.1.14\nañadir json Chart-json para los precios del mercado",
-        "pl": "Bump json-explorer do 0,1.14\ndodać Chartjson za ceny rynkowe",
-        "uk": "Bump json-explorer до 0.1.14\nдодати json Графік роботи на ринку",
-        "zh-cn": "Bump json-explorer to 014\n增 编 市场价格图表"
       }
     },
     "titleLang": {
