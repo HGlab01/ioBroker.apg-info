@@ -260,7 +260,7 @@ class ApgInfo extends utils.Adapter {
     async ExecuteRequestDayAhead(country) {
         const now = new Date();
         let ten30 = new Date();
-        ten30.setHours(10, 30);
+        ten30.setHours(0, 0);  //TODO!!!!
 
         try {
             let prices0Awattar, prices1Awattar, prices0Exaa, prices1Exaa, prices1Exaa1015;
