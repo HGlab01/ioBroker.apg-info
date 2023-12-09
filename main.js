@@ -64,7 +64,7 @@ class ApgInfo extends utils.Adapter {
             this.log.debug('Internet connection detected. Everything fine!');
         }
 
-        const delay = Math.floor(Math.random() * 25000); //25000
+        const delay = Math.floor(Math.random() * 1); //25000
         this.log.info(`Delay execution by ${delay}ms to better spread API calls`);
         await jsonExplorer.sleep(delay);
 
@@ -157,16 +157,53 @@ class ApgInfo extends utils.Adapter {
             axios.get(uri)
                 .then((response) => {
                     if (!response || !response.data) {
-                        throw new Error(`getDataDayAhead(): Respone empty for URL ${uri} with status code ${response.status}`);
+                        throw new Error(`getDataDayAheadExaa(): Respone empty for URL ${uri} with status code ${response.status}`);
                     } else {
-                        this.log.debug(`Response in getDataDayAhead(): [${response.status}] ${JSON.stringify(response.data)}`);
-                        console.log(`Response in getDataDayAhead(): [${response.status}] ${JSON.stringify(response.data)}`);
+                        this.log.debug(`Response in getDataDayAheadExaa(): [${response.status}] ${JSON.stringify(response.data)}`);
+                        console.log(`Response in getDataDayAheadExaa(): [${response.status}] ${JSON.stringify(response.data)}`);
                         if (response.data.data) resolve(response.data.data.h);
                         else resolve(null);
                     }
                 })
                 .catch(error => {
                     console.error('Error in getDataDayAheadExaa(): ' + error);
+                    reject(error);
+                })
+        })
+    }
+
+    /**
+     * Retrieves marketdata from REST-API from Exaa
+     * @param {string} country country of the market
+     */
+    async getDataDayAheadExaa1015(country) {
+        country = country.toUpperCase();
+        const day0 = cleanDate(new Date());
+        const day = addDays(day0, 1);
+
+        const dateStringToday = `${day.getFullYear()}-${day.getMonth() + 1}-${day.getDate()}`;
+        const uri = `https://www.exaa.at/data/market-results?delivery_day=${dateStringToday}&market=${country}&auction=1015`;
+        this.log.info(`API-Call ${uri}`);
+        console.log(`API-Call ${uri}`);
+
+        return new Promise((resolve, reject) => {
+            // @ts-ignore
+            axios.get(uri)
+                .then((response) => {
+                    if (!response || !response.data) {
+                        throw new Error(`getDataDayAheadExaa1015(): Respone empty for URL ${uri} with status code ${response.status}`);
+                    } else {
+                        this.log.info(`Response in getDataDayAheadExaa1015(): [${response.status}] ${JSON.stringify(response.data)}`);
+                        console.log(`Response in getDataDayAheadExaa1015(): [${response.status}] ${JSON.stringify(response.data)}`);
+                        if (response.data) {
+                            if (country == 'AT') resolve(response.data.AT.price);
+                            else resolve(response.data.DE.price);
+                        }
+                        else resolve(null);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error in getDataDayAheadExaa1015(): ' + error);
                     reject(error);
                 })
         })
@@ -201,10 +238,10 @@ class ApgInfo extends utils.Adapter {
             axios.get(uri)
                 .then((response) => {
                     if (!response || !response.data) {
-                        throw new Error(`getDataDayAhead(): Respone empty for URL ${uri} with status code ${response.status}`);
+                        throw new Error(`getDataDayAheadAwattar(): Respone empty for URL ${uri} with status code ${response.status}`);
                     } else {
-                        this.log.debug(`Response in getDataDayAhead(): [${response.status}] ${JSON.stringify(response.data)}`);
-                        console.log(`Response in getDataDayAhead(): [${response.status}] ${JSON.stringify(response.data)}`);
+                        this.log.debug(`Response in getDataDayAheadAwattar(): [${response.status}] ${JSON.stringify(response.data)}`);
+                        console.log(`Response in getDataDayAheadAwattar(): [${response.status}] ${JSON.stringify(response.data)}`);
                         resolve(response.data);
                     }
                 })
@@ -222,11 +259,11 @@ class ApgInfo extends utils.Adapter {
      */
     async ExecuteRequestDayAhead(country) {
         const now = new Date();
-        let twelve30 = new Date();
-        twelve30.setHours(12, 30);
+        let ten30 = new Date();
+        ten30.setHours(10, 30);
 
         try {
-            let prices0Awattar, prices1Awattar, prices0Exaa, prices1Exaa;
+            let prices0Awattar, prices1Awattar, prices0Exaa, prices1Exaa, prices1Exaa1015;
 
             prices0Awattar = await this.getDataDayAheadAwattar(false, country);
             this.log.debug(`Day ahead result for Awattar today is: ${JSON.stringify(prices0Awattar.data)}`);
@@ -238,13 +275,17 @@ class ApgInfo extends utils.Adapter {
             }
 
             //Check tomorrow only after 12.30
-            if (now.getTime() > twelve30.getTime()) {
+            if (now.getTime() > ten30.getTime()) {
                 prices1Awattar = await this.getDataDayAheadAwattar(true, country);
-                this.log.debug(`Day ahead result for Awattar tomorrow is: ${JSON.stringify(prices1Awattar.data)}`);
-                if (!prices1Awattar || !prices1Awattar.data || !prices1Awattar.data[0] && now.getTime() > twelve30.getTime()) {
+                this.log.info(`Day ahead result for Awattar tomorrow is: ${JSON.stringify(prices1Awattar.data)}`);
+                if (!prices1Awattar || !prices1Awattar.data || !prices1Awattar.data[0] && now.getTime() > ten30.getTime()) {
                     this.log.info(`No prices from Awattar for tomorrow, let's try Exaa`);
                     prices1Exaa = await this.getDataDayAheadExaa(true, country);
                     this.log.debug(`Day ahead result for Exaa tomorrow is: ${JSON.stringify(prices1Exaa)}`);
+                    if (!prices1Exaa) {
+                        prices1Exaa1015 = await this.getDataDayAheadExaa1015(country);
+                        this.log.info(`Day ahead result for Exaa1015 tomorrow is: ${JSON.stringify(prices1Exaa1015)}`);
+                    }
                 }
             }
 
@@ -267,12 +308,25 @@ class ApgInfo extends utils.Adapter {
                 }
             }
 
-            //Convert Awattar-structure to Exaa-structure for tomorrow
+            //Convert structures to Exaa-structure for tomorrow
             let prices1 = [];
             if (prices1Exaa) {
                 prices1 = prices1Exaa;
-            } else {
-                if (prices1Awattar && prices1Awattar.data && prices1Awattar.data[0]) {
+            }
+            else {
+                if (prices1Exaa1015) {
+                    for (const idS in prices1Exaa1015) {
+                        prices1[idS] = {};
+                        prices1[idS].Price = prices1Exaa1015[idS].y;
+                        let iHour = prices1Exaa1015[idS].x;
+                        let sHour = String(iHour);
+                        const pad = '00';
+                        sHour = pad.substring(0, pad.length - sHour.length) + sHour;
+                        prices1[idS].Product = 'H' + sHour;
+                    }
+                    this.log.info(JSON.stringify(prices1));
+                }
+                else if (prices1Awattar && prices1Awattar.data && prices1Awattar.data[0]) {
                     for (const idS in prices1Awattar.data) {
                         prices1[idS] = {};
                         prices1[idS].Price = prices1Awattar.data[idS].marketprice;
