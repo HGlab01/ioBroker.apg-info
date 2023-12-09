@@ -64,7 +64,7 @@ class ApgInfo extends utils.Adapter {
             this.log.debug('Internet connection detected. Everything fine!');
         }
 
-        const delay = Math.floor(Math.random() * 1); //25000
+        const delay = Math.floor(Math.random() * 25000); //25000
         this.log.info(`Delay execution by ${delay}ms to better spread API calls`);
         await jsonExplorer.sleep(delay);
 
@@ -183,7 +183,7 @@ class ApgInfo extends utils.Adapter {
 
         const dateStringToday = `${day.getFullYear()}-${day.getMonth() + 1}-${day.getDate()}`;
         const uri = `https://www.exaa.at/data/market-results?delivery_day=${dateStringToday}&market=${country}&auction=1015`;
-        this.log.info(`API-Call ${uri}`);
+        this.log.debug(`API-Call ${uri}`);
         console.log(`API-Call ${uri}`);
 
         return new Promise((resolve, reject) => {
@@ -193,7 +193,7 @@ class ApgInfo extends utils.Adapter {
                     if (!response || !response.data) {
                         throw new Error(`getDataDayAheadExaa1015(): Respone empty for URL ${uri} with status code ${response.status}`);
                     } else {
-                        this.log.info(`Response in getDataDayAheadExaa1015(): [${response.status}] ${JSON.stringify(response.data)}`);
+                        this.log.debug(`Response in getDataDayAheadExaa1015(): [${response.status}] ${JSON.stringify(response.data)}`);
                         console.log(`Response in getDataDayAheadExaa1015(): [${response.status}] ${JSON.stringify(response.data)}`);
                         if (response.data) {
                             if (country == 'AT') resolve(response.data.AT.price);
@@ -274,17 +274,18 @@ class ApgInfo extends utils.Adapter {
                 if (!prices0Exaa) this.log.warn('No market data for today');
             }
 
-            //Check tomorrow only after 12.30
+            //Check tomorrow only after 10.30
             if (now.getTime() > ten30.getTime()) {
                 prices1Awattar = await this.getDataDayAheadAwattar(true, country);
-                this.log.info(`Day ahead result for Awattar tomorrow is: ${JSON.stringify(prices1Awattar.data)}`);
+                this.log.debug(`Day ahead result for Awattar tomorrow is: ${JSON.stringify(prices1Awattar.data)}`);
                 if (!prices1Awattar || !prices1Awattar.data || !prices1Awattar.data[0] && now.getTime() > ten30.getTime()) {
                     this.log.info(`No prices from Awattar for tomorrow, let's try Exaa`);
                     prices1Exaa = await this.getDataDayAheadExaa(true, country);
                     this.log.debug(`Day ahead result for Exaa tomorrow is: ${JSON.stringify(prices1Exaa)}`);
                     if (!prices1Exaa) {
+                        this.log.info('No prices from Exaa MC, last change Exaa 10.15 auction');
                         prices1Exaa1015 = await this.getDataDayAheadExaa1015(country);
-                        this.log.info(`Day ahead result for Exaa1015 tomorrow is: ${JSON.stringify(prices1Exaa1015)}`);
+                        this.log.debug(`Day ahead result for Exaa1015 tomorrow is: ${JSON.stringify(prices1Exaa1015)}`);
                     }
                 }
             }
@@ -324,7 +325,7 @@ class ApgInfo extends utils.Adapter {
                         sHour = pad.substring(0, pad.length - sHour.length) + sHour;
                         prices1[idS].Product = 'H' + sHour;
                     }
-                    this.log.info(JSON.stringify(prices1));
+                    this.log.debug('prices1Exaa1015 converted to: ' + JSON.stringify(prices1));
                 }
                 else if (prices1Awattar && prices1Awattar.data && prices1Awattar.data[0]) {
                     for (const idS in prices1Awattar.data) {
