@@ -258,9 +258,9 @@ class ApgInfo extends utils.Adapter {
      * @param {string} country
      */
     async ExecuteRequestDayAhead(country) {
-        const now = new Date();
-        let ten30 = new Date();
-        ten30.setHours(0, 0);  //TODO!!!!
+        //const now = new Date();
+        //let ten30 = new Date();
+        //ten30.setHours(0, 0);  //TODO!!!!
 
         try {
             let prices0Awattar, prices1Awattar, prices0Exaa, prices1Exaa, prices1Exaa1015;
@@ -275,10 +275,10 @@ class ApgInfo extends utils.Adapter {
             }
 
             //Check tomorrow only after 10.30
-            if (now.getTime() > ten30.getTime()) {
+            //if (now.getTime() > ten30.getTime()) {
                 prices1Awattar = await this.getDataDayAheadAwattar(true, country);
                 this.log.debug(`Day ahead result for Awattar tomorrow is: ${JSON.stringify(prices1Awattar.data)}`);
-                if (!prices1Awattar || !prices1Awattar.data || !prices1Awattar.data[0] && now.getTime() > ten30.getTime()) {
+                if (!prices1Awattar || !prices1Awattar.data || !prices1Awattar.data[0] /*&& now.getTime() > ten30.getTime()*/) {
                     this.log.info(`No prices from Awattar for tomorrow, let's try Exaa`);
                     prices1Exaa = await this.getDataDayAheadExaa(true, country);
                     this.log.debug(`Day ahead result for Exaa tomorrow is: ${JSON.stringify(prices1Exaa)}`);
@@ -288,12 +288,13 @@ class ApgInfo extends utils.Adapter {
                         this.log.debug(`Day ahead result for Exaa1015 tomorrow is: ${JSON.stringify(prices1Exaa1015)}`);
                     }
                 }
-            }
+            //}
 
             //Convert Awattar-structure to Exaa-structure for today
             let prices0 = [];
             if (prices0Exaa) {
                 prices0 = prices0Exaa;
+                jsonExplorer.stateSetCreate('marketprice.today.source','Source','exaaMC');
             } else {
                 if (prices0Awattar && prices0Awattar.data && prices0Awattar.data[0]) {
                     for (const idS in prices0Awattar.data) {
@@ -306,6 +307,7 @@ class ApgInfo extends utils.Adapter {
                         sHour = pad.substring(0, pad.length - sHour.length) + sHour;
                         prices0[idS].Product = 'H' + sHour;
                     }
+                    jsonExplorer.stateSetCreate('marketprice.today.source','Source','awattar');
                 }
             }
 
@@ -313,6 +315,7 @@ class ApgInfo extends utils.Adapter {
             let prices1 = [];
             if (prices1Exaa) {
                 prices1 = prices1Exaa;
+                jsonExplorer.stateSetCreate('marketprice.tomorrow.source','Source','exaaMC');
             }
             else {
                 if (prices1Exaa1015) {
@@ -326,6 +329,7 @@ class ApgInfo extends utils.Adapter {
                         prices1[idS].Product = 'H' + sHour;
                     }
                     this.log.debug('prices1Exaa1015 converted to: ' + JSON.stringify(prices1));
+                    jsonExplorer.stateSetCreate('marketprice.tomorrow.source','Source','exaa1015');
                 }
                 else if (prices1Awattar && prices1Awattar.data && prices1Awattar.data[0]) {
                     for (const idS in prices1Awattar.data) {
@@ -338,6 +342,7 @@ class ApgInfo extends utils.Adapter {
                         sHour = pad.substring(0, pad.length - sHour.length) + sHour;
                         prices1[idS].Product = 'H' + sHour;
                     }
+                    jsonExplorer.stateSetCreate('marketprice.tomorrow.source','Source','awattar');
                 }
             }
 
