@@ -175,7 +175,8 @@
   },
   "native": {
     "threshold": 10,
-    "country": "at"
+    "country": "at",
+    "forecast": false
   },
   "objects": [],
   "instanceObjects": []

@@ -42,12 +42,16 @@ class ApgInfo extends utils.Adapter {
      */
     async onReady() {
         let country = '';
+        let forecast = false;
         // Initialize adapter
         jsonExplorer.sendVersionInfo(version);
         this.log.info('Started with JSON-Explorer version ' + jsonExplorer.version);
 
         if (this.config.threshold) threshold = this.config.threshold;
         else this.log.info('Market price threshold not found and set to 10');
+
+        if (this.config.forecast != undefined) forecast = this.config.forecast;
+        else this.log.info('Forecast config not found and set to disbaled');
 
         if (this.config.country) country = this.config.country;
         else {
@@ -70,7 +74,7 @@ class ApgInfo extends utils.Adapter {
 
         await jsonExplorer.setLastStartTime();
         let resultPeakHours = await this.ExecuteRequestPeakHours();
-        let resultDayAhead = await this.ExecuteRequestDayAhead(country);
+        let resultDayAhead = await this.ExecuteRequestDayAhead(country, forecast);
 
         if (resultPeakHours == 'error' || resultDayAhead == 'error') {
             this.terminate ? this.terminate(utils.EXIT_CODES.UNCAUGHT_EXCEPTION) : process.exit(0);
@@ -256,8 +260,9 @@ class ApgInfo extends utils.Adapter {
     /**
      * Handles json-object and creates states for market prices
      * @param {string} country
+     * @param {boolean} forecast
      */
-    async ExecuteRequestDayAhead(country) {
+    async ExecuteRequestDayAhead(country, forecast) {
         let source1 = '', source0 = '';
         try {
             let prices0Awattar, prices1Awattar, prices0Exaa, prices1Exaa, prices1Exaa1015;
@@ -276,7 +281,7 @@ class ApgInfo extends utils.Adapter {
                 this.log.info(`No prices from Awattar for tomorrow, let's try Exaa`);
                 prices1Exaa = await this.getDataDayAheadExaa(true, country);
                 this.log.debug(`Day ahead result for Exaa tomorrow is: ${JSON.stringify(prices1Exaa)}`);
-                if (!prices1Exaa) {
+                if (!prices1Exaa && forecast) {
                     this.log.info('No prices from Exaa MC, last change Exaa 10.15 auction');
                     prices1Exaa1015 = await this.getDataDayAheadExaa1015(country);
                     this.log.debug(`Day ahead result for Exaa1015 tomorrow is: ${JSON.stringify(prices1Exaa1015)}`);
