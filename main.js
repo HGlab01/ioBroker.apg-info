@@ -655,7 +655,7 @@ class ApgInfo extends utils.Adapter {
         chart.graphs[0].data = todayData;
         await jsonExplorer.stateSetCreate('marketprice.today.jsonChart', 'jsonChart', JSON.stringify(chart));
         chart.graphs[0].data = tomorrowData;
-        if (sourceTomorrow = 'exaa1015') chart.graphs[0].color = "lightgray";
+        if (sourceTomorrow == 'exaa1015') chart.graphs[0].color = "lightgray";
         await jsonExplorer.stateSetCreate('marketprice.tomorrow.jsonChart', 'jsonChart', JSON.stringify(chart));
     }
 
