@@ -258,6 +258,7 @@ class ApgInfo extends utils.Adapter {
      * @param {string} country
      */
     async ExecuteRequestDayAhead(country) {
+        let source1 = '', source0 = '';
         try {
             let prices0Awattar, prices1Awattar, prices0Exaa, prices1Exaa, prices1Exaa1015;
 
@@ -286,7 +287,8 @@ class ApgInfo extends utils.Adapter {
             let prices0 = [];
             if (prices0Exaa) {
                 prices0 = prices0Exaa;
-                jsonExplorer.stateSetCreate('marketprice.today.source', 'Source', 'exaaMC');
+                source0 = 'exaaMC';
+                jsonExplorer.stateSetCreate('marketprice.today.source', 'Source', source0);
             } else {
                 if (prices0Awattar && prices0Awattar.data && prices0Awattar.data[0]) {
                     for (const idS in prices0Awattar.data) {
@@ -299,7 +301,8 @@ class ApgInfo extends utils.Adapter {
                         sHour = pad.substring(0, pad.length - sHour.length) + sHour;
                         prices0[idS].Product = 'H' + sHour;
                     }
-                    jsonExplorer.stateSetCreate('marketprice.today.source', 'Source', 'awattar');
+                    source0 = 'awattar';
+                    jsonExplorer.stateSetCreate('marketprice.today.source', 'Source', source0);
                 }
             }
 
@@ -307,7 +310,8 @@ class ApgInfo extends utils.Adapter {
             let prices1 = [];
             if (prices1Exaa) {
                 prices1 = prices1Exaa;
-                jsonExplorer.stateSetCreate('marketprice.tomorrow.source', 'Source', 'exaaMC');
+                source1 = 'exaaMC';
+                jsonExplorer.stateSetCreate('marketprice.tomorrow.source', 'Source', source1);
             }
             else {
                 if (prices1Exaa1015) {
@@ -321,7 +325,8 @@ class ApgInfo extends utils.Adapter {
                         prices1[idS].Product = 'H' + sHour;
                     }
                     this.log.debug('prices1Exaa1015 converted to: ' + JSON.stringify(prices1));
-                    jsonExplorer.stateSetCreate('marketprice.tomorrow.source', 'Source', 'exaa1015');
+                    source1 = 'exaa1015';
+                    jsonExplorer.stateSetCreate('marketprice.tomorrow.source', 'Source', source1);
                 }
                 else if (prices1Awattar && prices1Awattar.data && prices1Awattar.data[0]) {
                     for (const idS in prices1Awattar.data) {
@@ -334,7 +339,8 @@ class ApgInfo extends utils.Adapter {
                         sHour = pad.substring(0, pad.length - sHour.length) + sHour;
                         prices1[idS].Product = 'H' + sHour;
                     }
-                    jsonExplorer.stateSetCreate('marketprice.tomorrow.source', 'Source', 'awattar');
+                    source1 = 'awattar';
+                    jsonExplorer.stateSetCreate('marketprice.tomorrow.source', 'Source', source1);
                 }
             }
 
@@ -421,7 +427,7 @@ class ApgInfo extends utils.Adapter {
             jDay1BelowThreshold.numberOfHours = days1Below;
             jDay1AboveThreshold.numberOfHours = days1Above;
 
-            this.createChart(arrAll0, arrAll1);
+            this.createChart(arrAll0, arrAll1, source1);
 
             this.log.debug('Marketprice jDay0: ' + JSON.stringify(jDay0));
             this.log.debug('Marketprice jDay0BelowThreshold: ' + JSON.stringify(jDay0BelowThreshold));
@@ -600,7 +606,7 @@ class ApgInfo extends utils.Adapter {
         return date.getTime();
     }
 
-    async createChart(arrayToday, arrayTomorrow) {
+    async createChart(arrayToday, arrayTomorrow, sourceTomorrow) {
         let todayData = [];
         let tomorrowData = [];
         let chart = {};
@@ -630,7 +636,7 @@ class ApgInfo extends utils.Adapter {
         chart.graphs = [];
         chart.graphs[0] = {};
         chart.graphs[0].type = "line";
-        chart.graphs[0].color = "lightgray";
+        chart.graphs[0].color = "gray";
         chart.graphs[0].line_steppedLine = true;
         chart.graphs[0].xAxis_timeFormats = { "hour": "HH" };
         chart.graphs[0].xAxis_time_unit = "hour";
@@ -649,6 +655,7 @@ class ApgInfo extends utils.Adapter {
         chart.graphs[0].data = todayData;
         await jsonExplorer.stateSetCreate('marketprice.today.jsonChart', 'jsonChart', JSON.stringify(chart));
         chart.graphs[0].data = tomorrowData;
+        if (sourceTomorrow = 'exaa1015') chart.graphs[0].color = "lightgray";
         await jsonExplorer.stateSetCreate('marketprice.tomorrow.jsonChart', 'jsonChart', JSON.stringify(chart));
     }
 
