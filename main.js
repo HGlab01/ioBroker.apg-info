@@ -42,12 +42,16 @@ class ApgInfo extends utils.Adapter {
      */
     async onReady() {
         let country = '';
+        let forecast = false;
         // Initialize adapter
         jsonExplorer.sendVersionInfo(version);
         this.log.info('Started with JSON-Explorer version ' + jsonExplorer.version);
 
         if (this.config.threshold) threshold = this.config.threshold;
         else this.log.info('Market price threshold not found and set to 10');
+
+        if (this.config.forecast != undefined) forecast = this.config.forecast;
+        else this.log.info('Forecast config not found and set to disbaled');
 
         if (this.config.country) country = this.config.country;
         else {
@@ -70,7 +74,7 @@ class ApgInfo extends utils.Adapter {
 
         await jsonExplorer.setLastStartTime();
         let resultPeakHours = await this.ExecuteRequestPeakHours();
-        let resultDayAhead = await this.ExecuteRequestDayAhead(country);
+        let resultDayAhead = await this.ExecuteRequestDayAhead(country, forecast);
 
         if (resultPeakHours == 'error' || resultDayAhead == 'error') {
             this.terminate ? this.terminate(utils.EXIT_CODES.UNCAUGHT_EXCEPTION) : process.exit(0);
@@ -157,16 +161,53 @@ class ApgInfo extends utils.Adapter {
             axios.get(uri)
                 .then((response) => {
                     if (!response || !response.data) {
-                        throw new Error(`getDataDayAhead(): Respone empty for URL ${uri} with status code ${response.status}`);
+                        throw new Error(`getDataDayAheadExaa(): Respone empty for URL ${uri} with status code ${response.status}`);
                     } else {
-                        this.log.debug(`Response in getDataDayAhead(): [${response.status}] ${JSON.stringify(response.data)}`);
-                        console.log(`Response in getDataDayAhead(): [${response.status}] ${JSON.stringify(response.data)}`);
+                        this.log.debug(`Response in getDataDayAheadExaa(): [${response.status}] ${JSON.stringify(response.data)}`);
+                        console.log(`Response in getDataDayAheadExaa(): [${response.status}] ${JSON.stringify(response.data)}`);
                         if (response.data.data) resolve(response.data.data.h);
                         else resolve(null);
                     }
                 })
                 .catch(error => {
                     console.error('Error in getDataDayAheadExaa(): ' + error);
+                    reject(error);
+                })
+        })
+    }
+
+    /**
+     * Retrieves marketdata from REST-API from Exaa
+     * @param {string} country country of the market
+     */
+    async getDataDayAheadExaa1015(country) {
+        country = country.toUpperCase();
+        const day0 = cleanDate(new Date());
+        const day = addDays(day0, 1);
+
+        const dateStringToday = `${day.getFullYear()}-${day.getMonth() + 1}-${day.getDate()}`;
+        const uri = `https://www.exaa.at/data/market-results?delivery_day=${dateStringToday}&market=${country}&auction=1015`;
+        this.log.debug(`API-Call ${uri}`);
+        console.log(`API-Call ${uri}`);
+
+        return new Promise((resolve, reject) => {
+            // @ts-ignore
+            axios.get(uri)
+                .then((response) => {
+                    if (!response || !response.data) {
+                        throw new Error(`getDataDayAheadExaa1015(): Respone empty for URL ${uri} with status code ${response.status}`);
+                    } else {
+                        this.log.debug(`Response in getDataDayAheadExaa1015(): [${response.status}] ${JSON.stringify(response.data)}`);
+                        console.log(`Response in getDataDayAheadExaa1015(): [${response.status}] ${JSON.stringify(response.data)}`);
+                        if (response.data && response.data.AT && response.data.AT.price) {
+                            if (country == 'AT') resolve(response.data.AT.price);
+                            else resolve(response.data.DE.price);
+                        }
+                        else resolve(null);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error in getDataDayAheadExaa1015(): ' + error);
                     reject(error);
                 })
         })
@@ -201,10 +242,10 @@ class ApgInfo extends utils.Adapter {
             axios.get(uri)
                 .then((response) => {
                     if (!response || !response.data) {
-                        throw new Error(`getDataDayAhead(): Respone empty for URL ${uri} with status code ${response.status}`);
+                        throw new Error(`getDataDayAheadAwattar(): Respone empty for URL ${uri} with status code ${response.status}`);
                     } else {
-                        this.log.debug(`Response in getDataDayAhead(): [${response.status}] ${JSON.stringify(response.data)}`);
-                        console.log(`Response in getDataDayAhead(): [${response.status}] ${JSON.stringify(response.data)}`);
+                        this.log.debug(`Response in getDataDayAheadAwattar(): [${response.status}] ${JSON.stringify(response.data)}`);
+                        console.log(`Response in getDataDayAheadAwattar(): [${response.status}] ${JSON.stringify(response.data)}`);
                         resolve(response.data);
                     }
                 })
@@ -219,14 +260,12 @@ class ApgInfo extends utils.Adapter {
     /**
      * Handles json-object and creates states for market prices
      * @param {string} country
+     * @param {boolean} forecast
      */
-    async ExecuteRequestDayAhead(country) {
-        const now = new Date();
-        let twelve30 = new Date();
-        twelve30.setHours(12, 30);
-
+    async ExecuteRequestDayAhead(country, forecast) {
+        let source1 = '', source0 = '';
         try {
-            let prices0Awattar, prices1Awattar, prices0Exaa, prices1Exaa;
+            let prices0Awattar, prices1Awattar, prices0Exaa, prices1Exaa, prices1Exaa1015;
 
             prices0Awattar = await this.getDataDayAheadAwattar(false, country);
             this.log.debug(`Day ahead result for Awattar today is: ${JSON.stringify(prices0Awattar.data)}`);
@@ -236,15 +275,16 @@ class ApgInfo extends utils.Adapter {
                 this.log.debug(`Day ahead result for Exaa today is: ${JSON.stringify(prices0Exaa)}`);
                 if (!prices0Exaa) this.log.warn('No market data for today');
             }
-
-            //Check tomorrow only after 12.30
-            if (now.getTime() > twelve30.getTime()) {
-                prices1Awattar = await this.getDataDayAheadAwattar(true, country);
-                this.log.debug(`Day ahead result for Awattar tomorrow is: ${JSON.stringify(prices1Awattar.data)}`);
-                if (!prices1Awattar || !prices1Awattar.data || !prices1Awattar.data[0] && now.getTime() > twelve30.getTime()) {
-                    this.log.info(`No prices from Awattar for tomorrow, let's try Exaa`);
-                    prices1Exaa = await this.getDataDayAheadExaa(true, country);
-                    this.log.debug(`Day ahead result for Exaa tomorrow is: ${JSON.stringify(prices1Exaa)}`);
+            prices1Awattar = await this.getDataDayAheadAwattar(true, country);
+            this.log.debug(`Day ahead result for Awattar tomorrow is: ${JSON.stringify(prices1Awattar.data)}`);
+            if (!prices1Awattar || !prices1Awattar.data || !prices1Awattar.data[0]) {
+                this.log.info(`No prices from Awattar for tomorrow, let's try Exaa`);
+                prices1Exaa = await this.getDataDayAheadExaa(true, country);
+                this.log.debug(`Day ahead result for Exaa tomorrow is: ${JSON.stringify(prices1Exaa)}`);
+                if (!prices1Exaa && forecast) {
+                    this.log.info('No prices from Exaa MC, last change Exaa 10.15 auction');
+                    prices1Exaa1015 = await this.getDataDayAheadExaa1015(country);
+                    this.log.debug(`Day ahead result for Exaa1015 tomorrow is: ${JSON.stringify(prices1Exaa1015)}`);
                 }
             }
 
@@ -252,6 +292,8 @@ class ApgInfo extends utils.Adapter {
             let prices0 = [];
             if (prices0Exaa) {
                 prices0 = prices0Exaa;
+                source0 = 'exaaMC';
+                jsonExplorer.stateSetCreate('marketprice.today.source', 'Source', source0);
             } else {
                 if (prices0Awattar && prices0Awattar.data && prices0Awattar.data[0]) {
                     for (const idS in prices0Awattar.data) {
@@ -264,15 +306,34 @@ class ApgInfo extends utils.Adapter {
                         sHour = pad.substring(0, pad.length - sHour.length) + sHour;
                         prices0[idS].Product = 'H' + sHour;
                     }
+                    source0 = 'awattar';
+                    jsonExplorer.stateSetCreate('marketprice.today.source', 'Source', source0);
                 }
             }
 
-            //Convert Awattar-structure to Exaa-structure for tomorrow
+            //Convert structures to Exaa-structure for tomorrow
             let prices1 = [];
             if (prices1Exaa) {
                 prices1 = prices1Exaa;
-            } else {
-                if (prices1Awattar && prices1Awattar.data && prices1Awattar.data[0]) {
+                source1 = 'exaaMC';
+                jsonExplorer.stateSetCreate('marketprice.tomorrow.source', 'Source', source1);
+            }
+            else {
+                if (prices1Exaa1015) {
+                    for (const idS in prices1Exaa1015) {
+                        prices1[idS] = {};
+                        prices1[idS].Price = prices1Exaa1015[idS].y;
+                        let iHour = prices1Exaa1015[idS].x;
+                        let sHour = String(iHour);
+                        const pad = '00';
+                        sHour = pad.substring(0, pad.length - sHour.length) + sHour;
+                        prices1[idS].Product = 'H' + sHour;
+                    }
+                    this.log.debug('prices1Exaa1015 converted to: ' + JSON.stringify(prices1));
+                    source1 = 'exaa1015';
+                    jsonExplorer.stateSetCreate('marketprice.tomorrow.source', 'Source', source1);
+                }
+                else if (prices1Awattar && prices1Awattar.data && prices1Awattar.data[0]) {
                     for (const idS in prices1Awattar.data) {
                         prices1[idS] = {};
                         prices1[idS].Price = prices1Awattar.data[idS].marketprice;
@@ -283,6 +344,8 @@ class ApgInfo extends utils.Adapter {
                         sHour = pad.substring(0, pad.length - sHour.length) + sHour;
                         prices1[idS].Product = 'H' + sHour;
                     }
+                    source1 = 'awattar';
+                    jsonExplorer.stateSetCreate('marketprice.tomorrow.source', 'Source', source1);
                 }
             }
 
@@ -369,7 +432,7 @@ class ApgInfo extends utils.Adapter {
             jDay1BelowThreshold.numberOfHours = days1Below;
             jDay1AboveThreshold.numberOfHours = days1Above;
 
-            this.createChart(arrAll0, arrAll1);
+            this.createChart(arrAll0, arrAll1, source1);
 
             this.log.debug('Marketprice jDay0: ' + JSON.stringify(jDay0));
             this.log.debug('Marketprice jDay0BelowThreshold: ' + JSON.stringify(jDay0BelowThreshold));
@@ -548,7 +611,7 @@ class ApgInfo extends utils.Adapter {
         return date.getTime();
     }
 
-    async createChart(arrayToday, arrayTomorrow) {
+    async createChart(arrayToday, arrayTomorrow, sourceTomorrow) {
         let todayData = [];
         let tomorrowData = [];
         let chart = {};
@@ -578,7 +641,7 @@ class ApgInfo extends utils.Adapter {
         chart.graphs = [];
         chart.graphs[0] = {};
         chart.graphs[0].type = "line";
-        chart.graphs[0].color = "lightgray";
+        chart.graphs[0].color = "gray";
         chart.graphs[0].line_steppedLine = true;
         chart.graphs[0].xAxis_timeFormats = { "hour": "HH" };
         chart.graphs[0].xAxis_time_unit = "hour";
@@ -597,6 +660,7 @@ class ApgInfo extends utils.Adapter {
         chart.graphs[0].data = todayData;
         await jsonExplorer.stateSetCreate('marketprice.today.jsonChart', 'jsonChart', JSON.stringify(chart));
         chart.graphs[0].data = tomorrowData;
+        if (sourceTomorrow == 'exaa1015') chart.graphs[0].color = "lightgray";
         await jsonExplorer.stateSetCreate('marketprice.tomorrow.jsonChart', 'jsonChart', JSON.stringify(chart));
     }
 

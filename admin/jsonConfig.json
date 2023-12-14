@@ -58,6 +58,11 @@
                 }
             ],
             "label": "Country of the market"
+        },
+        "forecast": {
+            "type": "checkbox",
+            "label": "Forecast based on 10.15 auction",
+            "default": false
         }
     }
 }

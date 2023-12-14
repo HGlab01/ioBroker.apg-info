@@ -150,7 +150,7 @@
     "readme": "https://github.com/HGlab01/ioBroker.apg-info/blob/main/README.md",
     "loglevel": "info",
     "mode": "schedule",
-    "schedule": "5 0 0,13 * * *",
+    "schedule": "5 0 0,15 * * *",
     "allowInit": true,
     "type": "general",
     "compact": true,
@@ -175,7 +175,8 @@
   },
   "native": {
     "threshold": 10,
-    "country": "at"
+    "country": "at",
+    "forecast": false
   },
   "objects": [],
   "instanceObjects": []
