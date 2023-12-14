@@ -53,7 +53,7 @@ This adapter provides the peak-times for the Austrian Power Grid, where power co
 ## License
 MIT License
 
-Copyright (c) 2023 HGlab01 <myiobrokeradapters@gmail.com>
+Copyright (c) 2024 HGlab01 <myiobrokeradapters@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
