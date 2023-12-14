@@ -61,7 +61,6 @@
         },
         "forecast": {
             "type": "checkbox",
-            "newLine": true,
             "label": "Forecast based on 10.15 auction",
             "default": false
         }
