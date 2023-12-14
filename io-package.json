@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "apg-info",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "news": {
+      "0.1.1": {
+        "en": "support Exxa10.15 auction as forecast",
+        "de": "unterstützung Exxa10.15 Auktion als Prognose",
+        "ru": "поддержка Exxa10.15 аукцион как прогноз",
+        "pt": "suporte Leilão Exxa10.15 como previsão",
+        "nl": "vertaling:",
+        "fr": "appui aux enchères Exxa10.15",
+        "it": "supporto Exxa10.15 aste come previsto",
+        "es": "apoyo Exxa10.15 subasta como previsión",
+        "pl": "aukcje Exxa10.15",
+        "uk": "support Exxa10.15 Аукціон як прогноз",
+        "zh-cn": "支持Exxa10.15拍卖"
+      },
       "0.1.0": {
         "en": "first minor release\nNode.js 18 or higher\nioBroker host (js-controller) 5.0 or higher\nBump axios to 1.6.2\nuse both providers (Awattar and Exaa) for market prices",
         "de": "erste kleinere veröffentlichung\nNode.js 18 oder höher\nioBroker host (js-controller) 5.0 oder höher\nBump axios zu 1.6.2\nbeide Anbieter (Awattar und Exaa) für Marktpreise nutzen",
@@ -80,19 +93,6 @@
         "pl": "pierwsze niewielkie wydanie\n18 lub więcej\nioBroker host (js-controller) 5.0 lub wyższe\nBump axios to 1.6.2 (ang.)\numożliwia to uniknięcie pierwszego certyfikatu. '",
         "uk": "перший незначний реліз\nNode.js 18 або вище\nioBroker host (js-controller) 5.0 або вище\nБампер аксіос до 1.6.2\nвиправити 'не вдалося перевірити перший сертифікат р",
         "zh-cn": "首批未成年人释放\n第18条或以上\nio Broker收容(控制员)5.0或更高。\nBumpxios to 1.6.2\nf 无法核实第一次证明 评 注"
-      },
-      "0.1.0-alpha.0": {
-        "en": "first minor release\nNode v18 or higher\nioBroker host (js-controller) 5.0 or higher",
-        "de": "erste kleinere veröffentlichung\nNode v18 oder höher\nioBroker host (js-controller) 5.0 oder höher",
-        "ru": "первый незначительный релиз\nNode v18 или выше\nioBroker host (js-controller) 5.0 или выше",
-        "pt": "primeiro lançamento menor\nNode v18 ou superior\nhospedeiro ioBroker (js-controller) 5.0 ou superior",
-        "nl": "eerste kleine vrijlating\nNode v18 of hoger\nioBroker gastheer (js-controller) 5,0 of hoger",
-        "fr": "première libération mineure\nNode v18 ou supérieur\nioBroker host (js-controller) 5.0 ou supérieur",
-        "it": "primo rilascio minore\nNodo v18 o superiore\nioBroker host (js-controller) 5.0 o superiore",
-        "es": "primera liberación menor\nNodo v18 o superior\nioBroker host (js-controller) 5.0 o superior",
-        "pl": "pierwsze niewielkie wydanie\nW 18 lub więcej\nioBroker host (js-controller) 5.0 lub wyższe",
-        "uk": "перший незначний реліз\nNode v18 або вище\nioBroker host (js-controller) 5.0 або вище",
-        "zh-cn": "首批未成年人释放\n第18条\nio Broker收容(控制员)5.0或更高。"
       }
     },
     "titleLang": {
