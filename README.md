@@ -27,8 +27,7 @@ This adapter provides the peak-times for the Austrian Power Grid, where power co
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-
-### __WORK IN PROGRESS__
+### 0.1.2 (2023-12-22)
 * (HGlab01) Fix issue "no marketprice found" when price is 0.00
 
 ### 0.1.1 (2023-12-14)
@@ -47,10 +46,6 @@ This adapter provides the peak-times for the Austrian Power Grid, where power co
 
 ### 0.0.6 (2023-10-04)
 * (HGlab01) fix "TypeError: Cannot read properties of undefined (reading 'Warning')"
-
-### 0.0.5 (2023-10-03)
-* (HGlab01) switch data provider for prices to EXAA
-* (HGlab01) support DE market prices in addiotion to AT prices
 
 ## License
 MIT License

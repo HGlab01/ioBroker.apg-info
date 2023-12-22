@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "apg-info",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "news": {
+      "0.1.2": {
+        "en": "Fix issue \"no marketprice found\" when price is 0.00",
+        "de": "Problem beheben \"kein Marktpreis gefunden\" wenn Preis ist 0.00",
+        "ru": "Исправлена проблема \"нет найденной рыночной цены\" когда цена 0.00",
+        "pt": "Corrigir problema \"nenhum preço de mercado encontrado\" quando o preço é 0.00",
+        "nl": "\"Geen marktprice gevonden\" als de prijs 0.00 is",
+        "fr": "Correction \"aucun prix du marché trouvé\" quand le prix est 0.00",
+        "it": "Risolvere il problema \"no marketprice found\" quando il prezzo è 0.00",
+        "es": "Edición fija \"no hay precio de mercado encontrado\" cuando el precio es 0.00",
+        "pl": "Kwestia rynkowa nie jest znana, gdy cena wynosi 0,00",
+        "uk": "Фіксований випуск \"не знайдено ринкову ціну\" при ціні 0.00",
+        "zh-cn": "当价格为0.00时,固定问题“没有市场价格”"
+      },
       "0.1.1": {
         "en": "support Exxa10.15 auction as forecast",
         "de": "unterstützung Exxa10.15 Auktion als Prognose",
@@ -69,19 +82,6 @@
         "zh-cn": "首批未成年人释放\n第18条或以上\nio Broker收容(控制员)5.0或更高。\nBumpxios to 1.6.2\nf 无法核实第一次证明 评 注\n利用市场价格的供应者(外加和亚瓦拉)"
       },
       "0.1.0-alpha.2": {
-        "en": "first minor release\nNode.js 18 or higher\nioBroker host (js-controller) 5.0 or higher\nBump axios to 1.6.2\nfix 'unable to verify the first certificate'",
-        "de": "erste kleinere veröffentlichung\nNode.js 18 oder höher\nioBroker host (js-controller) 5.0 oder höher\nBump axios zu 1.6.2\n\"unfähig, das erste zertifikat zu überprüfen '",
-        "ru": "первый незначительный релиз\nNode.js 18 или выше\nioBroker host (js-controller) 5.0 или выше\nBump осье до 1.6.2\nисправить 'невозможно проверить первый сертификат « »",
-        "pt": "primeiro lançamento menor\nNode.js 18 ou superior\nhospedeiro ioBroker (js-controller) 5.0 ou superior\nBump axios para 1.6.2\ncorrigir 'unable para verificar o primeiro certificado '",
-        "nl": "eerste kleine vrijlating\n18 of hoger\nioBroker gastheer (js-controller) 5,0 of hoger\nBump Axios naar 1.6.2\nkan niet het eerste certificaat controleren '",
-        "fr": "première libération mineure\nNode.js 18 ou plus\nioBroker host (js-controller) 5.0 ou supérieur\nAxyose de bouillon à 1.6.2\nfix 'incapable de vérifier le premier certificat '",
-        "it": "primo rilascio minore\nNode.js 18 o superiore\nioBroker host (js-controller) 5.0 o superiore\nAssio di bump a 1.6.2\nfix 'in grado di verificare il primo certificato '",
-        "es": "primera liberación menor\nNode.js 18 o superior\nioBroker host (js-controller) 5.0 o superior\nAxios de bomba a 1.6.2\nfijar 'incapaz de verificar el primer certificado '",
-        "pl": "pierwsze niewielkie wydanie\n18 lub więcej\nioBroker host (js-controller) 5.0 lub wyższe\nBump axios to 1.6.2 (ang.)\numożliwia to uniknięcie pierwszego certyfikatu. '",
-        "uk": "перший незначний реліз\nNode.js 18 або вище\nioBroker host (js-controller) 5.0 або вище\nБампер аксіос до 1.6.2\nвиправити 'не вдалося перевірити перший сертифікат р",
-        "zh-cn": "首批未成年人释放\n第18条或以上\nio Broker收容(控制员)5.0或更高。\nBumpxios to 1.6.2\nf 无法核实第一次证明 评 注"
-      },
-      "0.1.0-alpha.1": {
         "en": "first minor release\nNode.js 18 or higher\nioBroker host (js-controller) 5.0 or higher\nBump axios to 1.6.2\nfix 'unable to verify the first certificate'",
         "de": "erste kleinere veröffentlichung\nNode.js 18 oder höher\nioBroker host (js-controller) 5.0 oder höher\nBump axios zu 1.6.2\n\"unfähig, das erste zertifikat zu überprüfen '",
         "ru": "первый незначительный релиз\nNode.js 18 или выше\nioBroker host (js-controller) 5.0 или выше\nBump осье до 1.6.2\nисправить 'невозможно проверить первый сертификат « »",

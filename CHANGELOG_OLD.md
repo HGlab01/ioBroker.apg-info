@@ -1,4 +1,8 @@
 # Older changes
+## 0.0.5 (2023-10-03)
+* (HGlab01) switch data provider for prices to EXAA
+* (HGlab01) support DE market prices in addiotion to AT prices
+
 ## 0.0.3 (2023-09-24)
 * (HGlab01) add point in times sorted as array
 * (HGlab01) add average price
