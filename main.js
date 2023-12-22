@@ -359,7 +359,7 @@ class ApgInfo extends utils.Adapter {
 
             //manage today (day0)
             for (const idS in prices0) {
-                if (!prices0[idS].Price) {
+                if (prices0[idS].Price == undefined) {
                     this.log.error('No marketprice found in marketprice-result for today!')
                     return 'error';
                 }
@@ -391,7 +391,7 @@ class ApgInfo extends utils.Adapter {
 
             //manage tomorrow (day1)
             for (const idS in prices1) {
-                if (!prices1[idS].Price) {
+                if (prices1[idS].Price == undefined) {
                     this.log.error('No marketprice found in marketprice-result for tomorrow!')
                     return 'error';
                 }

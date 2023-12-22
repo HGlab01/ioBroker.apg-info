@@ -27,6 +27,10 @@ This adapter provides the peak-times for the Austrian Power Grid, where power co
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
+
+### __WORK IN PROGRESS__
+* (HGlab01) Fix issue "no marketprice found" when price is 0.00
+
 ### 0.1.1 (2023-12-14)
 * (HGlab01) support Exxa10.15 auction as forecast
 
