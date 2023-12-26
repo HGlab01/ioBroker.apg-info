@@ -135,7 +135,8 @@ class ApgInfo extends utils.Adapter {
                 })
                 .catch(error => {
                     console.error('Error in getDataPeakHours(): ' + error);
-                    reject(error);
+                    if (error.response.status >= 500) resolve(null);
+                    else reject(error);
                 })
         })
     }
@@ -171,7 +172,8 @@ class ApgInfo extends utils.Adapter {
                 })
                 .catch(error => {
                     console.error('Error in getDataDayAheadExaa(): ' + error);
-                    reject(error);
+                    if (error.response.status >= 500) resolve(null);
+                    else reject(error);
                 })
         })
     }
@@ -208,7 +210,8 @@ class ApgInfo extends utils.Adapter {
                 })
                 .catch(error => {
                     console.error('Error in getDataDayAheadExaa1015(): ' + error);
-                    reject(error);
+                    if (error.response.status >= 500) resolve(null);
+                    else reject(error);
                 })
         })
     }
