@@ -27,6 +27,9 @@ This adapter provides the peak-times for the Austrian Power Grid, where power co
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
+### __WORK IN PROGRESS__
+* (HGlab01) Fix issue AxiosError: Request failed with status code 500 (#170)
+
 ### 0.1.2 (2023-12-22)
 * (HGlab01) Fix issue "no marketprice found" when price is 0.00
 * (HGlab01) Bump json-explorer to 0.1.15
