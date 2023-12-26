@@ -1,4 +1,7 @@
 # Older changes
+## 0.0.6 (2023-10-04)
+* (HGlab01) fix "TypeError: Cannot read properties of undefined (reading 'Warning')"
+
 ## 0.0.5 (2023-10-03)
 * (HGlab01) switch data provider for prices to EXAA
 * (HGlab01) support DE market prices in addiotion to AT prices

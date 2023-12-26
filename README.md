@@ -27,7 +27,7 @@ This adapter provides the peak-times for the Austrian Power Grid, where power co
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### __WORK IN PROGRESS__
+### 0.1.3 (2023-12-26)
 * (HGlab01) Fix issue AxiosError: Request failed with status code 500 (#170)
 
 ### 0.1.2 (2023-12-22)
@@ -47,9 +47,6 @@ This adapter provides the peak-times for the Austrian Power Grid, where power co
 ### 0.0.7 (2023-10-11)
 * (HGlab01) Bump json-explorer to 0.1.14
 * (HGlab01) add jsonChart-json for market prices
-
-### 0.0.6 (2023-10-04)
-* (HGlab01) fix "TypeError: Cannot read properties of undefined (reading 'Warning')"
 
 ## License
 MIT License
