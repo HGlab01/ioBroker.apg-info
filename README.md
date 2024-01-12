@@ -27,6 +27,9 @@ This adapter provides the peak-times for the Austrian Power Grid, where power co
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
+### 0.1.4-alpha.0 (2024-01-12)
+* (HGlab01) fix "Cannot read properties of undefined (reading 'status')"
+
 ### 0.1.3 (2023-12-26)
 * (HGlab01) Fix issue AxiosError: Request failed with status code 500 (#170)
 
@@ -43,10 +46,6 @@ This adapter provides the peak-times for the Austrian Power Grid, where power co
 * (HGlab01) ioBroker host (js-controller) 5.0 or higher
 * (HGlab01) Bump axios to 1.6.2
 * (HGlab01) use both providers (Awattar and Exaa) for market prices
-
-### 0.0.7 (2023-10-11)
-* (HGlab01) Bump json-explorer to 0.1.14
-* (HGlab01) add jsonChart-json for market prices
 
 ## License
 MIT License
