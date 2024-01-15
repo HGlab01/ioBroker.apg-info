@@ -534,9 +534,9 @@ class ApgInfo extends utils.Adapter {
             let result = await this.getDataPeakHours();
             this.log.debug(`Peak hour result is: ${JSON.stringify(result)}`);
 
-            if (!result.StatusInfos) {
-                this.log.error('No StatusInfos found in peak-result!')
-                return 'error';
+            if (!result || !result.StatusInfos) {
+                this.log.error('No data available for peak-result!')
+                return;
             }
 
             let day0 = cleanDate(new Date());
