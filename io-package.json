@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "apg-info",
-    "version": "0.1.4",
+    "version": "0.1.5-alpha.0",
     "news": {
+      "0.1.5-alpha.0": {
+        "en": "Add fee, grid costs and tax calculation",
+        "de": "Gebühren, Netzkosten und Steuerberechnung hinzufügen",
+        "ru": "Добавить плату, сетки и налоговый расчет",
+        "pt": "Adicione taxa, custos de grade e cálculo de impostos",
+        "nl": "Toevoegen vergoeding, netkosten en belastingberekening",
+        "fr": "Ajouter les frais, les coûts de grille et le calcul de la taxe",
+        "it": "Aggiungere costi, costi di griglia e calcolo fiscale",
+        "es": "Añada cuota, costos de rejilla y cálculo de impuestos",
+        "pl": "Dodaj opłatę, koszty sieci i obliczenia podatkowe",
+        "uk": "Додати плату, витрати на сітку та розрахунок податку",
+        "zh-cn": "增加收费、电网成本和税收计算"
+      },
       "0.1.4": {
         "en": "fix 'Cannot read properties of undefined (reading 'status')'",
         "de": "fix 'Kann nicht lesen Eigenschaften von undefiniert (lesen 'status') '",
@@ -80,19 +93,6 @@
         "pl": "pierwsze niewielkie wydanie\n18 lub więcej\nioBroker host (js-controller) 5.0 lub wyższe\nBump axios to 1.6.2 (ang.)\nużywają obu dostawców (Awatar i Exaaaa) do cen rynkowych",
         "uk": "перший незначний реліз\nNode.js 18 або вище\nioBroker host (js-controller) 5.0 або вище\nБампер аксіос до 1.6.2\nвикористовувати як постачальників (Awattar і Exaa) для ринкових цін",
         "zh-cn": "首批未成年人释放\n第18条或以上\nio Broker收容(控制员)5.0或更高。\nBumpxios to 1.6.2\n对市场价格的供应者(Awanar和Exaa)"
-      },
-      "0.1.0-alpha.5": {
-        "en": "first minor release\nNode.js 18 or higher\nioBroker host (js-controller) 5.0 or higher\nBump axios to 1.6.2\nuse both providers (Exaa and Awattar) for market prices",
-        "de": "erste kleinere veröffentlichung\nNode.js 18 oder höher\nioBroker host (js-controller) 5.0 oder höher\nBump axios zu 1.6.2\nbeide Anbieter (Exaa und Awattar) für Marktpreise nutzen",
-        "ru": "первый незначительный релиз\nNode.js 18 или выше\nioBroker host (js-controller) 5.0 или выше\nBump осье до 1.6.2\nиспользовать оба поставщика (Exaa и Awattar) для рыночных цен",
-        "pt": "primeiro lançamento menor\nNode.js 18 ou superior\nhospedeiro ioBroker (js-controller) 5.0 ou superior\nBump axios para 1.6.2\nusar ambos os provedores (Exaa e Awattar) para preços de mercado",
-        "nl": "eerste kleine vrijlating\n18 of hoger\nioBroker gastheer (js-controller) 5,0 of hoger\nBump Axios naar 1.6.2\ngebruik beide voorzieningen voor de marktprijzen",
-        "fr": "première libération mineure\nNode.js 18 ou plus\nioBroker host (js-controller) 5.0 ou supérieur\nAxyose de bouillon à 1.6.2\nutiliser les deux fournisseurs (Exaa et Awattar) pour les prix du marché",
-        "it": "primo rilascio minore\nNode.js 18 o superiore\nioBroker host (js-controller) 5.0 o superiore\nAssio di bump a 1.6.2\nutilizzare entrambi i fornitori (Exaa e Awattar) per i prezzi di mercato",
-        "es": "primera liberación menor\nNode.js 18 o superior\nioBroker host (js-controller) 5.0 o superior\nAxios de bomba a 1.6.2\nutilizar ambos proveedores (Exaa y Awattar) para los precios del mercado",
-        "pl": "pierwsze niewielkie wydanie\n18 lub więcej\nioBroker host (js-controller) 5.0 lub wyższe\nBump axios to 1.6.2 (ang.)\nużywają obu dostawców (Exaa i Awatar) do ceny rynkowej",
-        "uk": "перший незначний реліз\nNode.js 18 або вище\nioBroker host (js-controller) 5.0 або вище\nБампер аксіос до 1.6.2\nвикористовувати як постачальників (Exaa і Awattar) для ринкових цін",
-        "zh-cn": "首批未成年人释放\n第18条或以上\nio Broker收容(控制员)5.0或更高。\nBumpxios to 1.6.2\n利用市场价格的供应者(外加和亚瓦拉)"
       }
     },
     "titleLang": {
