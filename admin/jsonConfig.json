@@ -137,8 +137,7 @@
                     "type": "staticText",
                     "text": {
                         "de": "Calculation: <br> provider = tradePrice * feeRelative + feeAbsolute; <br> charges = (tradePrice + provider) * charges; <br> vat = (tradePrice + provider + charges + gridCosts) * vat; <br> price = tradePrice + provider + charges + gridCosts + vat;",
-                        "en": "Berechnug wie folgt: (Börsenpreis * (1+Gebühr%) + Gebühr_absolut) * (1+USt+weitere_Abgaben) + Netzengelte * (1+USt)"
-                    },
+                        "en": "Calculation: <br> provider = tradePrice * feeRelative + feeAbsolute; <br> charges = (tradePrice + provider) * charges; <br> vat = (tradePrice + provider + charges + gridCosts) * vat; <br> price = tradePrice + provider + charges + gridCosts + vat;"                    },
                     "newLine": true,
                     "hidden": "!data.calculate"
                 }
