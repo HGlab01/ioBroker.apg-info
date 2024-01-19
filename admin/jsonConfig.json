@@ -1,68 +1,148 @@
 {
     "i18n": false,
-    "type": "panel",
+    "type": "tabs",
     "items": {
-        "threshold": {
-            "type": "number",
-            "label": {
-                "en": "Threshold market price (€ct/kWh)",
-                "de": "Schwellenmarktpreis (€ct/kWh)",
-                "ru": "Порог рыночная цена (€ct/kWh)",
-                "pt": "Preço de mercado limiar (€ct/kWh)",
-                "nl": "Dreig de marktprijs",
-                "fr": "Prix du marché seuil (€ct/kWh)",
-                "it": "Prezzo di mercato (€ct/kWh)",
-                "es": "Precio del mercado de propiedad (€ct/kWh)",
-                "pl": "Cena rynkowa (ok",
-                "uk": "Потрібна ціна ринку (€ct/kWh)",
-                "zh-cn": "市场价格(ct/kWh)"
-            },
-            "min": 0,
-            "step": 0.1,
-            "newLine": true
-        },
-        "country": {
-            "type": "select",
-            "options": [
-                {
+        "General": {
+            "type": "panel",
+            "label": "General",
+            "items": {
+                "threshold": {
+                    "type": "number",
                     "label": {
-                        "en": "Austria",
-                        "de": "Österreich",
-                        "ru": "Austria",
-                        "pt": "Austria",
-                        "nl": "Austria",
-                        "fr": "Austria",
-                        "it": "Austria",
-                        "es": "Austria",
-                        "pl": "Austria",
-                        "uk": "Austria",
-                        "zh-cn": "Austria"
+                        "en": "Threshold market price (€ct/kWh)",
+                        "de": "Schwellenmarktpreis (€ct/kWh)",
+                        "ru": "Порог рыночная цена (€ct/kWh)",
+                        "pt": "Preço de mercado limiar (€ct/kWh)",
+                        "nl": "Dreig de marktprijs",
+                        "fr": "Prix du marché seuil (€ct/kWh)",
+                        "it": "Prezzo di mercato (€ct/kWh)",
+                        "es": "Precio del mercado de propiedad (€ct/kWh)",
+                        "pl": "Cena rynkowa (ok",
+                        "uk": "Потрібна ціна ринку (€ct/kWh)",
+                        "zh-cn": "市场价格(ct/kWh)"
                     },
-                    "value": "at"
+                    "min": 0,
+                    "step": 0.1,
+                    "newLine": true
                 },
-                {
+                "country": {
+                    "type": "select",
+                    "md":2,
+                    "options": [
+                        {
+                            "label": {
+                                "en": "Austria",
+                                "de": "Österreich",
+                                "ru": "Austria",
+                                "pt": "Austria",
+                                "nl": "Austria",
+                                "fr": "Austria",
+                                "it": "Austria",
+                                "es": "Austria",
+                                "pl": "Austria",
+                                "uk": "Austria",
+                                "zh-cn": "Austria"
+                            },
+                            "value": "at"
+                        },
+                        {
+                            "label": {
+                                "en": "Germany",
+                                "de": "Deutschland",
+                                "ru": "Germany",
+                                "pt": "Germany",
+                                "nl": "Germany",
+                                "fr": "Germany",
+                                "it": "Germany",
+                                "es": "Germany",
+                                "pl": "Germany",
+                                "uk": "Germany",
+                                "zh-cn": "Germany"
+                            },
+                            "value": "de"
+                        }
+                    ],
                     "label": {
-                        "en": "Germany",
-                        "de": "Deutschland",
-                        "ru": "Germany",
-                        "pt": "Germany",
-                        "nl": "Germany",
-                        "fr": "Germany",
-                        "it": "Germany",
-                        "es": "Germany",
-                        "pl": "Germany",
-                        "uk": "Germany",
-                        "zh-cn": "Germany"
-                    },
-                    "value": "de"
+                        "en": "Country of the market",
+                        "de": "Land der Strombörse"
+                    }
+                },
+                "forecast": {
+                    "type": "checkbox",
+                    "label": "Forecast based on 10.15 auction",
+                    "default": false
                 }
-            ],
-            "label": "Country of the market"
+            }
         },
-        "forecast": {
-            "type": "checkbox",
-            "label": "Forecast based on 10.15 auction",
-            "default": false
+        "Calculation": {
+            "type": "panel",
+            "label": "Calculation",
+            "items": {
+                "calculate": {
+                    "newLine": true,
+                    "type": "checkbox",
+                    "label": {
+                        "en": "Activate price calculation",
+                        "de": "Preiskalkulation aktivieren"
+                    }
+                },
+                "feeAbsolute": {
+                    "newLine": true,
+                    "type": "number",
+                    "label": {
+                        "en": "Provider fee absolute (€ct/kWh)",
+                        "de": "Provider Gebühr Absolut (€ct/kWh)"
+                    },
+                    "hidden": "!data.calculate"
+                },
+                "feeRelative": {
+                    "type": "number",
+                    "label": {
+                        "en": "Provider fee (%)",
+                        "de": "Provider Gebühr (%)"
+                    },
+                    "hidden": "!data.calculate"
+                },
+                "charges": {
+                    "type": "number",
+                    "label": {
+                        "en": "other taxes (%)",
+                        "de": "weitere Abgaben (%)"
+                    },
+                    "hidden": "!data.calculate"
+                },
+                "gridCosts": {
+                    "type": "number",
+                    "label": {
+                        "en": "grid costs (€ct/kWh)",
+                        "de": "Netzentgelte (€ct/kWh)"
+                    },
+                    "hidden": "!data.calculate"
+                },
+                "vat": {
+                    "type": "number",
+                    "label": {
+                        "en": "VAT (%)",
+                        "de": "USt (%)"
+                    },
+                    "hidden": "!data.calculate"
+                },
+                "_text0": {
+                    "type": "staticText",
+                    "text": "",
+                    "newLine": true,
+                    "hidden": "!data.calculate"
+                },
+                "_text1": {
+                    "type": "staticText",
+                    "text": {
+                        "de": "Calculation: <br> provider = tradePrice * feeRelative + feeAbsolute; <br> charges = (tradePrice + provider) * charges; <br> vat = (tradePrice + provider + charges + gridCosts) * vat; <br> price = tradePrice + provider + charges + gridCosts + vat;",
+                        "en": "Berechnug wie folgt: (Börsenpreis * (1+Gebühr%) + Gebühr_absolut) * (1+USt+weitere_Abgaben) + Netzengelte * (1+USt)"
+                    },
+                    "newLine": true,
+                    "hidden": "!data.calculate"
+                }
+            }
         }
     }
 }
