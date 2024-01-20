@@ -35,6 +35,12 @@ class ApgInfo extends utils.Adapter {
         //this.on('message', this.onMessage.bind(this));
         this.on('unload', this.onUnload.bind(this));
         jsonExplorer.init(this, stateAttr);
+        this.calculate = false;
+        this.feeAbsolute = 0;
+        this.feeRelative = 0;
+        this.vat = 0;
+        this.charges = 0;
+        this.gridCosts = 0;
     }
 
     /**
@@ -52,6 +58,15 @@ class ApgInfo extends utils.Adapter {
 
         if (this.config.forecast != undefined) forecast = this.config.forecast;
         else this.log.info('Forecast config not found and set to disbaled');
+
+        if (this.config.calculate != undefined) this.calculate = this.config.calculate;
+        if (this.calculate == true) {
+            if (this.config.feeAbsolute != undefined) this.feeAbsolute = this.config.feeAbsolute;
+            if (this.config.feeRelative != undefined) this.feeRelative = this.config.feeRelative / 100;
+            if (this.config.vat != undefined) this.vat = this.config.vat / 100;
+            if (this.config.charges != undefined) this.charges = this.config.charges / 100;
+            if (this.config.gridCosts != undefined) this.gridCosts = this.config.gridCosts;
+        }
 
         if (this.config.country) country = this.config.country;
         else {
@@ -369,7 +384,7 @@ class ApgInfo extends utils.Adapter {
                 }
 
                 let product = prices0[idS].Product;
-                let marketprice = Math.round(Number(prices0[idS].Price) / 10 * 1000) / 1000;
+                let marketprice = this.calcPrice(prices0[idS].Price / 10);
                 this.log.debug('Marketprice for product ' + product + ' is ' + marketprice);
 
                 let sEndHour = product.substring(1, 3);
@@ -401,7 +416,7 @@ class ApgInfo extends utils.Adapter {
                 }
 
                 let product = prices1[idS].Product;
-                let marketprice = Math.round(Number(prices1[idS].Price) / 10 * 1000) / 1000;
+                let marketprice = this.calcPrice(prices1[idS].Price / 10);
                 this.log.debug('Marketprice for product ' + product + ' is ' + marketprice);
 
                 let sEndHour = product.substring(1, 3);
@@ -684,6 +699,24 @@ class ApgInfo extends utils.Adapter {
         } catch (error) {
             this.log.error(`Error in function sendSentry() main.js: ${error}`);
         }
+    }
+    /**
+     * @param {number} tradePrice
+     * @returns {number}
+     */
+    calcPrice(tradePrice) {
+        tradePrice = Math.round(tradePrice * 1000) / 1000;
+        let price = 0;
+        if (this.calculate == true) {
+            let provider = tradePrice * this.feeRelative + this.feeAbsolute;
+            let charges = (tradePrice + provider) * this.charges;
+            let vat = (tradePrice + provider + charges + this.gridCosts) * this.vat;
+            price = tradePrice + provider + charges + this.gridCosts + vat;
+        }
+        else price = tradePrice;
+        price = Math.round(price * 1000) / 1000;
+        this.log.debug('tradePrice is ' + tradePrice + ' and  finalPrice is ' + price);
+        return price;
     }
 }
 

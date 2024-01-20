@@ -1,4 +1,11 @@
 # Older changes
+## 0.1.0 (2023-12-04)
+* (HGlab01) first minor release
+* (HGlab01) Node.js 18 or higher
+* (HGlab01) ioBroker host (js-controller) 5.0 or higher
+* (HGlab01) Bump axios to 1.6.2
+* (HGlab01) use both providers (Awattar and Exaa) for market prices
+
 ## 0.0.7 (2023-10-11)
 * (HGlab01) Bump json-explorer to 0.1.14
 * (HGlab01) add jsonChart-json for market prices
