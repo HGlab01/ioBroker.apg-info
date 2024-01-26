@@ -27,6 +27,9 @@ This adapter provides the peak-times for the Austrian Power Grid, where power co
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
+### __WORK IN PROGRESS__
+* (HGlab01) fix issue in debug-mode: Cannot read properties of null (reading 'data')
+
 ### 0.1.5 (2024-01-20)
 * (HGlab01) Add fee, grid costs and tax calculation
 
