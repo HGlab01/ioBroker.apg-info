@@ -287,7 +287,8 @@ class ApgInfo extends utils.Adapter {
             let prices0Awattar, prices1Awattar, prices0Exaa, prices1Exaa, prices1Exaa1015;
 
             prices0Awattar = await this.getDataDayAheadAwattar(false, country);
-            this.log.debug(`Day ahead result for Awattar today is: ${JSON.stringify(prices0Awattar.data)}`);
+            if (prices0Awattar && prices0Awattar.data) this.log.debug(`Day ahead result for Awattar today is: ${JSON.stringify(prices0Awattar.data)}`);
+            else this.log.debug(`Day ahead result for Awattar today is: NO DATA`);
             if (!prices0Awattar || !prices0Awattar.data || !prices0Awattar.data[0]) {
                 this.log.info(`No prices from Awattar for today, let's try Exaa`);
                 prices0Exaa = await this.getDataDayAheadExaa(false, country);
@@ -295,7 +296,8 @@ class ApgInfo extends utils.Adapter {
                 if (!prices0Exaa) this.log.warn('No market data for today');
             }
             prices1Awattar = await this.getDataDayAheadAwattar(true, country);
-            this.log.debug(`Day ahead result for Awattar tomorrow is: ${JSON.stringify(prices1Awattar.data)}`);
+            if (prices1Awattar && prices1Awattar.data) this.log.debug(`Day ahead result for Awattar tomorrow is: ${JSON.stringify(prices1Awattar.data)}`);
+            else this.log.debug(`Day ahead result for Awattar tomorrow is: NO DATA`);
             if (!prices1Awattar || !prices1Awattar.data || !prices1Awattar.data[0]) {
                 this.log.info(`No prices from Awattar for tomorrow, let's try Exaa`);
                 prices1Exaa = await this.getDataDayAheadExaa(true, country);
