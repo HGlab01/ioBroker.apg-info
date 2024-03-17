@@ -1,4 +1,7 @@
 # Older changes
+## 0.1.1 (2023-12-14)
+* (HGlab01) support Exxa10.15 auction as forecast
+
 ## 0.1.0 (2023-12-04)
 * (HGlab01) first minor release
 * (HGlab01) Node.js 18 or higher

@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "apg-info",
-    "version": "0.1.5",
+    "version": "0.1.6",
     "news": {
+      "0.1.6": {
+        "en": "fix issue in debug-mode: Cannot read properties of null (reading 'data')\nbump axios to 1.6.8",
+        "de": "problem in debug-mode beheben: Nicht gelesene Eigenschaften von null (lesen von 'data')\nbump-axios zu 1.6.8",
+        "ru": "исправить проблему в отладке-режиме: Невозможно прочитать свойства null (читая «данные»)\n1.6.8",
+        "pt": "corrigir o problema no modo de depuração: Não é possível ler propriedades de null (ler 'dados')\naxios de choque para 1.6.8",
+        "nl": "probleem oplossen in debug-modus: Kan eigenschappen van nul niet lezen (lezen van 'data')\nbump axios tot 1.6.8",
+        "fr": "correction du problème en mode de débogage: Impossible de lire les propriétés de null (lecture de 'données')\naxios de bosse à 1.6.8",
+        "it": "risolvere problema in debug-mode: Non possono leggere le proprietà di null (leggendo 'dati')\nparaurti a 1.6.8",
+        "es": "solucionar el problema en debug-mode: No se pueden leer propiedades de null (leer 'data')\naxios de choque a 1.6.8",
+        "pl": "problem w trybie debug-: Nie można odczytać właściwości null (odczyt 'data')\nboom axios do 1.6.8",
+        "uk": "виправити проблему в debug-mode: Не можна прочитати властивості нулі (читати 'data')\nbump axios до 1.6.8",
+        "zh-cn": "在调试模式中固定问题 : 无法读取无效属性( 正在读取“ data ”)\n折合轴为1.6.8"
+      },
       "0.1.5": {
         "en": "Add fee, grid costs and tax calculation",
         "de": "Gebühren, Netzkosten und Steuerberechnung hinzufügen",
@@ -80,19 +93,6 @@
         "pl": "Kwestia rynkowa nie jest znana, gdy cena wynosi 0,00",
         "uk": "Фіксований випуск \"не знайдено ринкову ціну\" при ціні 0.00",
         "zh-cn": "当价格为0.00时,固定问题“没有市场价格”"
-      },
-      "0.1.1": {
-        "en": "support Exxa10.15 auction as forecast",
-        "de": "unterstützung Exxa10.15 Auktion als Prognose",
-        "ru": "поддержка Exxa10.15 аукцион как прогноз",
-        "pt": "suporte Leilão Exxa10.15 como previsão",
-        "nl": "vertaling:",
-        "fr": "appui aux enchères Exxa10.15",
-        "it": "supporto Exxa10.15 aste come previsto",
-        "es": "apoyo Exxa10.15 subasta como previsión",
-        "pl": "aukcje Exxa10.15",
-        "uk": "support Exxa10.15 Аукціон як прогноз",
-        "zh-cn": "支持Exxa10.15拍卖"
       }
     },
     "titleLang": {
