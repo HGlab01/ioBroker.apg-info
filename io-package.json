@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "apg-info",
-    "version": "0.1.7-alpha.0",
+    "version": "0.1.7-alpha.1",
     "news": {
+      "0.1.7-alpha.1": {
+        "en": "Add date to today and tomorrow to make the date of today and tomorrow clear",
+        "de": "Datum zu heute und morgen hinzufügen, um das Datum von heute und morgen klar zu machen",
+        "ru": "Добавьте дату сегодня и завтра, чтобы сделать дату сегодняшнего и завтрашнего дня ясной",
+        "pt": "Adicionar data para hoje e amanhã para fazer a data de hoje e amanhã claro",
+        "nl": "Voeg datum toe aan vandaag en morgen om de datum van vandaag en morgen duidelijk te maken",
+        "fr": "Ajouter la date d'aujourd'hui et de demain pour clarifier la date d'aujourd'hui et de demain",
+        "it": "Aggiungi data ad oggi e domani per rendere chiara la data di oggi e domani",
+        "es": "Añadir fecha a hoy y mañana para aclarar la fecha de hoy y mañana",
+        "pl": "Dodaj datę do dzisiaj i jutro, aby data dzisiaj i jutro była jasna",
+        "uk": "Додати дату на сьогодні і завтра, щоб зробити дату сьогодні і завтра ясно",
+        "zh-cn": "增加今天和明天的日期,使今天和明天的日期清楚"
+      },
       "0.1.7-alpha.0": {
         "en": "Add date to today and tomorrow to make the date of today and tomorrow clear",
         "de": "Datum zu heute und morgen hinzufügen, um das Datum von heute und morgen klar zu machen",
@@ -80,19 +93,6 @@
         "pl": "fix \"Nie można odczytać właściwości nieokreślone (odczyt 'status')\"",
         "uk": "виправити \"Не можна читати властивості невизначеної (читати 'статус')\"",
         "zh-cn": "固定“无法读取未定义属性( 读取“ status ” ) "
-      },
-      "0.1.3": {
-        "en": "Fix issue AxiosError: Request failed with status code 500 (#170)",
-        "de": "Problem beheben AxiosError: Antrag mit Statuscode fehlgeschlagen 500 #(170)",
-        "ru": "Исправлена проблема AxiosError: Запрос не удалось с кодом статуса 500 #(170)",
-        "pt": "Corrigir problema AxiosError: Pedido falhou com código de status 500 #(170)",
-        "nl": "Verzoek gefaald met statuscode 500",
-        "fr": "Correction de la question AxiosError: Demande d'annulation avec code de statut 500 #(170)",
-        "it": "AxiosError: Richiesta non riuscita con il codice di stato 500 #(170)",
-        "es": "Edición fija AxiosError: La solicitud falló con el código de estado 500 #(170)",
-        "pl": "AxiosError: Request nie powiodło się z kodem 500 #(170)",
-        "uk": "Виправити питання AxiosПошук не вдалося з кодом статусу 500 #(170)",
-        "zh-cn": "Fix问题 AxiosError:请求未遵守地位守则500#(170)"
       }
     },
     "titleLang": {
