@@ -1,4 +1,8 @@
 # Older changes
+## 0.1.2 (2023-12-22)
+* (HGlab01) Fix issue 'no marketprice found' when price is 0.00
+* (HGlab01) Bump json-explorer to 0.1.15
+
 ## 0.1.1 (2023-12-14)
 * (HGlab01) support Exxa10.15 auction as forecast
 

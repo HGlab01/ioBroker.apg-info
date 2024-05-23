@@ -27,6 +27,9 @@ This adapter provides the peak-times for the Austrian Power Grid, where power co
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
+### 0.1.7-alpha.0 (2024-05-23)
+* (HGlab01) Add date to today and tomorrow to make the date of today and tomorrow clear
+
 ### 0.1.6 (2024-03-17)
 * (HGlab01) fix issue in debug-mode: Cannot read properties of null (reading 'data')
 * (HGlab01) bump axios to 1.6.8
@@ -39,10 +42,6 @@ This adapter provides the peak-times for the Austrian Power Grid, where power co
 
 ### 0.1.3 (2023-12-26)
 * (HGlab01) Fix issue 'Request failed with status code 500' (#170)
-
-### 0.1.2 (2023-12-22)
-* (HGlab01) Fix issue 'no marketprice found' when price is 0.00
-* (HGlab01) Bump json-explorer to 0.1.15
 
 ## License
 MIT License
