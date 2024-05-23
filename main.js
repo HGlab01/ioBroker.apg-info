@@ -83,7 +83,7 @@ class ApgInfo extends utils.Adapter {
             this.log.debug('Internet connection detected. Everything fine!');
         }
 
-        const delay = Math.floor(Math.random() * 25000); //25000
+        const delay = Math.floor(Math.random() * 1); //25000
         this.log.info(`Delay execution by ${delay}ms to better spread API calls`);
         await jsonExplorer.sleep(delay);
 
@@ -285,6 +285,11 @@ class ApgInfo extends utils.Adapter {
         let source1 = '', source0 = '';
         try {
             let prices0Awattar, prices1Awattar, prices0Exaa, prices1Exaa, prices1Exaa1015;
+
+            const day0 = cleanDate(new Date());
+            const day1 = addDays(day0, 1);
+            jsonExplorer.stateSetCreate('marketprice.today.date', 'date', day0.getTime());
+            jsonExplorer.stateSetCreate('marketprice.tomorrow.date', 'date', day1.getTime());
 
             prices0Awattar = await this.getDataDayAheadAwattar(false, country);
             if (prices0Awattar && prices0Awattar.data) this.log.debug(`Day ahead result for Awattar today is: ${JSON.stringify(prices0Awattar.data)}`);
