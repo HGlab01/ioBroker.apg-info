@@ -28,7 +28,7 @@ With the standard-configuration the adapter runs at 00:00, 13:00 and 15.00 o'clo
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### 0.1.7-alpha.1 (2024-05-23)
+### 0.1.7 (2024-05-27)
 * (HGlab01) Add date to today and tomorrow to make the date of today and tomorrow clear
 * (HGlab01) bump axios to 1.7.2
 
