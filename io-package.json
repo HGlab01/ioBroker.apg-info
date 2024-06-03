@@ -141,14 +141,17 @@
       "Awattar",
       "Spotty"
     ],
-    "license": "MIT",
+    "licenseInformation": {
+      "type": "free",
+      "license": "MIT"
+    },
     "platform": "Javascript/Node.js",
-    "main": "main.js",
     "icon": "apg-info.png",
     "enabled": true,
     "extIcon": "https://raw.githubusercontent.com/HGlab01/ioBroker.apg-info/main/admin/apg-info.png",
     "readme": "https://github.com/HGlab01/ioBroker.apg-info/blob/main/README.md",
     "loglevel": "info",
+    "tier": 3,
     "mode": "schedule",
     "schedule": "5 0 0,13,15 * * *",
     "allowInit": true,
