@@ -10,6 +10,7 @@ const utils = require('@iobroker/adapter-core');
 
 // Load your modules here, e.g.:
 const axios = require('axios');
+const convert = require('xml-js');
 
 const jsonExplorer = require('iobroker-jsonexplorer');
 const stateAttr = require(`${__dirname}/lib/stateAttr.js`); // Load attribute library
@@ -83,7 +84,7 @@ class ApgInfo extends utils.Adapter {
             this.log.debug('Internet connection detected. Everything fine!');
         }
 
-        const delay = Math.floor(Math.random() * 25000); //25000
+        const delay = Math.floor(Math.random() * 1); //25000
         this.log.info(`Delay execution by ${delay}ms to better spread API calls`);
         await jsonExplorer.sleep(delay);
 
@@ -275,6 +276,70 @@ class ApgInfo extends utils.Adapter {
         })
     }
 
+    /**
+     * Retrieves marketdata from REST-API from entsoe
+     * @param {boolean} tomorrow
+     * @param {string} country country of the market
+     */
+    async getDataDayAheadEntsoe(tomorrow, country) {
+        const url = 'https://web-api.tp.entsoe.eu/api?documentType=A44'
+        const securityToken = '72e28f8f-4bc9-424d-8b04-1df19ef1f601';
+        const day0 = cleanDate(new Date());
+        const day1 = addDays(day0, 1);
+        let day = new Date();
+        if (tomorrow) day = day1;
+        else day = day0;
+        let dayPlus = addDays(day, 1);
+
+        const datebegin = day.getFullYear() + pad(day.getMonth() + 1, 2) + pad(day.getDate(), 2);
+        const dateend = dayPlus.getFullYear() + pad(dayPlus.getMonth() + 1, 2) + pad(dayPlus.getDate(), 2);
+
+        let domain = '';
+
+        switch (country) {
+            case 'ch':
+                domain = '10YCH-SWISSGRIDZ';
+                break;
+            case 'at':
+                domain = '10YAT-APG------L';
+                break;
+            case 'de':
+                domain = '10Y1001A1001A82H';
+                break;
+            default:
+                this.log.error('Country not found in definitions');
+        }
+
+        const uri = `${url}&securityToken=${securityToken}&periodStart=${datebegin}0000&periodEnd=${dateend}0000&in_Domain=${domain}&Out_Domain=${domain}`;
+        //return;
+
+        //const dateStringToday = `${day.getFullYear()}-${day.getMonth() + 1}-${day.getDate()}`;
+        //uri = `https://www.exaa.at/data/trading-results?delivery_day=${dateStringToday}&market=${country}&auction=market_coupling`;
+        this.log.info(`API-Call ${uri}`);
+        console.log(`API-Call ${uri}`);
+
+        return new Promise((resolve, reject) => {
+            // @ts-ignore
+            axios.get(uri)
+                .then((response) => {
+                    if (!response || !response.data) {
+                        throw new Error(`getDataDayAheadEntsoe(): Respone empty for URL ${uri} with status code ${response.status}`);
+                    } else {
+                        this.log.info(`Response in getDataDayAheadEntsoe(): [${response.status}] ${JSON.stringify(response.data)}`);
+                        console.log(`Response in getDataDayAheadEntsoe(): [${response.status}] ${JSON.stringify(response.data)}`);
+                        let result = xml2js(response.data);
+                        if (result.Publication_MarketDocument) resolve((result.Publication_MarketDocument));
+                        else resolve(null);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error in getDataDayAheadEntsoe(): ' + error);
+                    if (error && error.response && error.response.status >= 500) resolve(null);
+                    else reject(error);
+                })
+        })
+    }
+
 
     /**
      * Handles json-object and creates states for market prices
@@ -284,94 +349,130 @@ class ApgInfo extends utils.Adapter {
     async ExecuteRequestDayAhead(country, forecast) {
         let source1 = '', source0 = '';
         try {
-            let prices0Awattar, prices1Awattar, prices0Exaa, prices1Exaa, prices1Exaa1015;
+            let prices0Awattar, prices1Awattar, prices0Exaa, prices1Exaa, prices1Exaa1015, prices0Entsoe, prices1Entsoe;
 
             const day0 = cleanDate(new Date());
             const day1 = addDays(day0, 1);
             jsonExplorer.stateSetCreate('marketprice.today.date', 'date', day0.getTime());
             jsonExplorer.stateSetCreate('marketprice.tomorrow.date', 'date', day1.getTime());
+            let prices0 = [], prices1 = [];
 
-            prices0Awattar = await this.getDataDayAheadAwattar(false, country);
-            if (prices0Awattar && prices0Awattar.data) this.log.debug(`Day ahead result for Awattar today is: ${JSON.stringify(prices0Awattar.data)}`);
-            else this.log.debug(`Day ahead result for Awattar today is: NO DATA`);
-            if (!prices0Awattar || !prices0Awattar.data || !prices0Awattar.data[0]) {
-                this.log.info(`No prices from Awattar for today, let's try Exaa`);
-                prices0Exaa = await this.getDataDayAheadExaa(false, country);
-                this.log.debug(`Day ahead result for Exaa today is: ${JSON.stringify(prices0Exaa)}`);
-                if (!prices0Exaa) this.log.warn('No market data for today');
-            }
-            prices1Awattar = await this.getDataDayAheadAwattar(true, country);
-            if (prices1Awattar && prices1Awattar.data) this.log.debug(`Day ahead result for Awattar tomorrow is: ${JSON.stringify(prices1Awattar.data)}`);
-            else this.log.debug(`Day ahead result for Awattar tomorrow is: NO DATA`);
-            if (!prices1Awattar || !prices1Awattar.data || !prices1Awattar.data[0]) {
-                this.log.info(`No prices from Awattar for tomorrow, let's try Exaa`);
-                prices1Exaa = await this.getDataDayAheadExaa(true, country);
-                this.log.debug(`Day ahead result for Exaa tomorrow is: ${JSON.stringify(prices1Exaa)}`);
-                if (!prices1Exaa && forecast) {
-                    this.log.info('No prices from Exaa MC, last change Exaa 10.15 auction');
-                    prices1Exaa1015 = await this.getDataDayAheadExaa1015(country);
-                    this.log.debug(`Day ahead result for Exaa1015 tomorrow is: ${JSON.stringify(prices1Exaa1015)}`);
-                }
-            }
+            country = 'ch';
 
-            //Convert Awattar-structure to Exaa-structure for today
-            let prices0 = [];
-            if (prices0Exaa) {
-                prices0 = prices0Exaa;
-                source0 = 'exaaMC';
-                jsonExplorer.stateSetCreate('marketprice.today.source', 'Source', source0);
-            } else {
-                if (prices0Awattar && prices0Awattar.data && prices0Awattar.data[0]) {
-                    for (const idS in prices0Awattar.data) {
-                        prices0[idS] = {};
-                        prices0[idS].Price = prices0Awattar.data[idS].marketprice;
-                        let start = new Date(prices0Awattar.data[idS].start_timestamp);
-                        let iHour = start.getHours() + 1;
-                        let sHour = String(iHour);
-                        const pad = '00';
-                        sHour = pad.substring(0, pad.length - sHour.length) + sHour;
-                        prices0[idS].Product = 'H' + sHour;
+            if (country == 'ch') {
+                prices0Entsoe = await this.getDataDayAheadEntsoe(false, country);
+                prices1Entsoe = await this.getDataDayAheadEntsoe(true, country);
+                this.log.info('Today ' + JSON.stringify(prices0Entsoe));
+                this.log.info('Tomorrow ' + JSON.stringify(prices1Entsoe));
+
+                //Convert Etsoe-structure to Exaa-structure for today and tomorrow
+                if (prices0Entsoe) {
+                    for (let i = 0; i < 24; i++) {
+                        let ii = String(i);
+                        prices0[ii] = {};
+                        if (prices0Entsoe.TimeSeries[0]) prices0[ii].Price = parseFloat(prices0Entsoe.TimeSeries[0].Period.Point[i].price_amount._text);
+                        else prices0[ii].Price = parseFloat(prices0Entsoe.TimeSeries.Period.Point[i].price_amount._text);
+                        let sHour = pad(i + 1, 2);
+                        prices0[ii].Product = 'H' + sHour;
                     }
-                    source0 = 'awattar';
-                    jsonExplorer.stateSetCreate('marketprice.today.source', 'Source', source0);
+                    jsonExplorer.stateSetCreate('marketprice.today.source', 'Source', 'entsoe');
                 }
-            }
 
-            //Convert structures to Exaa-structure for tomorrow
-            let prices1 = [];
-            if (prices1Exaa) {
-                prices1 = prices1Exaa;
-                source1 = 'exaaMC';
-                jsonExplorer.stateSetCreate('marketprice.tomorrow.source', 'Source', source1);
+                if (prices1Entsoe) {
+                    for (let i = 0; i < 24; i++) {
+                        let ii = String(i);
+                        prices1[ii] = {};
+                        if (prices1Entsoe.TimeSeries[0]) prices1[ii].Price = parseFloat(prices1Entsoe.TimeSeries[0].Period.Point[i].price_amount._text);
+                        else prices1[ii].Price = parseFloat(prices1Entsoe.TimeSeries.Period.Point[i].price_amount._text);
+                        let sHour = pad(i + 1, 2);
+                        prices1[ii].Product = 'H' + sHour;
+                    }
+                    jsonExplorer.stateSetCreate('marketprice.tomorrow.source', 'Source', 'entsoe');
+                }
             }
             else {
-                if (prices1Exaa1015) {
-                    for (const idS in prices1Exaa1015) {
-                        prices1[idS] = {};
-                        prices1[idS].Price = prices1Exaa1015[idS].y;
-                        let iHour = prices1Exaa1015[idS].x;
-                        let sHour = String(iHour);
-                        const pad = '00';
-                        sHour = pad.substring(0, pad.length - sHour.length) + sHour;
-                        prices1[idS].Product = 'H' + sHour;
+                prices0Awattar = await this.getDataDayAheadAwattar(false, country);
+                if (prices0Awattar && prices0Awattar.data) this.log.debug(`Day ahead result for Awattar today is: ${JSON.stringify(prices0Awattar.data)}`);
+                else this.log.debug(`Day ahead result for Awattar today is: NO DATA`);
+                if (!prices0Awattar || !prices0Awattar.data || !prices0Awattar.data[0]) {
+                    this.log.info(`No prices from Awattar for today, let's try Exaa`);
+                    prices0Exaa = await this.getDataDayAheadExaa(false, country);
+                    this.log.debug(`Day ahead result for Exaa today is: ${JSON.stringify(prices0Exaa)}`);
+                    if (!prices0Exaa) this.log.warn('No market data for today');
+                }
+                prices1Awattar = await this.getDataDayAheadAwattar(true, country);
+                if (prices1Awattar && prices1Awattar.data) this.log.debug(`Day ahead result for Awattar tomorrow is: ${JSON.stringify(prices1Awattar.data)}`);
+                else this.log.debug(`Day ahead result for Awattar tomorrow is: NO DATA`);
+                if (!prices1Awattar || !prices1Awattar.data || !prices1Awattar.data[0]) {
+                    this.log.info(`No prices from Awattar for tomorrow, let's try Exaa`);
+                    prices1Exaa = await this.getDataDayAheadExaa(true, country);
+                    this.log.debug(`Day ahead result for Exaa tomorrow is: ${JSON.stringify(prices1Exaa)}`);
+                    if (!prices1Exaa && forecast) {
+                        this.log.info('No prices from Exaa MC, last change Exaa 10.15 auction');
+                        prices1Exaa1015 = await this.getDataDayAheadExaa1015(country);
+                        this.log.debug(`Day ahead result for Exaa1015 tomorrow is: ${JSON.stringify(prices1Exaa1015)}`);
                     }
-                    this.log.debug('prices1Exaa1015 converted to: ' + JSON.stringify(prices1));
-                    source1 = 'exaa1015';
+                }
+
+                //Convert Awattar-structure to Exaa-structure for today
+                prices0 = [];
+                if (prices0Exaa) {
+                    prices0 = prices0Exaa;
+                    source0 = 'exaaMC';
+                    jsonExplorer.stateSetCreate('marketprice.today.source', 'Source', source0);
+                } else {
+                    if (prices0Awattar && prices0Awattar.data && prices0Awattar.data[0]) {
+                        for (const idS in prices0Awattar.data) {
+                            prices0[idS] = {};
+                            prices0[idS].Price = prices0Awattar.data[idS].marketprice;
+                            let start = new Date(prices0Awattar.data[idS].start_timestamp);
+                            let iHour = start.getHours() + 1;
+                            let sHour = String(iHour);
+                            const pad = '00';
+                            sHour = pad.substring(0, pad.length - sHour.length) + sHour;
+                            prices0[idS].Product = 'H' + sHour;
+                        }
+                        source0 = 'awattar';
+                        jsonExplorer.stateSetCreate('marketprice.today.source', 'Source', source0);
+                    }
+                }
+
+                //Convert structures to Exaa-structure for tomorrow
+                prices1 = [];
+                if (prices1Exaa) {
+                    prices1 = prices1Exaa;
+                    source1 = 'exaaMC';
                     jsonExplorer.stateSetCreate('marketprice.tomorrow.source', 'Source', source1);
                 }
-                else if (prices1Awattar && prices1Awattar.data && prices1Awattar.data[0]) {
-                    for (const idS in prices1Awattar.data) {
-                        prices1[idS] = {};
-                        prices1[idS].Price = prices1Awattar.data[idS].marketprice;
-                        let start = new Date(prices1Awattar.data[idS].start_timestamp);
-                        let iHour = start.getHours() + 1;
-                        let sHour = String(iHour);
-                        const pad = '00';
-                        sHour = pad.substring(0, pad.length - sHour.length) + sHour;
-                        prices1[idS].Product = 'H' + sHour;
+                else {
+                    if (prices1Exaa1015) {
+                        for (const idS in prices1Exaa1015) {
+                            prices1[idS] = {};
+                            prices1[idS].Price = prices1Exaa1015[idS].y;
+                            let iHour = prices1Exaa1015[idS].x;
+                            let sHour = String(iHour);
+                            const pad = '00';
+                            sHour = pad.substring(0, pad.length - sHour.length) + sHour;
+                            prices1[idS].Product = 'H' + sHour;
+                        }
+                        this.log.debug('prices1Exaa1015 converted to: ' + JSON.stringify(prices1));
+                        source1 = 'exaa1015';
+                        jsonExplorer.stateSetCreate('marketprice.tomorrow.source', 'Source', source1);
                     }
-                    source1 = 'awattar';
-                    jsonExplorer.stateSetCreate('marketprice.tomorrow.source', 'Source', source1);
+                    else if (prices1Awattar && prices1Awattar.data && prices1Awattar.data[0]) {
+                        for (const idS in prices1Awattar.data) {
+                            prices1[idS] = {};
+                            prices1[idS].Price = prices1Awattar.data[idS].marketprice;
+                            let start = new Date(prices1Awattar.data[idS].start_timestamp);
+                            let iHour = start.getHours() + 1;
+                            let sHour = String(iHour);
+                            const pad = '00';
+                            sHour = pad.substring(0, pad.length - sHour.length) + sHour;
+                            prices1[idS].Product = 'H' + sHour;
+                        }
+                        source1 = 'awattar';
+                        jsonExplorer.stateSetCreate('marketprice.tomorrow.source', 'Source', source1);
+                    }
                 }
             }
 
@@ -777,3 +878,27 @@ const constructObject = arr => {
         return acc;
     }, {});
 };
+
+/**
+ * @param {number} n number
+ * @param {number} len length
+ */
+function pad(n, len) {
+    let l = Math.floor(len);
+    let sn = '' + n;
+    let snl = sn.length;
+    if (snl >= l) return sn;
+    return '0'.repeat(l - snl) + sn;
+}
+
+/**
+ * @param {string} xmlString
+ * @returns {any}
+ */
+function xml2js(xmlString) {
+    xmlString = xmlString.replaceAll(`price.amount`, `price_amount`);
+    const jsonResult = JSON.parse(convert.xml2json(xmlString, {
+        compact: true
+    }));
+    return (jsonResult);
+}

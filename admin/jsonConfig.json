@@ -31,6 +31,22 @@
                     "options": [
                         {
                             "label": {
+                                "en": "Swiss",
+                                "de": "Schweiz",
+                                "ru": "Swiss",
+                                "pt": "Swiss",
+                                "nl": "Swiss",
+                                "fr": "Swiss",
+                                "it": "Swiss",
+                                "es": "Swiss",
+                                "pl": "Swiss",
+                                "uk": "Swiss",
+                                "zh-cn": "Swiss"
+                            },
+                            "value": "ch"
+                        },
+                        {
+                            "label": {
                                 "en": "Austria",
                                 "de": "Österreich",
                                 "ru": "Austria",
