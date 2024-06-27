@@ -357,8 +357,6 @@ class ApgInfo extends utils.Adapter {
             jsonExplorer.stateSetCreate('marketprice.tomorrow.date', 'date', day1.getTime());
             let prices0 = [], prices1 = [];
 
-            country = 'ch';
-
             if (country == 'ch') {
                 prices0Entsoe = await this.getDataDayAheadEntsoe(false, country);
                 prices1Entsoe = await this.getDataDayAheadEntsoe(true, country);
