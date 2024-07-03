@@ -1,4 +1,7 @@
 # Older changes
+## 0.1.3 (2023-12-26)
+* (HGlab01) Fix issue 'Request failed with status code 500' (#170)
+
 ## 0.1.2 (2023-12-22)
 * (HGlab01) Fix issue 'no marketprice found' when price is 0.00
 * (HGlab01) Bump json-explorer to 0.1.15

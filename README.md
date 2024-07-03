@@ -34,7 +34,7 @@ For more details check https://transparency.entsoe.eu/content/static_content/Sta
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### __WORK IN PROGRESS__
+### 0.1.8-alpha.0 (2024-07-03)
 * (HGlab01) Swiss market support; Token needed! Check readme!
 
 ### 0.1.7 (2024-05-27)
@@ -50,9 +50,6 @@ For more details check https://transparency.entsoe.eu/content/static_content/Sta
 
 ### 0.1.4 (2024-01-15)
 * (HGlab01) fix 'Cannot read properties of undefined (reading 'status')'
-
-### 0.1.3 (2023-12-26)
-* (HGlab01) Fix issue 'Request failed with status code 500' (#170)
 
 ## License
 MIT License

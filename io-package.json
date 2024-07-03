@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "apg-info",
-    "version": "0.1.7",
+    "version": "0.1.8-alpha.0",
     "news": {
+      "0.1.8-alpha.0": {
+        "en": "(HGlab01) Swiss market support; Token needed! Check readme!",
+        "de": "(HGlab01) Schweizer Marktunterstützung; Token gebraucht! Sieh mir die Lese!",
+        "ru": "(HGlab01) Швейцарская рыночная поддержка; Токен нужен! Посмотри на меня!",
+        "pt": "(HGlab01) Apoio ao mercado suíço; Token necessário! Verifica o readme!",
+        "nl": "(HGlab01) Zwitserse marktsteun; Token nodig! Check me!",
+        "fr": "(HGlab01) Soutien du marché suisse; Token nécessaire! Vérifiez la lecture !",
+        "it": "(HGlab01) Supporto del mercato svizzero; Token necessario! Controllate il readme!",
+        "es": "(HGlab01) Apoyo al mercado suizo; ¡Token necesitaba! ¡Revisa la lectura!",
+        "pl": "(HGlab01) Swiss market support; Token need! Sprawdź mnie!",
+        "uk": "(HGlab01) швейцарська підтримка ринку; Token need! Перевірити читання!",
+        "zh-cn": "(HGLab01) 瑞士市场支持;托肯需要! 检查我!"
+      },
       "0.1.7": {
         "en": "Add date to today and tomorrow to make the date of today and tomorrow clear\nbump axios to 1.7.2",
         "de": "Datum zu heute und morgen hinzufügen, um das Datum von heute und morgen klar zu machen\nstoßaxios bis 1.7.2",
@@ -80,19 +93,6 @@
         "pl": "Dodaj opłatę, koszty sieci i obliczenia podatkowe",
         "uk": "Додати плату, витрати на сітку та розрахунок податку",
         "zh-cn": "增加收费、电网成本和税收计算"
-      },
-      "0.1.4": {
-        "en": "fix 'Cannot read properties of undefined (reading 'status')'",
-        "de": "fix 'Kann nicht lesen Eigenschaften von undefiniert (lesen 'status') '",
-        "ru": "исправить «Не может читать свойства неопределенного (читая «статус») \"",
-        "pt": "corrigir 'Não é possível ler propriedades indefinidas (ler 'status') '",
-        "nl": "fix 'Kan eigenschappen van ongedefinieerde niet lezen' (lezen 'status') '",
-        "fr": "corriger 'Impossible de lire les propriétés de l'indéfini (lire 'status') '",
-        "it": "fix 'Cannot leggere le proprietà di non definito (leggendo 'status') '",
-        "es": "fijar 'No puede leer propiedades de undefinido (leer 'status') '",
-        "pl": "fix 'Nie można odczytać właściwości nieokreślone (odczyt' status ')'",
-        "uk": "виправити 'Неможливо прочитати властивості невизначеної (читати 'статус') Р",
-        "zh-cn": "校正“ 无法读取未定义的属性( 正在读取“ status ”)  '"
       }
     },
     "titleLang": {
