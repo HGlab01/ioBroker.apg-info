@@ -25,7 +25,7 @@ With the standard-configuration the adapter runs at 00:00, 13:00 and 15.00 o'clo
 
 ## Swiss market
 For the swiss market a token from https://transparency.entsoe.eu/ is needed.
-Register at this page and send afterwards and email to transparency@entsoe.eu asking for RESTFUL API access for the email address zu registered. <br>
+Register at this page and send afterwards and email to transparency@entsoe.eu asking for RESTFUL API access for the email address you registered. <br>
 For more details check https://transparency.entsoe.eu/content/static_content/Static%20content/web%20api/Guide.html#_authentication_and_authorisation
 
 

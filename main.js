@@ -94,7 +94,7 @@ class ApgInfo extends utils.Adapter {
             this.log.debug('Internet connection detected. Everything fine!');
         }
 
-        const delay = Math.floor(Math.random() * 1); //25000
+        const delay = Math.floor(Math.random() * 25000); //25000
         this.log.info(`Delay execution by ${delay}ms to better spread API calls`);
         await jsonExplorer.sleep(delay);
 
@@ -321,7 +321,7 @@ class ApgInfo extends utils.Adapter {
         }
 
         const uri = `${url}&securityToken=${securityToken}&periodStart=${datebegin}0000&periodEnd=${dateend}0000&in_Domain=${domain}&Out_Domain=${domain}`;
-        this.log.info(`API-Call ${uri}`);
+        this.log.debug(`API-Call ${uri}`);
         console.log(`API-Call ${uri}`);
 
         return new Promise((resolve, reject) => {
@@ -331,7 +331,7 @@ class ApgInfo extends utils.Adapter {
                     if (!response || !response.data) {
                         throw new Error(`getDataDayAheadEntsoe(): Respone empty for URL ${uri} with status code ${response.status}`);
                     } else {
-                        this.log.info(`Response in getDataDayAheadEntsoe(): [${response.status}] ${JSON.stringify(response.data)}`);
+                        this.log.debug(`Response in getDataDayAheadEntsoe(): [${response.status}] ${JSON.stringify(response.data)}`);
                         console.log(`Response in getDataDayAheadEntsoe(): [${response.status}] ${JSON.stringify(response.data)}`);
                         let result = xml2js(response.data);
                         if (result.Publication_MarketDocument) resolve((result.Publication_MarketDocument));
@@ -366,8 +366,8 @@ class ApgInfo extends utils.Adapter {
             if (country == 'ch') {
                 prices0Entsoe = await this.getDataDayAheadEntsoe(false, country);
                 prices1Entsoe = await this.getDataDayAheadEntsoe(true, country);
-                this.log.info('Today ' + JSON.stringify(prices0Entsoe));
-                this.log.info('Tomorrow ' + JSON.stringify(prices1Entsoe));
+                this.log.debug('Today ' + JSON.stringify(prices0Entsoe));
+                this.log.debug('Tomorrow ' + JSON.stringify(prices1Entsoe));
 
                 //Convert Etsoe-structure to Exaa-structure for today and tomorrow
                 if (prices0Entsoe) {
@@ -900,6 +900,7 @@ function pad(n, len) {
  * @returns {any}
  */
 function xml2js(xmlString) {
+    // @ts-ignore
     xmlString = xmlString.replaceAll(`price.amount`, `price_amount`);
     const jsonResult = JSON.parse(convert.xml2json(xmlString, {
         compact: true
