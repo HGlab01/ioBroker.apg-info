@@ -96,8 +96,8 @@
       }
     },
     "titleLang": {
-      "en": "Power Grid (APG) Info (AT+DE)",
-      "de": "Power Grid (APG) Info (AT+DE)",
+      "en": "Power Grid (APG) Info (AT+DE+CH)",
+      "de": "Power Grid (APG) Info (AT+DE+CH)",
       "ru": "Информация об Австрийской энергосистеме (APG)",
       "pt": "Informações da rede elétrica austríaca (APG)",
       "nl": "Oostenrijkse Power Grid (APG) Info",
@@ -109,8 +109,8 @@
       "zh-cn": "奥地利电网 (APG) 信息"
     },
     "desc": {
-      "en": "Power Grid (APG) Info for Austria (Österreich) and Germany (Deutschland)",
-      "de": "Power Grid (APG) Info for Austria (Österreich) and Germany (Deutschland)",
+      "en": "Power Grid (APG) Info for Austria (Österreich), Swiss (Schweiz) and Germany (Deutschland)",
+      "de": "Power Grid (APG) Info for Austria (Österreich), Swiss (Schweiz) and Germany (Deutschland)",
       "ru": "Информация об Австрийской энергосистеме (APG)",
       "pt": "Informações da rede elétrica austríaca (APG)",
       "nl": "Oostenrijkse Power Grid (APG) Info",
@@ -134,10 +134,10 @@
       "Day ahead",
       "PHELIX-AT Day-Ahead",
       "PHELIX-DE Day-Ahead",
+      "PHELIX-CH Day-Ahead",
       "EPEX Spot",
       "Strompreis",
       "EXAA",
-      "Strompreis",
       "Awattar",
       "Spotty"
     ],
