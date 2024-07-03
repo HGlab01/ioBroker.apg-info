@@ -42,6 +42,7 @@ class ApgInfo extends utils.Adapter {
         this.vat = 0;
         this.charges = 0;
         this.gridCosts = 0;
+        this.token = '';
     }
 
     /**
@@ -73,6 +74,15 @@ class ApgInfo extends utils.Adapter {
         else {
             this.log.error('Country for market not found. Please confifure in Config');
             this.terminate ? this.terminate(utils.EXIT_CODES.UNCAUGHT_EXCEPTION) : process.exit(0);
+        }
+
+        if (this.config.token) this.token = this.config.token;
+        else {
+            if (country != 'at' && country != 'de') {
+                this.log.error('Not token defined. Please check readme how to request!');
+                this.terminate ? this.terminate(utils.EXIT_CODES.UNCAUGHT_EXCEPTION) : process.exit(0);
+            }
+            else this.log.debug('No token defined, but no issue as DE or AT');
         }
 
         if (await isOnline() == false) {
@@ -283,7 +293,7 @@ class ApgInfo extends utils.Adapter {
      */
     async getDataDayAheadEntsoe(tomorrow, country) {
         const url = 'https://web-api.tp.entsoe.eu/api?documentType=A44'
-        const securityToken = '72e28f8f-4bc9-424d-8b04-1df19ef1f601';
+        const securityToken = this.token;
         const day0 = cleanDate(new Date());
         const day1 = addDays(day0, 1);
         let day = new Date();
@@ -311,10 +321,6 @@ class ApgInfo extends utils.Adapter {
         }
 
         const uri = `${url}&securityToken=${securityToken}&periodStart=${datebegin}0000&periodEnd=${dateend}0000&in_Domain=${domain}&Out_Domain=${domain}`;
-        //return;
-
-        //const dateStringToday = `${day.getFullYear()}-${day.getMonth() + 1}-${day.getDate()}`;
-        //uri = `https://www.exaa.at/data/trading-results?delivery_day=${dateStringToday}&market=${country}&auction=market_coupling`;
         this.log.info(`API-Call ${uri}`);
         console.log(`API-Call ${uri}`);
 

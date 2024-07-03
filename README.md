@@ -23,11 +23,20 @@ With the standard-configuration the adapter runs at 00:00, 13:00 and 15.00 o'clo
 * Node.js 18 or higher
 * ioBroker host (js-controller) 5.0 or higher
 
+## Swiss market
+For the swiss market a token from https://transparency.entsoe.eu/ is needed.
+Register at this page and send afterwards and email to transparency@entsoe.eu asking for RESTFUL API access for the email address zu registered. <br>
+For more details check https://transparency.entsoe.eu/content/static_content/Static%20content/web%20api/Guide.html#_authentication_and_authorisation
+
+
 ## Changelog
 <!--
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
+### __WORK IN PROGRESS__
+* (HGlab01) Swiss market support; Token needed! Check readme!
+
 ### 0.1.7 (2024-05-27)
 * (HGlab01) Add date to today and tomorrow to make the date of today and tomorrow clear
 * (HGlab01) bump axios to 1.7.2
