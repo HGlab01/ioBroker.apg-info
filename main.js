@@ -626,8 +626,8 @@ class ApgInfo extends utils.Adapter {
 
             await jsonExplorer.checkExpire('marketprice.*');
 
-            jsonExplorer.deleteObjectsWithNull('marketprice.*Threshold.*');
-            jsonExplorer.deleteObjectsWithNull('marketprice.details.*');
+            await jsonExplorer.deleteObjectsWithNull('marketprice.*Threshold.*');
+            await jsonExplorer.deleteObjectsWithNull('marketprice.details.*');
 
             /*
             // check for outdated states to be deleted

@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "apg-info",
-    "version": "0.1.8-alpha.1",
+    "version": "0.1.8-alpha.2",
     "news": {
+      "0.1.8-alpha.2": {
+        "en": "(HGlab01) Swiss market support; Token needed! Check readme!",
+        "de": "(HGlab01) Schweizer Marktunterstützung; Token gebraucht! Sieh mir die Lese!",
+        "ru": "(HGlab01) Швейцарская рыночная поддержка; Токен нужен! Посмотри на меня!",
+        "pt": "(HGlab01) Apoio ao mercado suíço; Token necessário! Verifica o readme!",
+        "nl": "(HGlab01) Zwitserse marktsteun; Token nodig! Check me!",
+        "fr": "(HGlab01) Soutien du marché suisse; Token nécessaire! Vérifiez la lecture !",
+        "it": "(HGlab01) Supporto del mercato svizzero; Token necessario! Controllate il readme!",
+        "es": "(HGlab01) Apoyo al mercado suizo; ¡Token necesitaba! ¡Revisa la lectura!",
+        "pl": "(HGlab01) Swiss market support; Token need! Sprawdź mnie!",
+        "uk": "(HGlab01) швейцарська підтримка ринку; Token need! Перевірити читання!",
+        "zh-cn": "(HGLab01) 瑞士市场支持;托肯需要! 检查我!"
+      },
       "0.1.8-alpha.1": {
         "en": "(HGlab01) Swiss market support; Token needed! Check readme!",
         "de": "(HGlab01) Schweizer Marktunterstützung; Token gebraucht! Sieh mir die Lese!",
@@ -80,19 +93,6 @@
         "pl": "problem w trybie debug-: Nie można odczytać właściwości null (odczyt 'data')\nboom axios do 1.6.8",
         "uk": "виправити проблему в debug-mode: Не можна прочитати властивості нулі (читати 'data')\nbump axios до 1.6.8",
         "zh-cn": "在调试模式中固定问题 : 无法读取无效属性( 正在读取“ data ”)\n折合轴为1.6.8"
-      },
-      "0.1.5": {
-        "en": "Add fee, grid costs and tax calculation",
-        "de": "Gebühren, Netzkosten und Steuerberechnung hinzufügen",
-        "ru": "Добавить плату, сетки и налоговый расчет",
-        "pt": "Adicione taxa, custos de grade e cálculo de impostos",
-        "nl": "Toevoegen vergoeding, netkosten en belastingberekening",
-        "fr": "Ajouter les frais, les coûts de grille et le calcul de la taxe",
-        "it": "Aggiungere costi, costi di griglia e calcolo fiscale",
-        "es": "Añada cuota, costos de rejilla y cálculo de impuestos",
-        "pl": "Dodaj opłatę, koszty sieci i obliczenia podatkowe",
-        "uk": "Додати плату, витрати на сітку та розрахунок податку",
-        "zh-cn": "增加收费、电网成本和税收计算"
       }
     },
     "titleLang": {

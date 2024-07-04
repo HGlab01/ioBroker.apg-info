@@ -34,7 +34,7 @@ For more details check https://transparency.entsoe.eu/content/static_content/Sta
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### 0.1.8-alpha.1 (2024-07-04)
+### 0.1.8-alpha.2 (2024-07-04)
 * (HGlab01) Swiss market support; Token needed! Check readme!
 
 ### 0.1.7 (2024-05-27)
