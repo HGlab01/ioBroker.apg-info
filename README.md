@@ -34,8 +34,9 @@ For more details check https://transparency.entsoe.eu/content/static_content/Sta
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### 0.1.8-alpha.2 (2024-07-04)
+### __WORK IN PROGRESS__
 * (HGlab01) Swiss market support; Token needed! Check readme!
+* (HGlab01) Bump json-explorer to 0.1.16
 
 ### 0.1.7 (2024-05-27)
 * (HGlab01) Add date to today and tomorrow to make the date of today and tomorrow clear
