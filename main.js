@@ -626,6 +626,10 @@ class ApgInfo extends utils.Adapter {
 
             await jsonExplorer.checkExpire('marketprice.*');
 
+            jsonExplorer.deleteObjectsWithNull('marketprice.*Threshold.*');
+            jsonExplorer.deleteObjectsWithNull('marketprice.details.*');
+
+            /*
             // check for outdated states to be deleted
             let statesToDelete = await this.getStatesAsync('marketprice.*Threshold.*');
             for (const idS in statesToDelete) {
@@ -643,6 +647,7 @@ class ApgInfo extends utils.Adapter {
                     await this.delObjectAsync(idS);
                 }
             }
+            */
 
         } catch (error) {
             let eMsg = `Error in ExecuteRequestDayAhead(): ${error})`;
@@ -716,7 +721,9 @@ class ApgInfo extends utils.Adapter {
             await jsonExplorer.traverseJson(jDayAll, 'peakTime.allDays', true, true);
 
             await jsonExplorer.checkExpire('peakTime.*');
+            jsonExplorer.deleteObjectsWithNull('peakTime.*');
 
+            /*
             // check for outdated states to be deleted
             let statesToDelete = await this.getStatesAsync('peakTime.*');
             for (const idS in statesToDelete) {
@@ -725,7 +732,7 @@ class ApgInfo extends utils.Adapter {
                     this.log.debug(`State "${idS}" will be deleted`);
                     await this.delObjectAsync(idS);
                 }
-            }
+            }*/
 
         } catch (error) {
             let eMsg = `Error in ExecuteRequestPeakHours(): ${error})`;
