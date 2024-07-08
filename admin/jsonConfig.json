@@ -181,8 +181,8 @@
                 "_text1": {
                     "type": "staticText",
                     "text": {
-                        "de": "Token is only needed for Swiss market. How to request a token is dsecribed in the readme.",
-                        "en": "Token is only needed for Swiss market. How to request a token is decribed in the readme."
+                        "de": "Token is only needed for Swiss market. How to request a token is described in the readme.",
+                        "en": "Token is only needed for Swiss market. How to request a token is described in the readme."
                     },
                     "newLine": true
                 }
