@@ -79,7 +79,7 @@ class ApgInfo extends utils.Adapter {
         if (this.config.token) this.token = this.config.token;
         else {
             if (country != 'at' && country != 'de') {
-                this.log.error('Not token defined. Please check readme how to request!');
+                this.log.error('No token defined. Please check readme how to request!');
                 this.terminate ? this.terminate(utils.EXIT_CODES.UNCAUGHT_EXCEPTION) : process.exit(0);
             }
             else this.log.debug('No token defined, but no issue as DE or AT');
