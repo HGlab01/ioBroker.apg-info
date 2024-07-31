@@ -27,8 +27,24 @@
                 },
                 "country": {
                     "type": "select",
-                    "md":2,
+                    "md": 2,
                     "options": [
+                        {
+                            "label": {
+                                "en": "Swiss",
+                                "de": "Schweiz",
+                                "ru": "Swiss",
+                                "pt": "Swiss",
+                                "nl": "Swiss",
+                                "fr": "Swiss",
+                                "it": "Swiss",
+                                "es": "Swiss",
+                                "pl": "Swiss",
+                                "uk": "Swiss",
+                                "zh-cn": "Swiss"
+                            },
+                            "value": "ch"
+                        },
                         {
                             "label": {
                                 "en": "Austria",
@@ -69,7 +85,7 @@
                 },
                 "forecast": {
                     "type": "checkbox",
-                    "label": "Forecast based on 10.15 auction",
+                    "label": "Forecast based on 10.15 auction (works in AT and DE)",
                     "default": false
                 }
             }
@@ -136,10 +152,39 @@
                 "_text1": {
                     "type": "staticText",
                     "text": {
-                        "de": "Calculation: <br> provider = tradePrice * feeRelative + feeAbsolute; <br> charges = (tradePrice + provider) * charges; <br> vat = (tradePrice + provider + charges + gridCosts) * vat; <br> price = tradePrice + provider + charges + gridCosts + vat;",
-                        "en": "Calculation: <br> provider = tradePrice * feeRelative + feeAbsolute; <br> charges = (tradePrice + provider) * charges; <br> vat = (tradePrice + provider + charges + gridCosts) * vat; <br> price = tradePrice + provider + charges + gridCosts + vat;"                    },
+                        "de": "Calculation: <br> provider = tradePrice * tradePrice * providerFee + feeAbsolute; <br> charges = (tradePrice + provider) * otherTaxes; <br> vat = (tradePrice + provider + charges + gridCosts) * vat; <br> price = tradePrice + provider + charges + gridCosts + vat;",
+                        "en": "Calculation: <br> provider = tradePrice * tradePrice * providerFee + feeAbsolute; <br> charges = (tradePrice + provider) * otherTaxes; <br> vat = (tradePrice + provider + charges + gridCosts) * vat; <br> price = tradePrice + provider + charges + gridCosts + vat;"
+                    },
                     "newLine": true,
                     "hidden": "!data.calculate"
+                }
+            }
+        },
+        "EntsoeToken": {
+            "type": "panel",
+            "label": "Entsoe Token",
+            "items": {
+                "token": {
+                    "newLine": true,
+                    "type": "text",
+                    "sm": 3,
+                    "label": {
+                        "en": "Token",
+                        "de": "Token"
+                    }
+                },
+                "_text0": {
+                    "type": "staticText",
+                    "text": "",
+                    "newLine": true
+                },
+                "_text1": {
+                    "type": "staticText",
+                    "text": {
+                        "de": "Token is only needed for Swiss market. How to request a token is described in the readme.",
+                        "en": "Token is only needed for Swiss market. How to request a token is described in the readme."
+                    },
+                    "newLine": true
                 }
             }
         }
