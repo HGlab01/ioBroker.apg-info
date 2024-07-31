@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "apg-info",
-    "version": "0.1.8-alpha.3",
+    "version": "0.1.8",
     "news": {
+      "0.1.8": {
+        "en": "Swiss market support; Token needed! Check readme!\nBump json-explorer to 0.1.16",
+        "de": "Schweizer Marktunterstützung; Token benötigt! Sieh mir die Lese!\nStoßdämpfer bis 0,1.16",
+        "ru": "Швейцарская поддержка рынка; Токен нужен! Посмотри на меня!\nBump json-explorer до 0.1.16",
+        "pt": "Suporte ao mercado suíço; Token necessário! Verifica o readme!\nBump json-explorer para 0.1.16",
+        "nl": "Zwitserse marktsteun; Token nodig! Check me!\nBump json-explorer naar 0,1.16",
+        "fr": "Soutien du marché suisse; Token nécessaire! Vérifiez la lecture !\nBump json-explorer à 0,1.16",
+        "it": "Supporto del mercato svizzero; Token necessario! Controllate il readme!\nBump json-explorer a 0.1.16",
+        "es": "Soporte de mercado suizo; Token necesitaba! ¡Revise readme!\nBump json-explorer to 0.1.16",
+        "pl": "Wsparcie szwajcarskiego rynku; Token potrzebne! Sprawdź mnie!\nBump json- explorer do 0.1.16",
+        "uk": "Служба підтримки швейцарського ринку; Перевірити читання!\nBump json-explorer до 0.1.16",
+        "zh-cn": "瑞士市场支持;托肯需要! 检查我!\nBump json-探索器改为0.1.16"
+      },
       "0.1.8-alpha.3": {
         "en": "(HGlab01) Swiss market support; Token needed! Check readme!\n(HGlab01) Bump json-explorer to 0.1.16",
         "de": "(HGlab01) Schweizer Marktunterstützung; Token gebraucht! Sieh mir die Lese!\n(HGlab01) Stoßdämpfer bis 0,1.16",
@@ -69,19 +82,6 @@
         "zh-cn": "增加今天和明天的日期,使今天和明天的日期清楚\n折合轴为1.7.2"
       },
       "0.1.7-alpha.1": {
-        "en": "Add date to today and tomorrow to make the date of today and tomorrow clear",
-        "de": "Datum zu heute und morgen hinzufügen, um das Datum von heute und morgen klar zu machen",
-        "ru": "Добавьте дату сегодня и завтра, чтобы сделать дату сегодняшнего и завтрашнего дня ясной",
-        "pt": "Adicionar data para hoje e amanhã para fazer a data de hoje e amanhã claro",
-        "nl": "Voeg datum toe aan vandaag en morgen om de datum van vandaag en morgen duidelijk te maken",
-        "fr": "Ajouter la date d'aujourd'hui et de demain pour clarifier la date d'aujourd'hui et de demain",
-        "it": "Aggiungi data ad oggi e domani per rendere chiara la data di oggi e domani",
-        "es": "Añadir fecha a hoy y mañana para aclarar la fecha de hoy y mañana",
-        "pl": "Dodaj datę do dzisiaj i jutro, aby data dzisiaj i jutro była jasna",
-        "uk": "Додати дату на сьогодні і завтра, щоб зробити дату сьогодні і завтра ясно",
-        "zh-cn": "增加今天和明天的日期,使今天和明天的日期清楚"
-      },
-      "0.1.7-alpha.0": {
         "en": "Add date to today and tomorrow to make the date of today and tomorrow clear",
         "de": "Datum zu heute und morgen hinzufügen, um das Datum von heute und morgen klar zu machen",
         "ru": "Добавьте дату сегодня и завтра, чтобы сделать дату сегодняшнего и завтрашнего дня ясной",
