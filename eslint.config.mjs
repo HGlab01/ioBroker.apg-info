@@ -9,29 +9,29 @@ const __dirname = path.dirname(__filename);
 const compat = new FlatCompat({
     baseDirectory: __dirname,
     recommendedConfig: js.configs.recommended,
-    allConfig: js.configs.all,
+    allConfig: js.configs.all
 });
 
 export default [...compat.extends('eslint:recommended'), {
     languageOptions: {
         globals: {
             ...globals.node,
-            ...globals.mocha,
+            ...globals.mocha
         },
         ecmaVersion: 2023,
-        sourceType: 'module',
+        sourceType: 'module'
     },
     rules: {
         indent: ['warn', 4, {
-            SwitchCase: 1,
+            SwitchCase: 1
         }],
         'no-console': 'off',
         'no-trailing-spaces': 'error',
         quotes: ['error', 'single', {
             avoidEscape: true,
-            allowTemplateLiterals: true,
+            allowTemplateLiterals: true
         }],
         semi: ['error', 'always'],
-        'comma-dangle': ['error', 'never']
+        'comma-dangle': ['error', 'only-multiline']
     },
 }];
