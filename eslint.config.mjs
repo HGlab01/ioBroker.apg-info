@@ -24,19 +24,21 @@ export default [...compat.extends("eslint:recommended"), {
     },
 
     rules: {
-        indent: ["error", "space", {
+        indent: ['error', 4, {
             SwitchCase: 1,
         }],
 
-        "no-console": "off",
-        "no-var": "error",
-        "prefer-const": "error",
+        'no-console': 'off',
+        'no-var': 'error',
+        'no-trailing-spaces': 'error',
+        'prefer-const': 'error',
 
-        quotes: ["error", "single", {
+        quotes: ['error', 'single', {
             avoidEscape: true,
             allowTemplateLiterals: true,
         }],
 
-        semi: ["error", "always"],
+        semi: ['error', 'always'],
+        'comma-dangle': ['error', 'always-multiline'],
     },
 }];
