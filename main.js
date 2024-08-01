@@ -21,7 +21,6 @@ const { version } = require('./package.json');
 let threshold = 10;
 
 class ApgInfo extends utils.Adapter {
-
     /**
      * @param {Partial<utils.AdapterOptions>} [options={}]
      */
@@ -118,7 +117,7 @@ class ApgInfo extends utils.Adapter {
             this.log.info('cleaned everything up...');
             this.unloaded = true;
             callback();
-        } catch (e) {
+        } catch  {
             callback();
         }
     }
@@ -163,8 +162,8 @@ class ApgInfo extends utils.Adapter {
                     console.error('Error in getDataPeakHours(): ' + error);
                     if (error && error.response && error.response.status >= 500) resolve(null);
                     else reject(error);
-                })
-        })
+                });
+        });
     }
 
     /**
@@ -200,8 +199,8 @@ class ApgInfo extends utils.Adapter {
                     console.error('Error in getDataDayAheadExaa(): ' + error);
                     if (error && error.response && error.response.status >= 500) resolve(null);
                     else reject(error);
-                })
-        })
+                });
+        });
     }
 
     /**
@@ -238,8 +237,8 @@ class ApgInfo extends utils.Adapter {
                     console.error('Error in getDataDayAheadExaa1015(): ' + error);
                     if (error && error.response && error.response.status >= 500) resolve(null);
                     else reject(error);
-                })
-        })
+                });
+        });
     }
 
     /**
@@ -282,8 +281,8 @@ class ApgInfo extends utils.Adapter {
                     console.error('Error in getDataDayAheadAwattar(): ' + error);
                     if (error && error.response && error.response.status >= 500) resolve(null);
                     else reject(error);
-                })
-        })
+                });
+        });
     }
 
     /**
@@ -292,7 +291,7 @@ class ApgInfo extends utils.Adapter {
      * @param {string} country country of the market
      */
     async getDataDayAheadEntsoe(tomorrow, country) {
-        const url = 'https://web-api.tp.entsoe.eu/api?documentType=A44'
+        const url = 'https://web-api.tp.entsoe.eu/api?documentType=A44';
         const securityToken = this.token;
         const day0 = cleanDate(new Date());
         const day1 = addDays(day0, 1);
@@ -342,8 +341,8 @@ class ApgInfo extends utils.Adapter {
                     console.error('Error in getDataDayAheadEntsoe(): ' + error);
                     if (error && error.response && error.response.status >= 500) resolve(null);
                     else reject(error);
-                })
-        })
+                });
+        });
     }
 
 
@@ -491,7 +490,7 @@ class ApgInfo extends utils.Adapter {
             //manage today (day0)
             for (const idS in prices0) {
                 if (prices0[idS].Price == undefined) {
-                    this.log.error('No marketprice found in marketprice-result for today!')
+                    this.log.error('No marketprice found in marketprice-result for today!');
                     return 'error';
                 }
 
@@ -523,7 +522,7 @@ class ApgInfo extends utils.Adapter {
             //manage tomorrow (day1)
             for (const idS in prices1) {
                 if (prices1[idS].Price == undefined) {
-                    this.log.error('No marketprice found in marketprice-result for tomorrow!')
+                    this.log.error('No marketprice found in marketprice-result for tomorrow!');
                     return 'error';
                 }
 
@@ -667,7 +666,7 @@ class ApgInfo extends utils.Adapter {
             this.log.debug(`Peak hour result is: ${JSON.stringify(result)}`);
 
             if (!result || !result.StatusInfos) {
-                this.log.error('No data available for peak-result!')
+                this.log.error('No data available for peak-result!');
                 return;
             }
 
@@ -683,7 +682,7 @@ class ApgInfo extends utils.Adapter {
 
             for (const idS in result.StatusInfos) {
                 if (!result.StatusInfos[idS].utc) {
-                    this.log.error('No UTC found in peak-result!')
+                    this.log.error('No UTC found in peak-result!');
                     return 'error';
                 }
                 this.log.debug(result.StatusInfos[idS].utc);
@@ -758,12 +757,12 @@ class ApgInfo extends utils.Adapter {
         let todayMax = 0, tomorrowMax = 0;
 
         for (const idS in arrayToday) {
-            todayData[idS] = { "y": arrayToday[idS][1], "t": this.calcDate(idS) };
+            todayData[idS] = { 'y': arrayToday[idS][1], 't': this.calcDate(idS) };
             todayMin = Math.min(todayMin, Number(arrayToday[idS][1]));
             todayMax = Math.max(todayMax, Number(arrayToday[idS][1]));
         }
         for (const idS in arrayTomorrow) {
-            tomorrowData[idS] = { "y": arrayTomorrow[idS][1], "t": this.calcDate(idS, true) };
+            tomorrowData[idS] = { 'y': arrayTomorrow[idS][1], 't': this.calcDate(idS, true) };
             tomorrowMin = Math.min(tomorrowMin, Number(arrayTomorrow[idS][1]));
             tomorrowMax = Math.max(tomorrowMax, Number(arrayTomorrow[idS][1]));
         }
@@ -772,17 +771,17 @@ class ApgInfo extends utils.Adapter {
         let allMax = Math.max(todayMax, tomorrowMax);
         allMax = Math.ceil(allMax * 1.1 / 5) * 5;
 
-        if (todayData[23] && todayData[23].y && todayData[23].t) todayData[24] = { "y": todayData[23].y, "t": todayData[23].t + 60 * 60 * 1000 };
+        if (todayData[23] && todayData[23].y && todayData[23].t) todayData[24] = { 'y': todayData[23].y, 't': todayData[23].t + 60 * 60 * 1000 };
 
-        if (tomorrowData[23] && tomorrowData[23].y && tomorrowData[23].t) tomorrowData[24] = { "y": tomorrowData[23].y, "t": tomorrowData[23].t + 60 * 60 * 1000 };
+        if (tomorrowData[23] && tomorrowData[23].y && tomorrowData[23].t) tomorrowData[24] = { 'y': tomorrowData[23].y, 't': tomorrowData[23].t + 60 * 60 * 1000 };
 
         chart.graphs = [];
         chart.graphs[0] = {};
-        chart.graphs[0].type = "line";
-        chart.graphs[0].color = "gray";
+        chart.graphs[0].type = 'line';
+        chart.graphs[0].color = 'gray';
         chart.graphs[0].line_steppedLine = true;
-        chart.graphs[0].xAxis_timeFormats = { "hour": "HH" };
-        chart.graphs[0].xAxis_time_unit = "hour";
+        chart.graphs[0].xAxis_timeFormats = { 'hour': 'HH' };
+        chart.graphs[0].xAxis_time_unit = 'hour';
         chart.graphs[0].yAxis_min = Math.min(0, allMin);
         chart.graphs[0].yAxis_max = allMax;
         chart.graphs[0].datalabel_show = 'auto';
@@ -798,7 +797,7 @@ class ApgInfo extends utils.Adapter {
         chart.graphs[0].data = todayData;
         await jsonExplorer.stateSetCreate('marketprice.today.jsonChart', 'jsonChart', JSON.stringify(chart));
         chart.graphs[0].data = tomorrowData;
-        if (sourceTomorrow == 'exaa1015') chart.graphs[0].color = "lightgray";
+        if (sourceTomorrow == 'exaa1015') chart.graphs[0].color = 'lightgray';
         await jsonExplorer.stateSetCreate('marketprice.tomorrow.jsonChart', 'jsonChart', JSON.stringify(chart));
     }
 
@@ -882,13 +881,14 @@ function compareSecondColumn(a, b) {
     }
 }
 
+/*
 const constructObject = arr => {
-    return arr.reduce((acc, val) => {
-        const [key, value] = val;
-        acc[key] = value;
-        return acc;
-    }, {});
-};
+	return arr.reduce((acc, val) => {
+		const [key, value] = val;
+		acc[key] = value;
+		return acc;
+	}, {});
+};*/
 
 /**
  * @param {number} n number
@@ -910,7 +910,7 @@ function xml2js(xmlString) {
     // @ts-ignore
     xmlString = xmlString.replaceAll(`price.amount`, `price_amount`);
     const jsonResult = JSON.parse(convert.xml2json(xmlString, {
-        compact: true
+        compact: true,
     }));
     return (jsonResult);
 }
