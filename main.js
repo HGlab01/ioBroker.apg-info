@@ -882,14 +882,14 @@ function compareSecondColumn(a, b) {
 	}
 }
 
-// @ts-ignore
+/*
 const constructObject = arr => {
 	return arr.reduce((acc, val) => {
 		const [key, value] = val;
 		acc[key] = value;
 		return acc;
 	}, {});
-};
+};*/
 
 /**
  * @param {number} n number
