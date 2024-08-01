@@ -9,7 +9,7 @@ const __dirname = path.dirname(__filename);
 const compat = new FlatCompat({
     baseDirectory: __dirname,
     recommendedConfig: js.configs.recommended,
-    allConfig: js.configs.all
+    allConfig: js.configs.all,
 });
 
 export default [...compat.extends('eslint:recommended'), {
@@ -32,6 +32,6 @@ export default [...compat.extends('eslint:recommended'), {
             allowTemplateLiterals: true,
         }],
         semi: ['error', 'always'],
-        'comma-dangle': ['error', 'always-multiline'],
-    }
+        'comma-dangle': ['error', 'never']
+    },
 }];
