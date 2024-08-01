@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "apg-info",
-    "version": "0.1.8",
+    "version": "0.1.9-alpha.0",
     "news": {
+      "0.1.9-alpha.0": {
+        "en": "Support eslint9",
+        "de": "Support eslint9",
+        "ru": "Поддержка eslint9",
+        "pt": "Suporte eslint9",
+        "nl": "Ondersteuning eslint9",
+        "fr": "Soutien",
+        "it": "Supporto eslint9",
+        "es": "Support eslint9",
+        "pl": "Eslint9",
+        "uk": "Підтримка eslint9",
+        "zh-cn": "支持埃斯林特9号"
+      },
       "0.1.8": {
         "en": "Swiss market support; Token needed! Check readme!\nBump json-explorer to 0.1.16",
         "de": "Schweizer Marktunterstützung; Token benötigt! Sieh mir die Lese!\nStoßdämpfer bis 0,1.16",
@@ -80,19 +93,6 @@
         "pl": "Dodaj datę do dzisiaj i jutro, aby data dzisiaj i jutro była jasna\naxios bump do 1.7.2",
         "uk": "Додати дату на сьогодні і завтра, щоб зробити дату сьогодні і завтра ясно\nbump axios до 1.7.2",
         "zh-cn": "增加今天和明天的日期,使今天和明天的日期清楚\n折合轴为1.7.2"
-      },
-      "0.1.7-alpha.1": {
-        "en": "Add date to today and tomorrow to make the date of today and tomorrow clear",
-        "de": "Datum zu heute und morgen hinzufügen, um das Datum von heute und morgen klar zu machen",
-        "ru": "Добавьте дату сегодня и завтра, чтобы сделать дату сегодняшнего и завтрашнего дня ясной",
-        "pt": "Adicionar data para hoje e amanhã para fazer a data de hoje e amanhã claro",
-        "nl": "Voeg datum toe aan vandaag en morgen om de datum van vandaag en morgen duidelijk te maken",
-        "fr": "Ajouter la date d'aujourd'hui et de demain pour clarifier la date d'aujourd'hui et de demain",
-        "it": "Aggiungi data ad oggi e domani per rendere chiara la data di oggi e domani",
-        "es": "Añadir fecha a hoy y mañana para aclarar la fecha de hoy y mañana",
-        "pl": "Dodaj datę do dzisiaj i jutro, aby data dzisiaj i jutro była jasna",
-        "uk": "Додати дату на сьогодні і завтра, щоб зробити дату сьогодні і завтра ясно",
-        "zh-cn": "增加今天和明天的日期,使今天和明天的日期清楚"
       }
     },
     "titleLang": {

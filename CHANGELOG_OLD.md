@@ -1,4 +1,7 @@
 # Older changes
+## 0.1.4 (2024-01-15)
+* (HGlab01) fix 'Cannot read properties of undefined (reading 'status')'
+
 ## 0.1.3 (2023-12-26)
 * (HGlab01) Fix issue 'Request failed with status code 500' (#170)
 
