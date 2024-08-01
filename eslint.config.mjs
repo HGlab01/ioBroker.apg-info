@@ -1,4 +1,3 @@
-// @ts-ignore
 import globals from "globals";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -25,7 +24,9 @@ export default [...compat.extends("eslint:recommended"), {
     },
 
     rules: {
-        indent: ['error', 'tab'],
+        indent: ['warn', 4, {
+            SwitchCase: 1,
+        }],
         'no-console': 'off',
         'no-trailing-spaces': 'error',
 
