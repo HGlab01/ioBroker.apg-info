@@ -21,11 +21,11 @@ export default [...compat.extends("eslint:recommended"), {
         },
 
         ecmaVersion: 2023,
-        sourceType: "commonjs",
+        sourceType: 'commonjs',
     },
 
     rules: {
-        indent: ["error", "tab"],
+        indent: ['error', 'tab'],
         'no-console': 'off',
         'no-trailing-spaces': 'error',
 
