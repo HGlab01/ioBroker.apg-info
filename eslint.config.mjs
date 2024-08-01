@@ -38,4 +38,9 @@ export default [...compat.extends("eslint:recommended"), {
         semi: ['error', 'always'],
         'comma-dangle': ['error', 'always-multiline'],
     },
+    parserOptions: {
+        ecmaFeatures: {
+            jsx: true,
+        },
+    },
 }];
