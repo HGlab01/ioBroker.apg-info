@@ -18,29 +18,20 @@ export default [...compat.extends("eslint:recommended"), {
             ...globals.node,
             ...globals.mocha,
         },
-
         ecmaVersion: 2023,
-        sourceType: 'commonjs',
+        sourceType: 'module',
     },
-
     rules: {
         indent: ['warn', 4, {
             SwitchCase: 1,
         }],
         'no-console': 'off',
         'no-trailing-spaces': 'error',
-
         quotes: ['error', 'single', {
             avoidEscape: true,
             allowTemplateLiterals: true,
         }],
-
         semi: ['error', 'always'],
         'comma-dangle': ['error', 'always-multiline'],
-    },
-    parserOptions: {
-        ecmaFeatures: {
-            jsx: true,
-        },
-    },
+    }
 }];
