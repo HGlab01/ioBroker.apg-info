@@ -13,7 +13,6 @@ const compat = new FlatCompat({
 });
 
 export default [...compat.extends("eslint:recommended"), {
-    extends: ["eslint:recommended"],
     languageOptions: {
         globals: {
             ...globals.node,
@@ -25,10 +24,7 @@ export default [...compat.extends("eslint:recommended"), {
     },
 
     rules: {
-        indent: ['error', 4, {
-            SwitchCase: 1,
-        }],
-
+        indent: ["error", "tab"],
         'no-console': 'off',
         'no-var': 'error',
         'no-trailing-spaces': 'error',
