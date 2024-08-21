@@ -34,7 +34,7 @@ For more details check https://transparency.entsoe.eu/content/static_content/Sta
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### 0.1.9-alpha.0 (2024-08-01)
+### 0.1.9 (2024-08-21)
 * (HGlab01) Support eslint9
 
 ### 0.1.8 (2024-07-31)
