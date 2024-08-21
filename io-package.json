@@ -166,7 +166,7 @@
     "supportCustoms": false,
     "dependencies": [
       {
-        "js-controller": ">=5.0.0"
+        "js-controller": ">=5.0.19"
       }
     ],
     "plugins": {
@@ -184,7 +184,9 @@
     "feeRelative": 0,
     "vat": 20,
     "charges": 6,
-    "gridCosts": 6.636,
+    "gridCosts": 6.636
+  },
+  "protectedNative": {
     "token": ""
   },
   "objects": [],
