@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/HGlab01/ioBroker.apg-info",
   "keywords": [
+    "ioBroker",
     "APG",
     "Austrian Power Grid",
     "Stromspitzen",
@@ -37,7 +38,7 @@
     "@esm2cjs/is-online": "^10.0.0",
     "@iobroker/adapter-core": "^3.1.6",
     "axios": "^1.7.4",
-    "iobroker-jsonexplorer": "0.1.16",
+    "iobroker-jsonexplorer": "^0.1.16",
     "xml-js": "^1.6.11"
   },
   "deprecated": false,
@@ -72,5 +73,13 @@
     "test:unit": "mocha test/unit --exit",
     "release": "release-script",
     "translate": "translate-adapter"
-  }
+  },
+  "files": [
+    "admin/",
+    "lib/*.js",
+    "main.js",
+    "io-package.json",
+    "LICENSE",
+    "*.md"
+  ]
 }
