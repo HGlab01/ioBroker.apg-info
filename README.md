@@ -34,7 +34,7 @@ For more details check https://transparency.entsoe.eu/content/static_content/Sta
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### __WORK IN PROGRESS__
+### 0.1.10 (2024-10-04)
 * (HGlab01) fix issue #290
 * (HGlab01) bump axios to 1.7.7
 
@@ -52,9 +52,6 @@ For more details check https://transparency.entsoe.eu/content/static_content/Sta
 ### 0.1.6 (2024-03-17)
 * (HGlab01) fix issue in debug-mode: Cannot read properties of null (reading 'data')
 * (HGlab01) bump axios to 1.6.8
-
-### 0.1.5 (2024-01-20)
-* (HGlab01) Add fee, grid costs and tax calculation
 
 ## License
 MIT License

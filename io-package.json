@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "apg-info",
-    "version": "0.1.9",
+    "version": "0.1.10",
     "news": {
+      "0.1.10": {
+        "en": "fix issue #290\nbump axios to 1.7.7",
+        "de": "problem behoben #290\nstoßaxios bis 1.7.7",
+        "ru": "#290\n1.7.7",
+        "pt": "corrigir problema #290\naxios de choque para 1.7.7",
+        "nl": "probleem #290 oplossen\nbump axios tot 1.7.7",
+        "fr": "correction #290\naxios de bosse à 1.7.7",
+        "it": "problema di correzione #290\nurto assio a 1.7.7",
+        "es": "solucionar el problema #290\naxios de choque a 1.7.7",
+        "pl": "fix issue # 290\naxios bump do 1.7.7",
+        "uk": "виправити проблему #290\nbump axios до 1.7.7",
+        "zh-cn": "固定问题290\n折合轴为1.7.7"
+      },
       "0.1.9": {
         "en": "Support eslint9",
         "de": "Support eslint9",
@@ -69,19 +82,6 @@
         "zh-cn": "(HGLab01) 瑞士市场支持;托肯需要! 检查我!"
       },
       "0.1.8-alpha.1": {
-        "en": "(HGlab01) Swiss market support; Token needed! Check readme!",
-        "de": "(HGlab01) Schweizer Marktunterstützung; Token gebraucht! Sieh mir die Lese!",
-        "ru": "(HGlab01) Швейцарская рыночная поддержка; Токен нужен! Посмотри на меня!",
-        "pt": "(HGlab01) Apoio ao mercado suíço; Token necessário! Verifica o readme!",
-        "nl": "(HGlab01) Zwitserse marktsteun; Token nodig! Check me!",
-        "fr": "(HGlab01) Soutien du marché suisse; Token nécessaire! Vérifiez la lecture !",
-        "it": "(HGlab01) Supporto del mercato svizzero; Token necessario! Controllate il readme!",
-        "es": "(HGlab01) Apoyo al mercado suizo; ¡Token necesitaba! ¡Revisa la lectura!",
-        "pl": "(HGlab01) Swiss market support; Token need! Sprawdź mnie!",
-        "uk": "(HGlab01) швейцарська підтримка ринку; Token need! Перевірити читання!",
-        "zh-cn": "(HGLab01) 瑞士市场支持;托肯需要! 检查我!"
-      },
-      "0.1.8-alpha.0": {
         "en": "(HGlab01) Swiss market support; Token needed! Check readme!",
         "de": "(HGlab01) Schweizer Marktunterstützung; Token gebraucht! Sieh mir die Lese!",
         "ru": "(HGlab01) Швейцарская рыночная поддержка; Токен нужен! Посмотри на меня!",

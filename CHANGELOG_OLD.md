@@ -1,4 +1,7 @@
 # Older changes
+## 0.1.5 (2024-01-20)
+* (HGlab01) Add fee, grid costs and tax calculation
+
 ## 0.1.4 (2024-01-15)
 * (HGlab01) fix 'Cannot read properties of undefined (reading 'status')'
 
