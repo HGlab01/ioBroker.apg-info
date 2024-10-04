@@ -75,6 +75,7 @@ class ApgInfo extends utils.Adapter {
             this.terminate ? this.terminate(utils.EXIT_CODES.UNCAUGHT_EXCEPTION) : process.exit(0);
         }
 
+        // @ts-ignore
         if (this.config.token) this.token = this.config.token;
         else {
             if (country != 'at' && country != 'de') {
@@ -370,10 +371,12 @@ class ApgInfo extends utils.Adapter {
 
                 //Convert Etsoe-structure to Exaa-structure for today and tomorrow
                 if (prices0Entsoe) {
+                    this.log.debug(JSON.stringify(prices0Entsoe));
                     for (let i = 0; i < 24; i++) {
                         let ii = String(i);
                         prices0[ii] = {};
                         if (prices0Entsoe.TimeSeries[0]) prices0[ii].Price = parseFloat(prices0Entsoe.TimeSeries[0].Period.Point[i].price_amount._text);
+                        else if (prices0Entsoe.TimeSeries.Period[0]) prices0[ii].Price = parseFloat(prices0Entsoe.TimeSeries.Period[0].Point[i].price_amount._text);
                         else prices0[ii].Price = parseFloat(prices0Entsoe.TimeSeries.Period.Point[i].price_amount._text);
                         let sHour = pad(i + 1, 2);
                         prices0[ii].Product = 'H' + sHour;
