@@ -118,11 +118,11 @@
                         "en": "Activate price calculation",
                         "de": "Preiskalkulation aktivieren"
                     },
-                    "xs": 3,
-                    "sm": 3,
-                    "md": 2,
-                    "lg": 1,
-                    "xl": 1
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 4,
+                    "xl": 4
                 },
                 "feeAbsolute": {
                     "newLine": true,
