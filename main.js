@@ -389,6 +389,7 @@ class ApgInfo extends utils.Adapter {
                         let ii = String(i);
                         prices1[ii] = {};
                         if (prices1Entsoe.TimeSeries[0]) prices1[ii].Price = parseFloat(prices1Entsoe.TimeSeries[0].Period.Point[i].price_amount._text);
+                        else if (prices1Entsoe.TimeSeries.Period[0]) prices0[ii].Price = parseFloat(prices1Entsoe.TimeSeries.Period[0].Point[i].price_amount._text);
                         else prices1[ii].Price = parseFloat(prices1Entsoe.TimeSeries.Period.Point[i].price_amount._text);
                         let sHour = pad(i + 1, 2);
                         prices1[ii].Product = 'H' + sHour;

@@ -1,6 +1,9 @@
 {
     "i18n": false,
     "type": "tabs",
+    "tabsStyle": {
+        "width": "calc(100% - 100px)"
+    },
     "items": {
         "General": {
             "type": "panel",
@@ -23,11 +26,15 @@
                     },
                     "min": 0,
                     "step": 0.1,
-                    "newLine": true
+                    "newLine": true,
+                    "xs": 3,
+                    "sm": 3,
+                    "md": 2,
+                    "lg": 1,
+                    "xl": 1
                 },
                 "country": {
                     "type": "select",
-                    "md": 2,
                     "options": [
                         {
                             "label": {
@@ -81,13 +88,23 @@
                     "label": {
                         "en": "Country of the market",
                         "de": "Land der Strombörse"
-                    }
+                    },
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 4,
+                    "xl": 4
                 },
                 "forecast": {
                     "type": "checkbox",
                     "label": "Forecast based on 10.15 auction (works in AT and DE)",
-                    "default": false
-                }
+                    "default": false,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 4,
+                    "xl": 4
+                },
             }
         },
         "Calculation": {
@@ -100,7 +117,12 @@
                     "label": {
                         "en": "Activate price calculation",
                         "de": "Preiskalkulation aktivieren"
-                    }
+                    },
+                    "xs": 3,
+                    "sm": 3,
+                    "md": 2,
+                    "lg": 1,
+                    "xl": 1
                 },
                 "feeAbsolute": {
                     "newLine": true,
@@ -109,7 +131,12 @@
                         "en": "Provider fee absolute (€ct/kWh)",
                         "de": "Provider Gebühr Absolut (€ct/kWh)"
                     },
-                    "hidden": "!data.calculate"
+                    "hidden": "!data.calculate",
+                    "xs": 3,
+                    "sm": 3,
+                    "md": 2,
+                    "lg": 1,
+                    "xl": 1
                 },
                 "feeRelative": {
                     "type": "number",
@@ -117,7 +144,12 @@
                         "en": "Provider fee (%)",
                         "de": "Provider Gebühr (%)"
                     },
-                    "hidden": "!data.calculate"
+                    "hidden": "!data.calculate",
+                    "xs": 3,
+                    "sm": 3,
+                    "md": 2,
+                    "lg": 1,
+                    "xl": 1
                 },
                 "charges": {
                     "type": "number",
@@ -125,7 +157,12 @@
                         "en": "other taxes (%)",
                         "de": "weitere Abgaben (%)"
                     },
-                    "hidden": "!data.calculate"
+                    "hidden": "!data.calculate",
+                    "xs": 3,
+                    "sm": 3,
+                    "md": 2,
+                    "lg": 1,
+                    "xl": 1
                 },
                 "gridCosts": {
                     "type": "number",
@@ -133,7 +170,12 @@
                         "en": "grid costs (€ct/kWh)",
                         "de": "Netzentgelte (€ct/kWh)"
                     },
-                    "hidden": "!data.calculate"
+                    "hidden": "!data.calculate",
+                    "xs": 3,
+                    "sm": 3,
+                    "md": 2,
+                    "lg": 1,
+                    "xl": 1
                 },
                 "vat": {
                     "type": "number",
@@ -141,13 +183,23 @@
                         "en": "VAT (%)",
                         "de": "USt (%)"
                     },
-                    "hidden": "!data.calculate"
+                    "hidden": "!data.calculate",
+                    "xs": 3,
+                    "sm": 3,
+                    "md": 2,
+                    "lg": 1,
+                    "xl": 1
                 },
                 "_text0": {
                     "type": "staticText",
                     "text": "",
                     "newLine": true,
-                    "hidden": "!data.calculate"
+                    "hidden": "!data.calculate",
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 4,
+                    "xl": 4
                 },
                 "_text1": {
                     "type": "staticText",
@@ -186,7 +238,12 @@
                     },
                     "newLine": true
                 }
-            }
+            },
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 4
         }
     }
 }
