@@ -1,4 +1,8 @@
 # Older changes
+## 0.1.6 (2024-03-17)
+* (HGlab01) fix issue in debug-mode: Cannot read properties of null (reading 'data')
+* (HGlab01) bump axios to 1.6.8
+
 ## 0.1.5 (2024-01-20)
 * (HGlab01) Add fee, grid costs and tax calculation
 
