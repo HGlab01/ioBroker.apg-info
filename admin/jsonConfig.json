@@ -219,7 +219,6 @@
                 "token": {
                     "newLine": true,
                     "type": "text",
-                    "sm": 12,
                     "label": {
                         "en": "Token",
                         "de": "Token"
