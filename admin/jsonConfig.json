@@ -197,9 +197,9 @@
                     "hidden": "!data.calculate",
                     "xs": 12,
                     "sm": 12,
-                    "md": 6,
-                    "lg": 4,
-                    "xl": 4
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "_text1": {
                     "type": "staticText",
@@ -208,7 +208,12 @@
                         "en": "Calculation: <br> provider = tradePrice * tradePrice * providerFee + feeAbsolute; <br> charges = (tradePrice + provider) * otherTaxes; <br> vat = (tradePrice + provider + charges + gridCosts) * vat; <br> price = tradePrice + provider + charges + gridCosts + vat;"
                     },
                     "newLine": true,
-                    "hidden": "!data.calculate"
+                    "hidden": "!data.calculate",
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 }
             }
         },
@@ -219,16 +224,25 @@
                 "token": {
                     "newLine": true,
                     "type": "text",
-                    "sm": 3,
                     "label": {
                         "en": "Token",
                         "de": "Token"
-                    }
+                    },
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 4,
+                    "xl": 4
                 },
                 "_text0": {
                     "type": "staticText",
                     "text": "",
-                    "newLine": true
+                    "newLine": true,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "_text1": {
                     "type": "staticText",
@@ -236,14 +250,14 @@
                         "de": "Token is only needed for Swiss market. How to request a token is described in the readme.",
                         "en": "Token is only needed for Swiss market. How to request a token is described in the readme."
                     },
-                    "newLine": true
+                    "newLine": true,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 }
-            },
-            "xs": 12,
-            "sm": 12,
-            "md": 6,
-            "lg": 4,
-            "xl": 4
+            }
         }
     }
 }
