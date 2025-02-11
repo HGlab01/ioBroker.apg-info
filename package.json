@@ -41,7 +41,6 @@
     "iobroker-jsonexplorer": "^0.1.16",
     "xml-js": "^1.6.11"
   },
-  "deprecated": false,
   "description": "APG Info",
   "devDependencies": {
     "@alcalzone/release-script": "^3.8.0",
