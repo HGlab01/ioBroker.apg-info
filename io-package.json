@@ -191,9 +191,9 @@
     "charges": 6,
     "gridCosts": 6.636
   },
-  "protectedNative": {
-    "token": ""
-  },
+  "protectedNative": [
+    "token"
+  ],
   "objects": [],
   "instanceObjects": []
 }
