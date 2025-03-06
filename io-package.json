@@ -189,7 +189,8 @@
     "feeRelative": 0,
     "vat": 20,
     "charges": 6,
-    "gridCosts": 6.636
+    "gridCosts": 6.636,
+    "token": ""
   },
   "protectedNative": [
     "token"
