@@ -34,6 +34,11 @@ For more details check https://transparency.entsoe.eu/content/static_content/Sta
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
+### __WORK IN PROGRESS__
+* (HGlab01) Fix warning definition missing for 'from_19_to_20'
+* (HGlab01) Fix warning definition missing for 'item 32'
+* (HGlab01) Bump axios to 1.8.1
+
 ### 0.1.11 (2024-10-20)
 * (HGlab01) improve UI config (#296)
 
