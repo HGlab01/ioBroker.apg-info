@@ -1,4 +1,8 @@
 # Older changes
+## 0.1.7 (2024-05-27)
+* (HGlab01) Add date to today and tomorrow to make the date of today and tomorrow clear
+* (HGlab01) bump axios to 1.7.2
+
 ## 0.1.6 (2024-03-17)
 * (HGlab01) fix issue in debug-mode: Cannot read properties of null (reading 'data')
 * (HGlab01) bump axios to 1.6.8
