@@ -36,7 +36,7 @@ For more details check https://transparency.entsoe.eu/content/static_content/Sta
 -->
 ### __WORK IN PROGRESS__
 * (HGlab01) Fix warning definition missing for 'from_19_to_20'
-* (HGlab01) Fix warning definition missing for 'item 32'
+* (HGlab01) Fix warning definition missing for 'item xx'
 * (HGlab01) Bump axios to 1.8.1
 
 ### 0.1.11 (2024-10-20)
