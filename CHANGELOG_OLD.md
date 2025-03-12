@@ -1,4 +1,8 @@
 # Older changes
+## 0.1.8 (2024-07-31)
+* (HGlab01) Swiss market support; Token needed! Check readme!
+* (HGlab01) Bump json-explorer to 0.1.16
+
 ## 0.1.7 (2024-05-27)
 * (HGlab01) Add date to today and tomorrow to make the date of today and tomorrow clear
 * (HGlab01) bump axios to 1.7.2

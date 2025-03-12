@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "apg-info",
-    "version": "0.1.12",
+    "version": "0.1.13",
     "news": {
+      "0.1.13": {
+        "en": "Bump axios to 1.8.3",
+        "de": "Bump axios zu 1.8.3",
+        "ru": "Аксиос удара до 1,8.3",
+        "pt": "Bump axios para 1.8.3",
+        "nl": "Bump axio's tot 1.8.3",
+        "fr": "Axios bouffés à 1.8.3",
+        "it": "Assio di bump a 1.8.3",
+        "es": "Axios de bomba a 1.8.3",
+        "pl": "Axios bump do 1.8.3",
+        "uk": "Бампер аксіос до 1.8.3",
+        "zh-cn": "横轴改为1.8.3"
+      },
       "0.1.12": {
         "en": "Fix warning definition missing for 'from_19_to_20'\nFix warning definition missing for 'item xx'\nBump axios to 1.8.1",
         "de": "Warnungsdefinition fehlt für 'from_19_to_20 '\nWarnungsdefinition fehlt für 'item xx '\nBump axios zu 1.8.1",
@@ -80,19 +93,6 @@
         "pl": "Wsparcie szwajcarskiego rynku; Token potrzebne! Sprawdź mnie!\nBump json- explorer do 0.1.16",
         "uk": "Служба підтримки швейцарського ринку; Перевірити читання!\nBump json-explorer до 0.1.16",
         "zh-cn": "瑞士市场支持;托肯需要! 检查我!\nBump json-探索器改为0.1.16"
-      },
-      "0.1.8-alpha.3": {
-        "en": "(HGlab01) Swiss market support; Token needed! Check readme!\n(HGlab01) Bump json-explorer to 0.1.16",
-        "de": "(HGlab01) Schweizer Marktunterstützung; Token gebraucht! Sieh mir die Lese!\n(HGlab01) Stoßdämpfer bis 0,1.16",
-        "ru": "(HGlab01) Швейцарская рыночная поддержка; Токен нужен! Посмотри на меня!\n(HGlab01) Исследователь Bump до 0.1.16",
-        "pt": "(HGlab01) Apoio ao mercado suíço; Token necessário! Verifica o readme!\n(HGlab01) Bump json-explorer para 0.1.16",
-        "nl": "(HGlab01) Zwitserse marktsteun; Token nodig! Check me!\nBump json-explorer naar 0,1.16",
-        "fr": "(HGlab01) Soutien du marché suisse; Token nécessaire! Vérifiez la lecture !\n(HGlab01) Bump json-explorer à 0,1.16",
-        "it": "(HGlab01) Supporto del mercato svizzero; Token necessario! Controllate il readme!\n(HGlab01) Bump json-explorer a 0.1.16",
-        "es": "(HGlab01) Apoyo al mercado suizo; ¡Token necesitaba! ¡Revisa la lectura!\n(HGlab01) Bump json-explorer to 0,1.16",
-        "pl": "(HGlab01) Swiss market support; Token need! Sprawdź mnie!\n(HGlab01) Bump json- explorer do 0.1.16",
-        "uk": "(HGlab01) швейцарська підтримка ринку; Token need! Перевірити читання!\n(HGlab01) Bump json-explorer до 0.1.16",
-        "zh-cn": "(HGLab01) 瑞士市场支持;托肯需要! 检查我!\n(HGLab01) Bump json勘探器改为0.1.16"
       }
     },
     "titleLang": {

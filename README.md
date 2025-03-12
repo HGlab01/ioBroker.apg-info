@@ -34,6 +34,9 @@ For more details check https://transparency.entsoe.eu/content/static_content/Sta
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
+### 0.1.13 (2025-03-12)
+* (HGlab01) Bump axios to 1.8.3
+
 ### 0.1.12 (2025-03-06)
 * (HGlab01) Fix warning definition missing for 'from_19_to_20'
 * (HGlab01) Fix warning definition missing for 'item xx'
@@ -48,10 +51,6 @@ For more details check https://transparency.entsoe.eu/content/static_content/Sta
 
 ### 0.1.9 (2024-08-21)
 * (HGlab01) Support eslint9
-
-### 0.1.8 (2024-07-31)
-* (HGlab01) Swiss market support; Token needed! Check readme!
-* (HGlab01) Bump json-explorer to 0.1.16
 
 ## License
 MIT License
