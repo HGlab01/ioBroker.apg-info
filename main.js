@@ -19,7 +19,7 @@ const { version } = require('./package.json');
 
 //global variables
 let threshold = 10;
-const maxDelay = 1; //25000
+const maxDelay = 25000; //25000
 
 class ApgInfo extends utils.Adapter {
     /**
