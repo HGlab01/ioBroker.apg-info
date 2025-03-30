@@ -556,7 +556,7 @@ class ApgInfo extends utils.Adapter {
             }
             this.log.debug('Day1 looks like ' + JSON.stringify(jDay1));
 
-            //put data into an array to be sorted in a later step
+            //put data into an array
             let arrBelow0 = Object.keys(jDay0BelowThreshold).map((key) => [key, jDay0BelowThreshold[key]]);
             let arrBelow1 = Object.keys(jDay1BelowThreshold).map((key) => [key, jDay1BelowThreshold[key]]);
             let arrAll0 = Object.keys(jDay0).map((key) => [key, jDay0[key]]);
@@ -629,29 +629,8 @@ class ApgInfo extends utils.Adapter {
             await jsonExplorer.stateSetCreate('marketprice.tomorrow.average', 'average', price1Avg);
 
             await jsonExplorer.checkExpire('marketprice.*');
-
             await jsonExplorer.deleteObjectsWithNull('marketprice.*Threshold.*');
             await jsonExplorer.deleteObjectsWithNull('marketprice.details.*');
-
-            /*
-            // check for outdated states to be deleted
-            let statesToDelete = await this.getStatesAsync('marketprice.*Threshold.*');
-            for (const idS in statesToDelete) {
-                let state = await this.getStateAsync(idS);
-                if (state != null && state.val == null) {
-                    this.log.debug(`State "${idS}" will be deleted`);
-                    await this.delObjectAsync(idS);
-                }
-            }
-            statesToDelete = await this.getStatesAsync('marketprice.details.*');
-            for (const idS in statesToDelete) {
-                let state = await this.getStateAsync(idS);
-                if (state && state.val == null) {
-                    this.log.debug(`State "${idS}" will be deleted`);
-                    await this.delObjectAsync(idS);
-                }
-            }
-            */
 
         } catch (error) {
             let eMsg = `Error in ExecuteRequestDayAhead(): ${error})`;
@@ -746,13 +725,9 @@ class ApgInfo extends utils.Adapter {
         }
     }
 
-    calcDate(i, tomorrow = false) {
-        let date = cleanDate(new Date());
-        if (tomorrow) date = addDays(date, 1);
-        date.setHours(i);
-        return date.getTime();
-    }
-
+    /**
+     * Creates JSON-date for charts for today and tomorrow
+     */
     async createChart(arrayToday, arrayTomorrow, sourceTomorrow) {
         let todayData = [];
         let tomorrowData = [];
@@ -763,13 +738,13 @@ class ApgInfo extends utils.Adapter {
 
         for (const idS in arrayToday) {
             let iHour = parseInt(arrayToday[idS][0]); //analysing "00_to_01" with parseInt ignores everything starting with "_"
-            todayData[idS] = { 'y': arrayToday[idS][1], 't': this.calcDate(iHour) };
+            todayData[idS] = { 'y': arrayToday[idS][1], 't': calcDate(iHour, false) };
             todayMin = Math.min(todayMin, Number(arrayToday[idS][1]));
             todayMax = Math.max(todayMax, Number(arrayToday[idS][1]));
         }
         for (const idS in arrayTomorrow) {
             let iHour = parseInt(arrayTomorrow[idS][0]); //analysing "00_to_01" with parseInt ignores everything starting with "_"
-            tomorrowData[idS] = { 'y': arrayTomorrow[idS][1], 't': this.calcDate(iHour) };
+            tomorrowData[idS] = { 'y': arrayTomorrow[idS][1], 't': calcDate(iHour, true) };
             tomorrowMin = Math.min(tomorrowMin, Number(arrayTomorrow[idS][1]));
             tomorrowMax = Math.max(tomorrowMax, Number(arrayTomorrow[idS][1]));
         }
@@ -858,6 +833,11 @@ if (module.parent) {
     new ApgInfo();
 }
 
+
+/**************************************************** */
+/*         H E L P E R S                              */
+/**************************************************** */
+
 /**
  * sets time to 00:00:00.00000
  * @param {Date} date date to be changed
@@ -865,6 +845,18 @@ if (module.parent) {
 function cleanDate(date) {
     date.setHours(0, 0, 0, 0);
     return date;
+}
+
+/**
+ * @param {number} i
+ * @param {boolean} tomorrow
+ * @returns {number}
+ */
+function calcDate(i, tomorrow = false) {
+    let date = cleanDate(new Date());
+    if (tomorrow) date = addDays(date, 1);
+    date.setHours(i);
+    return date.getTime();
 }
 
 /**
@@ -889,18 +881,11 @@ function compareSecondColumn(a, b) {
     }
 }
 
-/*
-const constructObject = arr => {
-    return arr.reduce((acc, val) => {
-        const [key, value] = val;
-        acc[key] = value;
-        return acc;
-    }, {});
-};*/
 
 /**
  * @param {number} n number
  * @param {number} len length
+ * @returns {string}
  */
 function pad(n, len) {
     let l = Math.floor(len);
@@ -910,9 +895,10 @@ function pad(n, len) {
     return '0'.repeat(l - snl) + sn;
 }
 
+
 /**
  * @param {string} xmlString
- * @returns {any}
+ * @returns {object}
  */
 function xml2js(xmlString) {
     // @ts-ignore
