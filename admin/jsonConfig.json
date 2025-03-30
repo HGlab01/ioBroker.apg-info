@@ -204,7 +204,7 @@
                 "_text1": {
                     "type": "staticText",
                     "text": {
-                        "de": "Calculation: <br> provider = tradePrice * tradePrice * providerFee + feeAbsolute; <br> charges = (tradePrice + provider) * otherTaxes; <br> vat = (tradePrice + provider + charges + gridCosts) * vat; <br> price = tradePrice + provider + charges + gridCosts + vat;",
+                        "de": "Calculation: <br> provider = tradePrice * Abs(tradePrice * providerFee) + feeAbsolute; <br> charges = (tradePrice + provider) * otherTaxes; <br> vat = (tradePrice + provider + charges + gridCosts) * vat; <br> price = tradePrice + provider + charges + gridCosts + vat;",
                         "en": "Calculation: <br> provider = tradePrice * tradePrice * providerFee + feeAbsolute; <br> charges = (tradePrice + provider) * otherTaxes; <br> vat = (tradePrice + provider + charges + gridCosts) * vat; <br> price = tradePrice + provider + charges + gridCosts + vat;"
                     },
                     "newLine": true,
