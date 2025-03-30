@@ -809,7 +809,7 @@ class ApgInfo extends utils.Adapter {
         tradePrice = Math.round(tradePrice * 1000) / 1000;
         let price = 0;
         if (this.calculate == true) {
-            let provider = tradePrice * this.feeRelative + this.feeAbsolute;
+            let provider = Math.abs(tradePrice * this.feeRelative) + this.feeAbsolute;
             let charges = (tradePrice + provider) * this.charges;
             let vat = (tradePrice + provider + charges + this.gridCosts) * this.vat;
             price = tradePrice + provider + charges + this.gridCosts + vat;
