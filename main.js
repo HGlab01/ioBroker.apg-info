@@ -768,7 +768,8 @@ class ApgInfo extends utils.Adapter {
             todayMax = Math.max(todayMax, Number(arrayToday[idS][1]));
         }
         for (const idS in arrayTomorrow) {
-            tomorrowData[idS] = { 'y': arrayTomorrow[idS][1], 't': this.calcDate(idS, true) };
+            let iHour = parseInt(arrayToday[idS][0]); //analysing "00_to_01" with parseInt ignores everything starting with "_"
+            tomorrowData[idS] = { 'y': arrayTomorrow[idS][1], 't': this.calcDate(iHour) };
             tomorrowMin = Math.min(tomorrowMin, Number(arrayTomorrow[idS][1]));
             tomorrowMax = Math.max(tomorrowMax, Number(arrayTomorrow[idS][1]));
         }
