@@ -16,9 +16,10 @@ const jsonExplorer = require('iobroker-jsonexplorer');
 const stateAttr = require(`${__dirname}/lib/stateAttr.js`); // Load attribute library
 const isOnline = require('@esm2cjs/is-online').default;
 const { version } = require('./package.json');
-//const jToday = require('./z_TimeChange.json');
+
 //global variables
 let threshold = 10;
+const maxDelay = 1; //25000
 
 class ApgInfo extends utils.Adapter {
     /**
@@ -94,9 +95,9 @@ class ApgInfo extends utils.Adapter {
             this.log.debug('Internet connection detected. Everything fine!');
         }
 
-        const delay = Math.floor(Math.random() * 25000); //25000
-        this.log.info(`Delay execution by ${delay}ms to better spread API calls`);
-        await jsonExplorer.sleep(delay);
+        const callApiDelay = Math.floor(Math.random() * maxDelay);
+        this.log.info(`Delay execution by ${callApiDelay}ms to better spread API calls`);
+        await jsonExplorer.sleep(callApiDelay);
 
         await jsonExplorer.setLastStartTime();
         let resultPeakHours = await this.ExecuteRequestPeakHours();
@@ -118,7 +119,7 @@ class ApgInfo extends utils.Adapter {
             this.log.info('cleaned everything up...');
             this.unloaded = true;
             callback();
-        } catch  {
+        } catch {
             callback();
         }
     }
@@ -761,7 +762,8 @@ class ApgInfo extends utils.Adapter {
         let todayMax = 0, tomorrowMax = 0;
 
         for (const idS in arrayToday) {
-            todayData[idS] = { 'y': arrayToday[idS][1], 't': this.calcDate(idS) };
+            let iHour = parseInt(arrayToday[idS][0]); //analysing "00_to_01" with parseInt ignores everything starting with "_"
+            todayData[idS] = { 'y': arrayToday[idS][1], 't': this.calcDate(iHour) };
             todayMin = Math.min(todayMin, Number(arrayToday[idS][1]));
             todayMax = Math.max(todayMax, Number(arrayToday[idS][1]));
         }
@@ -775,9 +777,10 @@ class ApgInfo extends utils.Adapter {
         let allMax = Math.max(todayMax, tomorrowMax);
         allMax = Math.ceil(allMax * 1.1 / 5) * 5;
 
-        if (todayData[23] && todayData[23].y && todayData[23].t) todayData[24] = { 'y': todayData[23].y, 't': todayData[23].t + 60 * 60 * 1000 };
-
-        if (tomorrowData[23] && tomorrowData[23].y && tomorrowData[23].t) tomorrowData[24] = { 'y': tomorrowData[23].y, 't': tomorrowData[23].t + 60 * 60 * 1000 };
+        let todayMaxIndex = todayData.length - 1;
+        let tomorrowMaxIndex = tomorrowData.length - 1;
+        if (todayData[todayMaxIndex] && todayData[todayMaxIndex].y && todayData[todayMaxIndex].t) todayData[todayMaxIndex + 1] = { 'y': todayData[todayMaxIndex].y, 't': todayData[todayMaxIndex].t + 60 * 60 * 1000 };
+        if (tomorrowData[tomorrowMaxIndex] && tomorrowData[tomorrowMaxIndex].y && tomorrowData[tomorrowMaxIndex].t) tomorrowData[tomorrowMaxIndex + 1] = { 'y': tomorrowData[tomorrowMaxIndex].y, 't': tomorrowData[tomorrowMaxIndex].t + 60 * 60 * 1000 };
 
         chart.graphs = [];
         chart.graphs[0] = {};
@@ -887,11 +890,11 @@ function compareSecondColumn(a, b) {
 
 /*
 const constructObject = arr => {
-	return arr.reduce((acc, val) => {
-		const [key, value] = val;
-		acc[key] = value;
-		return acc;
-	}, {});
+    return arr.reduce((acc, val) => {
+        const [key, value] = val;
+        acc[key] = value;
+        return acc;
+    }, {});
 };*/
 
 /**
