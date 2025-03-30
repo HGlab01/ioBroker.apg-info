@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "apg-info",
-    "version": "0.1.13",
+    "version": "0.1.14",
     "news": {
+      "0.1.14": {
+        "en": "Fix switch to summer time begin issue\nBump axios to 1.8.4\nFix warning \"State attribute definition missing for 'item xx' \nFix provider-fee% calculation if base price is negative ([#354](https://github.com/HGlab01/ioBroker.apg-info/issues/354))",
+        "de": "Fix Schalter für Sommerzeit beginnen Problem\nBump axios zu 1.8.4\nWarnung reparieren \"Attributdefinition für 'item xx fehlen\"\nReparieren Sie die Berechnung von Provider-Fee%, wenn der Basispreis negativ ist ([#354](https://github.com/HGlab01/ioBroker.apg-info/issues/354))",
+        "ru": "Fix switch to summer time скачать бесплатно\nАксиос удара до 1,8.4\nПредупреждение об исправлении \"Определение атрибутов государства отсутствует для \"пункта xx\"\nИсправьте вычисление процентной ставки поставщика, если базовая цена отрицательна ([#354](https://github.com/HGlab01/ioBroker.apg-info/issues/354))",
+        "pt": "Corrigir interruptor para o tempo de verão começar questão\nBump axios para 1.8.4\nCorrigir aviso \"Estar definição de atributo faltando para 'item xx'\nFixar o cálculo do fornecedor-fee %s e o preço base for negativo ([#354](https://github.com/HGlab01/ioBroker.apg-info/issues/354)))",
+        "nl": "Fix switch naar zomertijd begin probleem\nBump axios naar 1.8.4\nFix waarschuwing \"State attribuut definitie ontbreekt voor 'item xx'\nFix provider-fee% berekening als basisprijs negatief is ([#354](https://github.com/HGlab01/ioBroker.apg-info/issues/354))",
+        "fr": "Correction du passage à l'heure d'été\nAxios bouffés à 1.8.4\nCorrection de l'avertissement \"Définition de l'attribut État manquant pour 'item xx'\nFixez le calcul du pourcentage du fournisseur si le prix de base est négatif ([#354](https://github.com/HGlab01/ioBroker.apg-info/issues/354))",
+        "it": "Fissare l'interruttore per il tempo estivo iniziare problema\nAssio di bump a 1.8.4\nFissare l'avvertimento \"State attributo definizione mancante per 'item xx'\nFissare il calcolo del fornitore-fee %s e il prezzo di base è negativo ([#354](https://github.com/HGlab01/ioBroker.apg-info/issues/354))",
+        "es": "Interruptor de fijación a la hora de inicio de verano\nAxios de bomba a 1.8.4\nCorrección de advertencia \"Definición de atributo estatal falta para 'item xx'\nCorregir el cálculo del porcentaje de proveedores si el precio básico es negativo ([#354](https://github.com/HGlab01/ioBroker.apg-info/issues/354))",
+        "pl": "Napraw przełączanie na czas letni\nAksykony bumpy do 1.8.4\nNapraw ostrzeżenie \"brak definicji atrybutu państwa dla 'pozycji xx'\nFix provider- fee% calculation if base price is negative ([# 354] (https: / / github.com / HGlab01 / ioBroker.apg- info / issues / 354))",
+        "uk": "Виправлення перемикача на літній час\nБампер аксіос до 1.8.4\nВиправлення попередження \"Державне визначення атрибутів відсутній для 'item xx'\nФіксаторно-fee% розрахунок, якщо базова ціна негативна ([#354](https://github.com/HGlab01/ioBroker.apg-info/products/354)",
+        "zh-cn": "切换到夏令时开始发行\n横轴改为1.8.4\n修复“ 缺少“ xxx” 的状态属性定义\n如果基本价格为负值,则固定提供者-收费百分比计算([#354](https://github.com/HGlab01/ioBroker.apg-info/issues/354))"
+      },
       "0.1.13": {
         "en": "Bump axios to 1.8.3",
         "de": "Bump axios zu 1.8.3",
@@ -80,19 +93,6 @@
         "pl": "Eslint9",
         "uk": "Підтримка eslint9",
         "zh-cn": "支持埃斯林特9号"
-      },
-      "0.1.8": {
-        "en": "Swiss market support; Token needed! Check readme!\nBump json-explorer to 0.1.16",
-        "de": "Schweizer Marktunterstützung; Token benötigt! Sieh mir die Lese!\nStoßdämpfer bis 0,1.16",
-        "ru": "Швейцарская поддержка рынка; Токен нужен! Посмотри на меня!\nBump json-explorer до 0.1.16",
-        "pt": "Suporte ao mercado suíço; Token necessário! Verifica o readme!\nBump json-explorer para 0.1.16",
-        "nl": "Zwitserse marktsteun; Token nodig! Check me!\nBump json-explorer naar 0,1.16",
-        "fr": "Soutien du marché suisse; Token nécessaire! Vérifiez la lecture !\nBump json-explorer à 0,1.16",
-        "it": "Supporto del mercato svizzero; Token necessario! Controllate il readme!\nBump json-explorer a 0.1.16",
-        "es": "Soporte de mercado suizo; Token necesitaba! ¡Revise readme!\nBump json-explorer to 0.1.16",
-        "pl": "Wsparcie szwajcarskiego rynku; Token potrzebne! Sprawdź mnie!\nBump json- explorer do 0.1.16",
-        "uk": "Служба підтримки швейцарського ринку; Перевірити читання!\nBump json-explorer до 0.1.16",
-        "zh-cn": "瑞士市场支持;托肯需要! 检查我!\nBump json-探索器改为0.1.16"
       }
     },
     "titleLang": {
