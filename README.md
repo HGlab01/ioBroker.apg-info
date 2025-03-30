@@ -35,7 +35,7 @@ For more details check https://transparency.entsoe.eu/content/static_content/Sta
     ### __WORK IN PROGRESS__
 -->
 ### __WORK IN PROGRESS__
-* (HGlab01) Fix switch to summer time issue
+* (HGlab01) Fix switch to summer time begin issue
 * (HGlab01) Bump axios to 1.8.4
 * (HGlab01) Fix warning "State attribute definition missing for 'item xx' 
 
