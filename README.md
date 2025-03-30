@@ -35,7 +35,7 @@ For more details check https://transparency.entsoe.eu/content/static_content/Sta
     ### __WORK IN PROGRESS__
 -->
 ### __WORK IN PROGRESS__
-* (HGlab01) Fix change to summer time issue
+* (HGlab01) Fix switch to summer time issue
 * (HGlab01) Bump axios to 1.8.4
 
 ### 0.1.13 (2025-03-12)
