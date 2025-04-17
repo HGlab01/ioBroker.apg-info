@@ -372,7 +372,12 @@ class ApgInfo extends utils.Adapter {
 
                 //Convert Etsoe-structure to Exaa-structure for today and tomorrow
                 if (prices0Entsoe) {
-                    this.log.debug(JSON.stringify(prices0Entsoe));
+                    this.log.debug('prices0Entsoe: ' + JSON.stringify(prices0Entsoe));
+                    console.log('prices0Entsoe: ' + JSON.stringify(prices0Entsoe));
+                    if (prices0Entsoe.TimeSeries[0] == null && prices0Entsoe.TimeSeries == null) {
+                        this.log.error('No data available for today!');
+                        return;
+                    }
                     for (let i = 0; i < 24; i++) {
                         let ii = String(i);
                         prices0[ii] = {};
@@ -386,6 +391,12 @@ class ApgInfo extends utils.Adapter {
                 }
 
                 if (prices1Entsoe) {
+                    this.log.debug('prices1Entsoe: ' + JSON.stringify(prices1Entsoe));
+                    console.log('prices1Entsoe: ' + JSON.stringify(prices1Entsoe));
+                    if (prices1Entsoe.TimeSeries[0] == null && prices1Entsoe.TimeSeries == null) {
+                        this.log.error('No data available for tomorrow!');
+                        return;
+                    }
                     for (let i = 0; i < 24; i++) {
                         let ii = String(i);
                         prices1[ii] = {};
