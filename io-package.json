@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "apg-info",
-    "version": "0.1.14",
+    "version": "0.1.15",
     "news": {
+      "0.1.15": {
+        "en": "fix 'Cannot read properties of undefined (reading 'price_amount')'",
+        "de": "'Cannot read properties of undefiniert (reading 'price_amount') '",
+        "ru": "исправить «Не могу прочитать свойства неопределенного» (чтение «цена_сумма») \"",
+        "pt": "corrigir 'Não é possível ler propriedades indefinidas (ler 'price_amount') '",
+        "nl": "fix 'Kan eigenschappen van ongedefinieerde niet lezen' (lezen van 'prijs_bedrag') '",
+        "fr": "correction 'Impossible de lire les propriétés non définies (lecture de 'prix_montant') '",
+        "it": "fix 'Cannot leggere proprietà di non definita (leggi 'price_amount') '",
+        "es": "fijar 'No puede leer propiedades de undefinido (leer 'price_amount') '",
+        "pl": "fix 'Nie można odczytać właściwości nieokreślone (czytanie' price _ amount ')'",
+        "uk": "виправити 'Неможливо прочитати властивості невизначеного (читання 'price_amount') Р",
+        "zh-cn": "固定“ 无法读取未定义的属性( 正在读取 price_ amount) ”  '"
+      },
       "0.1.14": {
         "en": "Fix switch to summer time begin issue\nBump axios to 1.8.4\nFix warning \"State attribute definition missing for 'item xx' \nFix provider-fee% calculation if base price is negative ([#354](https://github.com/HGlab01/ioBroker.apg-info/issues/354))",
         "de": "Fix Schalter für Sommerzeit beginnen Problem\nBump axios zu 1.8.4\nWarnung reparieren \"Attributdefinition für 'item xx fehlen\"\nReparieren Sie die Berechnung von Provider-Fee%, wenn der Basispreis negativ ist ([#354](https://github.com/HGlab01/ioBroker.apg-info/issues/354))",
@@ -69,19 +82,6 @@
         "zh-cn": "固定问题290\n折合轴为1.7.7"
       },
       "0.1.9": {
-        "en": "Support eslint9",
-        "de": "Support eslint9",
-        "ru": "Поддержка eslint9",
-        "pt": "Suporte eslint9",
-        "nl": "Ondersteuning eslint9",
-        "fr": "Soutien",
-        "it": "Supporto eslint9",
-        "es": "Support eslint9",
-        "pl": "Eslint9",
-        "uk": "Підтримка eslint9",
-        "zh-cn": "支持埃斯林特9号"
-      },
-      "0.1.9-alpha.0": {
         "en": "Support eslint9",
         "de": "Support eslint9",
         "ru": "Поддержка eslint9",

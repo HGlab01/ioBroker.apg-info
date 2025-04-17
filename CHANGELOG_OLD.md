@@ -1,4 +1,8 @@
 # Older changes
+## 0.1.10 (2024-10-04)
+* (HGlab01) fix issue #290
+* (HGlab01) bump axios to 1.7.7
+
 ## 0.1.9 (2024-08-21)
 * (HGlab01) Support eslint9
 
