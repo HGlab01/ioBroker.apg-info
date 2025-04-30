@@ -20,7 +20,7 @@ With the standard-configuration the adapter runs at 00:00, 13:00 and 15.00 o'clo
 **This adapter uses Sentry libraries to automatically report exceptions and code errors to the developers.** For more details and for information how to disable the error reporting see [Sentry-Plugin Documentation](https://github.com/ioBroker/plugin-sentry#plugin-sentry)!
 
 ## Requires
-* Node.js 18 or higher
+* Node.js 20 or higher
 * ioBroker host (js-controller) 5.0 or higher
 
 ## Swiss market
