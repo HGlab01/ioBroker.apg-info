@@ -20,6 +20,8 @@ const { version } = require('./package.json');
 //global variables
 let threshold = 10;
 const maxDelay = 25000; //25000
+// @ts-ignore
+const axiosInstance = axios.create({ timeout: 30000 });
 
 class ApgInfo extends utils.Adapter {
     /**
@@ -149,8 +151,7 @@ class ApgInfo extends utils.Adapter {
         this.log.debug(`API-Call ${uri}`);
         console.log(`API-Call ${uri}`);
         return new Promise((resolve, reject) => {
-            // @ts-ignore
-            axios.get(uri)
+            axiosInstance.get(uri)
                 .then((response) => {
                     if (!response || !response.data) {
                         throw new Error(`getDataPeakHours(): Respone empty for URL ${uri} with status code ${response.status}`);
@@ -185,8 +186,7 @@ class ApgInfo extends utils.Adapter {
         console.log(`API-Call ${uri}`);
 
         return new Promise((resolve, reject) => {
-            // @ts-ignore
-            axios.get(uri)
+            axiosInstance.get(uri)
                 .then((response) => {
                     if (!response || !response.data) {
                         throw new Error(`getDataDayAheadExaa(): Respone empty for URL ${uri} with status code ${response.status}`);
@@ -220,8 +220,7 @@ class ApgInfo extends utils.Adapter {
         console.log(`API-Call ${uri}`);
 
         return new Promise((resolve, reject) => {
-            // @ts-ignore
-            axios.get(uri)
+            axiosInstance.get(uri)
                 .then((response) => {
                     if (!response || !response.data) {
                         throw new Error(`getDataDayAheadExaa1015(): Respone empty for URL ${uri} with status code ${response.status}`);
@@ -268,8 +267,7 @@ class ApgInfo extends utils.Adapter {
         this.log.debug(`API-Call ${uri}`);
         console.log(`API-Call ${uri}`);
         return new Promise((resolve, reject) => {
-            // @ts-ignore
-            axios.get(uri)
+            axiosInstance.get(uri)
                 .then((response) => {
                     if (!response || !response.data) {
                         throw new Error(`getDataDayAheadAwattar(): Respone empty for URL ${uri} with status code ${response.status}`);
@@ -326,8 +324,7 @@ class ApgInfo extends utils.Adapter {
         console.log(`API-Call ${uri}`);
 
         return new Promise((resolve, reject) => {
-            // @ts-ignore
-            axios.get(uri)
+            axiosInstance.get(uri)
                 .then((response) => {
                     if (!response || !response.data) {
                         throw new Error(`getDataDayAheadEntsoe(): Respone empty for URL ${uri} with status code ${response.status}`);
@@ -378,13 +375,21 @@ class ApgInfo extends utils.Adapter {
                         this.log.error('No data available for today!');
                         return;
                     }
-                    for (let i = 0; i < 24; i++) {
+
+                    let point = [];
+                    if (prices0Entsoe.TimeSeries[0]?.Period[0]?.Point) point = prices0Entsoe.TimeSeries[0].Period[0].Point;
+                    else if (prices0Entsoe.TimeSeries[0]?.Period?.Point) point = prices0Entsoe.TimeSeries[0].Period.Point;
+                    else if (prices0Entsoe.TimeSeries?.Period[0]?.Point) point = prices0Entsoe.TimeSeries.Period[0].Point;
+                    else if (prices0Entsoe.TimeSeries?.Period?.Point) point = prices0Entsoe.TimeSeries.Period.Point;
+                    else throw new Error('Received data for today did not fit to supported patterns! Received data: ' + JSON.stringify(prices0Entsoe));
+
+                    let length = point.length;
+                    for (let i = 0; i < length; i++) {
                         let ii = String(i);
                         prices0[ii] = {};
-                        if (prices0Entsoe.TimeSeries[0]) prices0[ii].Price = parseFloat(prices0Entsoe.TimeSeries[0].Period.Point[i].price_amount._text);
-                        else if (prices0Entsoe.TimeSeries.Period[0]) prices0[ii].Price = parseFloat(prices0Entsoe.TimeSeries.Period[0].Point[i].price_amount._text);
-                        else prices0[ii].Price = parseFloat(prices0Entsoe.TimeSeries.Period.Point[i].price_amount._text);
-                        let sHour = pad(i + 1, 2);
+                        let price = parseFloat(point[i].price_amount._text);
+                        let sHour = pad(point[i].position._text, 2);
+                        prices0[ii].Price = price;
                         prices0[ii].Product = 'H' + sHour;
                     }
                     jsonExplorer.stateSetCreate('marketprice.today.source', 'Source', 'entsoe');
@@ -397,13 +402,21 @@ class ApgInfo extends utils.Adapter {
                         this.log.error('No data available for tomorrow!');
                         return;
                     }
-                    for (let i = 0; i < 24; i++) {
+
+                    let point = [];
+                    if (prices1Entsoe.TimeSeries[0]?.Period[0]?.Point) point = prices1Entsoe.TimeSeries[0].Period[0].Point;
+                    else if (prices1Entsoe.TimeSeries[0]?.Period?.Point) point = prices1Entsoe.TimeSeries[0].Period.Point;
+                    else if (prices1Entsoe.TimeSeries?.Period[0]?.Point) point = prices1Entsoe.TimeSeries.Period[0].Point;
+                    else if (prices1Entsoe.TimeSeries?.Period?.Point) point = prices1Entsoe.TimeSeries.Period.Point;
+                    else throw new Error('Received data for tomorrow did not fit to supported patterns! Received data: ' + JSON.stringify(prices1Entsoe));
+
+                    let length = point.length;
+                    for (let i = 0; i < length; i++) {
                         let ii = String(i);
                         prices1[ii] = {};
-                        if (prices1Entsoe.TimeSeries[0]) prices1[ii].Price = parseFloat(prices1Entsoe.TimeSeries[0].Period.Point[i].price_amount._text);
-                        else if (prices1Entsoe.TimeSeries.Period[0]) prices0[ii].Price = parseFloat(prices1Entsoe.TimeSeries.Period[0].Point[i].price_amount._text);
-                        else prices1[ii].Price = parseFloat(prices1Entsoe.TimeSeries.Period.Point[i].price_amount._text);
-                        let sHour = pad(i + 1, 2);
+                        let price = parseFloat(point[i].price_amount._text);
+                        let sHour = pad(point[i].position._text, 2);
+                        prices1[ii].Price = price;
                         prices1[ii].Product = 'H' + sHour;
                     }
                     jsonExplorer.stateSetCreate('marketprice.tomorrow.source', 'Source', 'entsoe');
