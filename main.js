@@ -162,8 +162,14 @@ class ApgInfo extends utils.Adapter {
                     }
                 })
                 .catch(error => {
-                    console.error('Error in getDataPeakHours(): ' + error);
-                    if (error && error.response && error.response.status >= 500) resolve(null);
+                    if (error?.response?.data) {
+                        console.error('Error in getDataPeakHours(): ' + error + ' with response ' + JSON.stringify(error.response.data));
+                        this.log.error('Error to get peak hours ' + error + ' with response ' + JSON.stringify(error.response.data));
+                    } else {
+                        console.error('Error in getDataPeakHours(): ' + error);
+                        this.log.error('Error to get peak hours ' + error);
+                    }
+                    if (error?.response?.status >= 500) resolve(null);
                     else reject(error);
                 });
         });
@@ -198,8 +204,14 @@ class ApgInfo extends utils.Adapter {
                     }
                 })
                 .catch(error => {
-                    console.error('Error in getDataDayAheadExaa(): ' + error);
-                    if (error && error.response && error.response.status >= 500) resolve(null);
+                    if (error?.response?.data) {
+                        console.error('Error in getDataDayAheadExaa(): ' + error + ' with response ' + JSON.stringify(error.response.data));
+                        this.log.error('Error to get market price (Exaa) ' + error + ' with response ' + JSON.stringify(error.response.data));
+                    } else {
+                        console.error('Error in getDataDayAheadExaa(): ' + error);
+                        this.log.error('Error to get market price (Exaa) ' + error);
+                    }
+                    if (error?.response?.status >= 500) resolve(null);
                     else reject(error);
                 });
         });
@@ -235,8 +247,14 @@ class ApgInfo extends utils.Adapter {
                     }
                 })
                 .catch(error => {
-                    console.error('Error in getDataDayAheadExaa1015(): ' + error);
-                    if (error && error.response && error.response.status >= 500) resolve(null);
+                    if (error?.response?.data) {
+                        console.error('Error in getDataDayAheadExaa1015(): ' + error + ' with response ' + JSON.stringify(error.response.data));
+                        this.log.error('Error to get market price (Exaa1015) ' + error + ' with response ' + JSON.stringify(error.response.data));
+                    } else {
+                        console.error('Error in getDataDayAheadExaa1015(): ' + error);
+                        this.log.error('Error to get market price (Exaa1015) ' + error);
+                    }
+                    if (error?.response?.status >= 500) resolve(null);
                     else reject(error);
                 });
         });
@@ -278,8 +296,14 @@ class ApgInfo extends utils.Adapter {
                     }
                 })
                 .catch(error => {
-                    console.error('Error in getDataDayAheadAwattar(): ' + error);
-                    if (error && error.response && error.response.status >= 500) resolve(null);
+                    if (error?.response?.data) {
+                        console.error('Error in getDataDayAheadAwattar(): ' + error + ' with response ' + JSON.stringify(error.response.data));
+                        this.log.error('Error to get market price (Awattar) ' + error + ' with response ' + JSON.stringify(error.response.data));
+                    } else {
+                        console.error('Error in getDataDayAheadAwattar(): ' + error);
+                        this.log.error('Error to get market price (Awattar) ' + error);
+                    }
+                    if (error?.response?.status >= 500) resolve(null);
                     else reject(error);
                 });
         });
@@ -337,8 +361,14 @@ class ApgInfo extends utils.Adapter {
                     }
                 })
                 .catch(error => {
-                    console.error('Error in getDataDayAheadEntsoe(): ' + error);
-                    if (error && error.response && error.response.status >= 500) resolve(null);
+                    if (error?.response?.data) {
+                        console.error('Error in getDataDayAheadEntsoe(): ' + error + ' with response ' + JSON.stringify(error.response.data));
+                        this.log.error('Error to get market price (Entsoe) ' + error + ' with response ' + JSON.stringify(error.response.data));
+                    } else {
+                        console.error('Error in getDataDayAheadEntsoe(): ' + error);
+                        this.log.error('Error to get market price (Entsoe) ' + error);
+                    }
+                    if (error?.response?.status >= 500) resolve(null);
                     else reject(error);
                 });
         });
