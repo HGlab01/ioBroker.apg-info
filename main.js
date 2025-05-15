@@ -20,6 +20,8 @@ const { version } = require('./package.json');
 //global variables
 let threshold = 10;
 const maxDelay = 25000; //25000
+// @ts-ignore
+const axiosInstance = axios.create({ timeout: 30000 });
 
 class ApgInfo extends utils.Adapter {
     /**
@@ -149,8 +151,7 @@ class ApgInfo extends utils.Adapter {
         this.log.debug(`API-Call ${uri}`);
         console.log(`API-Call ${uri}`);
         return new Promise((resolve, reject) => {
-            // @ts-ignore
-            axios.get(uri)
+            axiosInstance.get(uri)
                 .then((response) => {
                     if (!response || !response.data) {
                         throw new Error(`getDataPeakHours(): Respone empty for URL ${uri} with status code ${response.status}`);
@@ -161,8 +162,14 @@ class ApgInfo extends utils.Adapter {
                     }
                 })
                 .catch(error => {
-                    console.error('Error in getDataPeakHours(): ' + error);
-                    if (error && error.response && error.response.status >= 500) resolve(null);
+                    if (error?.response?.data) {
+                        console.error('Error in getDataPeakHours(): ' + error + ' with response ' + JSON.stringify(error.response.data));
+                        this.log.error('Error to get peak hours ' + error + ' with response ' + JSON.stringify(error.response.data));
+                    } else {
+                        console.error('Error in getDataPeakHours(): ' + error);
+                        this.log.error('Error to get peak hours ' + error);
+                    }
+                    if (error?.response?.status >= 500) resolve(null);
                     else reject(error);
                 });
         });
@@ -185,8 +192,7 @@ class ApgInfo extends utils.Adapter {
         console.log(`API-Call ${uri}`);
 
         return new Promise((resolve, reject) => {
-            // @ts-ignore
-            axios.get(uri)
+            axiosInstance.get(uri)
                 .then((response) => {
                     if (!response || !response.data) {
                         throw new Error(`getDataDayAheadExaa(): Respone empty for URL ${uri} with status code ${response.status}`);
@@ -198,8 +204,14 @@ class ApgInfo extends utils.Adapter {
                     }
                 })
                 .catch(error => {
-                    console.error('Error in getDataDayAheadExaa(): ' + error);
-                    if (error && error.response && error.response.status >= 500) resolve(null);
+                    if (error?.response?.data) {
+                        console.error('Error in getDataDayAheadExaa(): ' + error + ' with response ' + JSON.stringify(error.response.data));
+                        this.log.error('Error to get market price (Exaa) ' + error + ' with response ' + JSON.stringify(error.response.data));
+                    } else {
+                        console.error('Error in getDataDayAheadExaa(): ' + error);
+                        this.log.error('Error to get market price (Exaa) ' + error);
+                    }
+                    if (error?.response?.status >= 500) resolve(null);
                     else reject(error);
                 });
         });
@@ -220,8 +232,7 @@ class ApgInfo extends utils.Adapter {
         console.log(`API-Call ${uri}`);
 
         return new Promise((resolve, reject) => {
-            // @ts-ignore
-            axios.get(uri)
+            axiosInstance.get(uri)
                 .then((response) => {
                     if (!response || !response.data) {
                         throw new Error(`getDataDayAheadExaa1015(): Respone empty for URL ${uri} with status code ${response.status}`);
@@ -236,8 +247,14 @@ class ApgInfo extends utils.Adapter {
                     }
                 })
                 .catch(error => {
-                    console.error('Error in getDataDayAheadExaa1015(): ' + error);
-                    if (error && error.response && error.response.status >= 500) resolve(null);
+                    if (error?.response?.data) {
+                        console.error('Error in getDataDayAheadExaa1015(): ' + error + ' with response ' + JSON.stringify(error.response.data));
+                        this.log.error('Error to get market price (Exaa1015) ' + error + ' with response ' + JSON.stringify(error.response.data));
+                    } else {
+                        console.error('Error in getDataDayAheadExaa1015(): ' + error);
+                        this.log.error('Error to get market price (Exaa1015) ' + error);
+                    }
+                    if (error?.response?.status >= 500) resolve(null);
                     else reject(error);
                 });
         });
@@ -268,8 +285,7 @@ class ApgInfo extends utils.Adapter {
         this.log.debug(`API-Call ${uri}`);
         console.log(`API-Call ${uri}`);
         return new Promise((resolve, reject) => {
-            // @ts-ignore
-            axios.get(uri)
+            axiosInstance.get(uri)
                 .then((response) => {
                     if (!response || !response.data) {
                         throw new Error(`getDataDayAheadAwattar(): Respone empty for URL ${uri} with status code ${response.status}`);
@@ -280,8 +296,14 @@ class ApgInfo extends utils.Adapter {
                     }
                 })
                 .catch(error => {
-                    console.error('Error in getDataDayAheadAwattar(): ' + error);
-                    if (error && error.response && error.response.status >= 500) resolve(null);
+                    if (error?.response?.data) {
+                        console.error('Error in getDataDayAheadAwattar(): ' + error + ' with response ' + JSON.stringify(error.response.data));
+                        this.log.error('Error to get market price (Awattar) ' + error + ' with response ' + JSON.stringify(error.response.data));
+                    } else {
+                        console.error('Error in getDataDayAheadAwattar(): ' + error);
+                        this.log.error('Error to get market price (Awattar) ' + error);
+                    }
+                    if (error?.response?.status >= 500) resolve(null);
                     else reject(error);
                 });
         });
@@ -326,8 +348,7 @@ class ApgInfo extends utils.Adapter {
         console.log(`API-Call ${uri}`);
 
         return new Promise((resolve, reject) => {
-            // @ts-ignore
-            axios.get(uri)
+            axiosInstance.get(uri)
                 .then((response) => {
                     if (!response || !response.data) {
                         throw new Error(`getDataDayAheadEntsoe(): Respone empty for URL ${uri} with status code ${response.status}`);
@@ -340,8 +361,14 @@ class ApgInfo extends utils.Adapter {
                     }
                 })
                 .catch(error => {
-                    console.error('Error in getDataDayAheadEntsoe(): ' + error);
-                    if (error && error.response && error.response.status >= 500) resolve(null);
+                    if (error?.response?.data) {
+                        console.error('Error in getDataDayAheadEntsoe(): ' + error + ' with response ' + JSON.stringify(error.response.data));
+                        this.log.error('Error to get market price (Entsoe) ' + error + ' with response ' + JSON.stringify(error.response.data));
+                    } else {
+                        console.error('Error in getDataDayAheadEntsoe(): ' + error);
+                        this.log.error('Error to get market price (Entsoe) ' + error);
+                    }
+                    if (error?.response?.status >= 500) resolve(null);
                     else reject(error);
                 });
         });
@@ -378,13 +405,24 @@ class ApgInfo extends utils.Adapter {
                         this.log.error('No data available for today!');
                         return;
                     }
-                    for (let i = 0; i < 24; i++) {
+
+                    let point = [];
+                    if (prices0Entsoe.TimeSeries[0]?.Period[0]?.Point) point = prices0Entsoe.TimeSeries[0].Period[0].Point;
+                    else if (prices0Entsoe.TimeSeries[0]?.Period?.Point) point = prices0Entsoe.TimeSeries[0].Period.Point;
+                    else if (prices0Entsoe.TimeSeries?.Period[0]?.Point) point = prices0Entsoe.TimeSeries.Period[0].Point;
+                    else if (prices0Entsoe.TimeSeries?.Period?.Point) point = prices0Entsoe.TimeSeries.Period.Point;
+                    else {
+                        console.error('Received data for today did not fit to supported patterns! Received data: ' + JSON.stringify(prices0Entsoe));
+                        throw new Error('Received data for today did not fit to supported patterns! Received data: ' + JSON.stringify(prices0Entsoe));
+                    }
+
+                    let length = point.length;
+                    for (let i = 0; i < length; i++) {
                         let ii = String(i);
                         prices0[ii] = {};
-                        if (prices0Entsoe.TimeSeries[0]) prices0[ii].Price = parseFloat(prices0Entsoe.TimeSeries[0].Period.Point[i].price_amount._text);
-                        else if (prices0Entsoe.TimeSeries.Period[0]) prices0[ii].Price = parseFloat(prices0Entsoe.TimeSeries.Period[0].Point[i].price_amount._text);
-                        else prices0[ii].Price = parseFloat(prices0Entsoe.TimeSeries.Period.Point[i].price_amount._text);
-                        let sHour = pad(i + 1, 2);
+                        let price = parseFloat(point[i].price_amount._text);
+                        let sHour = pad(point[i].position._text, 2);
+                        prices0[ii].Price = price;
                         prices0[ii].Product = 'H' + sHour;
                     }
                     jsonExplorer.stateSetCreate('marketprice.today.source', 'Source', 'entsoe');
@@ -397,13 +435,21 @@ class ApgInfo extends utils.Adapter {
                         this.log.error('No data available for tomorrow!');
                         return;
                     }
-                    for (let i = 0; i < 24; i++) {
+
+                    let point = [];
+                    if (prices1Entsoe.TimeSeries[0]?.Period[0]?.Point) point = prices1Entsoe.TimeSeries[0].Period[0].Point;
+                    else if (prices1Entsoe.TimeSeries[0]?.Period?.Point) point = prices1Entsoe.TimeSeries[0].Period.Point;
+                    else if (prices1Entsoe.TimeSeries?.Period[0]?.Point) point = prices1Entsoe.TimeSeries.Period[0].Point;
+                    else if (prices1Entsoe.TimeSeries?.Period?.Point) point = prices1Entsoe.TimeSeries.Period.Point;
+                    else throw new Error('Received data for tomorrow did not fit to supported patterns! Received data: ' + JSON.stringify(prices1Entsoe));
+
+                    let length = point.length;
+                    for (let i = 0; i < length; i++) {
                         let ii = String(i);
                         prices1[ii] = {};
-                        if (prices1Entsoe.TimeSeries[0]) prices1[ii].Price = parseFloat(prices1Entsoe.TimeSeries[0].Period.Point[i].price_amount._text);
-                        else if (prices1Entsoe.TimeSeries.Period[0]) prices0[ii].Price = parseFloat(prices1Entsoe.TimeSeries.Period[0].Point[i].price_amount._text);
-                        else prices1[ii].Price = parseFloat(prices1Entsoe.TimeSeries.Period.Point[i].price_amount._text);
-                        let sHour = pad(i + 1, 2);
+                        let price = parseFloat(point[i].price_amount._text);
+                        let sHour = pad(point[i].position._text, 2);
+                        prices1[ii].Price = price;
                         prices1[ii].Product = 'H' + sHour;
                     }
                     jsonExplorer.stateSetCreate('marketprice.tomorrow.source', 'Source', 'entsoe');
@@ -446,9 +492,7 @@ class ApgInfo extends utils.Adapter {
                             prices0[idS].Price = prices0Awattar.data[idS].marketprice;
                             let start = new Date(prices0Awattar.data[idS].start_timestamp);
                             let iHour = start.getHours() + 1;
-                            let sHour = String(iHour);
-                            const pad = '00';
-                            sHour = pad.substring(0, pad.length - sHour.length) + sHour;
+                            let sHour = pad(iHour, 2);
                             prices0[idS].Product = 'H' + sHour;
                         }
                         source0 = 'awattar';
@@ -469,9 +513,7 @@ class ApgInfo extends utils.Adapter {
                             prices1[idS] = {};
                             prices1[idS].Price = prices1Exaa1015[idS].y;
                             let iHour = prices1Exaa1015[idS].x;
-                            let sHour = String(iHour);
-                            const pad = '00';
-                            sHour = pad.substring(0, pad.length - sHour.length) + sHour;
+                            let sHour = pad(iHour, 2);
                             prices1[idS].Product = 'H' + sHour;
                         }
                         this.log.debug('prices1Exaa1015 converted to: ' + JSON.stringify(prices1));
@@ -484,9 +526,7 @@ class ApgInfo extends utils.Adapter {
                             prices1[idS].Price = prices1Awattar.data[idS].marketprice;
                             let start = new Date(prices1Awattar.data[idS].start_timestamp);
                             let iHour = start.getHours() + 1;
-                            let sHour = String(iHour);
-                            const pad = '00';
-                            sHour = pad.substring(0, pad.length - sHour.length) + sHour;
+                            let sHour = pad(iHour, 2);
                             prices1[idS].Product = 'H' + sHour;
                         }
                         source1 = 'awattar';
@@ -517,12 +557,9 @@ class ApgInfo extends utils.Adapter {
                 let sEndHour = product.substring(1, 3);
                 let iEndHour = Number(sEndHour);
                 let iBeginHour = iEndHour - 1;
-                let sBeginHour = String(iBeginHour);
-                const pad = '00';
-                sBeginHour = pad.substring(0, pad.length - sBeginHour.length) + sBeginHour;
+                let sBeginHour = pad(iBeginHour, 2);
 
                 let range = sBeginHour + '_to_' + sEndHour;
-
                 jDay0[range] = marketprice;
                 if (marketprice < threshold) {
                     jDay0BelowThreshold[range] = marketprice;
@@ -549,12 +586,9 @@ class ApgInfo extends utils.Adapter {
                 let sEndHour = product.substring(1, 3);
                 let iEndHour = Number(sEndHour);
                 let iBeginHour = iEndHour - 1;
-                let sBeginHour = String(iBeginHour);
-                const pad = '00';
-                sBeginHour = pad.substring(0, pad.length - sBeginHour.length) + sBeginHour;
+                let sBeginHour = pad(iBeginHour, 2);
 
                 let range = sBeginHour + '_to_' + sEndHour;
-
                 jDay1[range] = marketprice;
                 if (marketprice < threshold) {
                     jDay1BelowThreshold[range] = marketprice;
@@ -859,14 +893,14 @@ function cleanDate(date) {
 }
 
 /**
- * @param {number} i
+ * @param {number} hour
  * @param {boolean} tomorrow
  * @returns {number}
  */
-function calcDate(i, tomorrow = false) {
+function calcDate(hour, tomorrow = false) {
     let date = cleanDate(new Date());
     if (tomorrow) date = addDays(date, 1);
-    date.setHours(i);
+    date.setHours(hour);
     return date.getTime();
 }
 
@@ -876,11 +910,9 @@ function calcDate(i, tomorrow = false) {
  * @param {number} numberOfDays number of days which origin date shall be added (positive and negative allowes)
  */
 function addDays(date, numberOfDays) {
-    const oneDayTime = 1000 * 60 * 60 * 24;
-    const oneHourAndOneMinute = 1000 * 60 * 61;
-    let originDate = cleanDate(date);
-    let targetDate = new Date(originDate.getTime() + oneDayTime * numberOfDays + oneHourAndOneMinute); //oneHourAndOneMinute to cover Zeitumstellung
-    return (cleanDate(targetDate));
+    let newDate = new Date(date.getTime());
+    newDate.setDate(newDate.getDate() + numberOfDays);
+    return (cleanDate(newDate));
 }
 
 function compareSecondColumn(a, b) {
@@ -894,13 +926,14 @@ function compareSecondColumn(a, b) {
 
 
 /**
- * @param {number} n number
- * @param {number} len length
- * @returns {string}
+ * @param {number} num number
+ * @param {number} length length
+ * @returns {string} returns a string with leading zeros based on given number
  */
-function pad(n, len) {
-    let l = Math.floor(len);
-    let sn = '' + n;
+function pad(num, length) {
+    if (num == null) num = 0;
+    let l = Math.floor(length);
+    let sn = String(num);
     let snl = sn.length;
     if (snl >= l) return sn;
     return '0'.repeat(l - snl) + sn;
