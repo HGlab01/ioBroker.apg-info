@@ -411,7 +411,10 @@ class ApgInfo extends utils.Adapter {
                     else if (prices0Entsoe.TimeSeries[0]?.Period?.Point) point = prices0Entsoe.TimeSeries[0].Period.Point;
                     else if (prices0Entsoe.TimeSeries?.Period[0]?.Point) point = prices0Entsoe.TimeSeries.Period[0].Point;
                     else if (prices0Entsoe.TimeSeries?.Period?.Point) point = prices0Entsoe.TimeSeries.Period.Point;
-                    else throw new Error('Received data for today did not fit to supported patterns! Received data: ' + JSON.stringify(prices0Entsoe));
+                    else {
+                        console.error('Received data for today did not fit to supported patterns! Received data: ' + JSON.stringify(prices0Entsoe));
+                        throw new Error('Received data for today did not fit to supported patterns! Received data: ' + JSON.stringify(prices0Entsoe));
+                    }
 
                     let length = point.length;
                     for (let i = 0; i < length; i++) {
@@ -489,9 +492,7 @@ class ApgInfo extends utils.Adapter {
                             prices0[idS].Price = prices0Awattar.data[idS].marketprice;
                             let start = new Date(prices0Awattar.data[idS].start_timestamp);
                             let iHour = start.getHours() + 1;
-                            let sHour = String(iHour);
-                            const pad = '00';
-                            sHour = pad.substring(0, pad.length - sHour.length) + sHour;
+                            let sHour = pad(iHour, 2);
                             prices0[idS].Product = 'H' + sHour;
                         }
                         source0 = 'awattar';
@@ -512,9 +513,7 @@ class ApgInfo extends utils.Adapter {
                             prices1[idS] = {};
                             prices1[idS].Price = prices1Exaa1015[idS].y;
                             let iHour = prices1Exaa1015[idS].x;
-                            let sHour = String(iHour);
-                            const pad = '00';
-                            sHour = pad.substring(0, pad.length - sHour.length) + sHour;
+                            let sHour = pad(iHour, 2);
                             prices1[idS].Product = 'H' + sHour;
                         }
                         this.log.debug('prices1Exaa1015 converted to: ' + JSON.stringify(prices1));
@@ -527,9 +526,7 @@ class ApgInfo extends utils.Adapter {
                             prices1[idS].Price = prices1Awattar.data[idS].marketprice;
                             let start = new Date(prices1Awattar.data[idS].start_timestamp);
                             let iHour = start.getHours() + 1;
-                            let sHour = String(iHour);
-                            const pad = '00';
-                            sHour = pad.substring(0, pad.length - sHour.length) + sHour;
+                            let sHour = pad(iHour, 2);
                             prices1[idS].Product = 'H' + sHour;
                         }
                         source1 = 'awattar';
@@ -560,12 +557,9 @@ class ApgInfo extends utils.Adapter {
                 let sEndHour = product.substring(1, 3);
                 let iEndHour = Number(sEndHour);
                 let iBeginHour = iEndHour - 1;
-                let sBeginHour = String(iBeginHour);
-                const pad = '00';
-                sBeginHour = pad.substring(0, pad.length - sBeginHour.length) + sBeginHour;
+                let sBeginHour = pad(iBeginHour, 2);
 
                 let range = sBeginHour + '_to_' + sEndHour;
-
                 jDay0[range] = marketprice;
                 if (marketprice < threshold) {
                     jDay0BelowThreshold[range] = marketprice;
@@ -592,12 +586,9 @@ class ApgInfo extends utils.Adapter {
                 let sEndHour = product.substring(1, 3);
                 let iEndHour = Number(sEndHour);
                 let iBeginHour = iEndHour - 1;
-                let sBeginHour = String(iBeginHour);
-                const pad = '00';
-                sBeginHour = pad.substring(0, pad.length - sBeginHour.length) + sBeginHour;
+                let sBeginHour = pad(iBeginHour, 2);
 
                 let range = sBeginHour + '_to_' + sEndHour;
-
                 jDay1[range] = marketprice;
                 if (marketprice < threshold) {
                     jDay1BelowThreshold[range] = marketprice;
@@ -902,14 +893,14 @@ function cleanDate(date) {
 }
 
 /**
- * @param {number} i
+ * @param {number} hour
  * @param {boolean} tomorrow
  * @returns {number}
  */
-function calcDate(i, tomorrow = false) {
+function calcDate(hour, tomorrow = false) {
     let date = cleanDate(new Date());
     if (tomorrow) date = addDays(date, 1);
-    date.setHours(i);
+    date.setHours(hour);
     return date.getTime();
 }
 
@@ -919,11 +910,9 @@ function calcDate(i, tomorrow = false) {
  * @param {number} numberOfDays number of days which origin date shall be added (positive and negative allowes)
  */
 function addDays(date, numberOfDays) {
-    const oneDayTime = 1000 * 60 * 60 * 24;
-    const oneHourAndOneMinute = 1000 * 60 * 61;
-    let originDate = cleanDate(date);
-    let targetDate = new Date(originDate.getTime() + oneDayTime * numberOfDays + oneHourAndOneMinute); //oneHourAndOneMinute to cover Zeitumstellung
-    return (cleanDate(targetDate));
+    let newDate = new Date(date.getTime());
+    newDate.setDate(newDate.getDate() + numberOfDays);
+    return (cleanDate(newDate));
 }
 
 function compareSecondColumn(a, b) {
@@ -937,13 +926,14 @@ function compareSecondColumn(a, b) {
 
 
 /**
- * @param {number} n number
- * @param {number} len length
- * @returns {string}
+ * @param {number} num number
+ * @param {number} length length
+ * @returns {string} returns a string with leading zeros based on given number
  */
-function pad(n, len) {
-    let l = Math.floor(len);
-    let sn = '' + n;
+function pad(num, length) {
+    if (num == null) num = 0;
+    let l = Math.floor(length);
+    let sn = String(num);
     let snl = sn.length;
     if (snl >= l) return sn;
     return '0'.repeat(l - snl) + sn;
