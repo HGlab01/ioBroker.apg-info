@@ -1,4 +1,7 @@
 # Older changes
+## 0.1.11 (2024-10-20)
+* (HGlab01) improve UI config (#296)
+
 ## 0.1.10 (2024-10-04)
 * (HGlab01) fix issue #290
 * (HGlab01) bump axios to 1.7.7

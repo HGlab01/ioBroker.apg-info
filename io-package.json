@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "apg-info",
-    "version": "0.1.15",
+    "version": "0.1.16",
     "news": {
+      "0.1.16": {
+        "en": "Optimize Entsoe (Swiss market) requests\nDefine 30 seconds timeout for all \nBump axios to 1.9.0",
+        "de": "Optimieren von Entsoe-Anfragen (Schweizer Markt)\nDefinieren Sie 30 Sekunden Zeit für alle\nBump axios zu 1.9.0",
+        "ru": "Оптимизация запросов Entsoe (швейцарский рынок)\n30 секунд тайм-аута для всех\nАксиос удара до 1,9,0",
+        "pt": "Otimizar pedidos de Entsoe (Swiss market)\nDefina 30 segundos timeout para todos\nBump axios para 1.9.0",
+        "nl": "Entsoe-verzoeken (Zwitserse markt) optimaliseren\nDefinieer 30 seconden timeout voor iedereen\nBump axios naar 1.9.0",
+        "fr": "Optimiser les demandes d'Entsoe (marché suisse)\nDéfinissez 30 secondes de délai pour tous\nAxios bouffés à 1,9.0",
+        "it": "Ottimizzare le richieste Entsoe (Swiss market)\nDefinire 30 secondi timeout per tutti\nAssio di bump a 1.9.0",
+        "es": "Optimize Entsoe (mercado suizo)\nDefinir 30 segundos de tiempo para todos\nAxios de bomba a 1.9.0",
+        "pl": "Optymalizacja wniosków Entsoe (rynek szwajcarski)\nZdefiniuj czas 30 sekund dla wszystkich\nAxios bump do 1.9.0",
+        "uk": "Optimize Entsoe (Swiss ринку) запитів\nВизначення 30 секунд для всіх\nБампер аксіос до 1.9.0",
+        "zh-cn": "优化Entsoe(瑞士市场)请求\n为所有人定义30秒的超时\n横轴为1.9.0"
+      },
       "0.1.15": {
         "en": "fix 'Cannot read properties of undefined (reading 'price_amount')'",
         "de": "'Cannot read properties of undefiniert (reading 'price_amount') '",
@@ -80,19 +93,6 @@
         "pl": "fix issue # 290\naxios bump do 1.7.7",
         "uk": "виправити проблему #290\nbump axios до 1.7.7",
         "zh-cn": "固定问题290\n折合轴为1.7.7"
-      },
-      "0.1.9": {
-        "en": "Support eslint9",
-        "de": "Support eslint9",
-        "ru": "Поддержка eslint9",
-        "pt": "Suporte eslint9",
-        "nl": "Ondersteuning eslint9",
-        "fr": "Soutien",
-        "it": "Supporto eslint9",
-        "es": "Support eslint9",
-        "pl": "Eslint9",
-        "uk": "Підтримка eslint9",
-        "zh-cn": "支持埃斯林特9号"
       }
     },
     "titleLang": {
