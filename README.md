@@ -34,9 +34,12 @@ For more details check https://transparency.entsoe.eu/content/static_content/Sta
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
+### __WORK IN PROGRESS__
+* (HGlab01) Add retry mechanism for Entsoe
+
 ### 0.1.16 (2025-05-18)
 * (HGlab01) Optimize Entsoe (Swiss market) requests
-* (HGlab01) Define 30 seconds timeout for all 
+* (HGlab01) Extend timeout for Api calls to 30 seconds 
 * (HGlab01) Bump axios to 1.9.0
 
 ### 0.1.15 (2025-04-17)
