@@ -21,7 +21,7 @@ const { version } = require('./package.json');
 let threshold = 10;
 const maxDelay = 25000; //25000
 // @ts-ignore
-const axiosInstance = axios.create({ timeout: 30000 });
+const axiosInstance = axios.create({ timeout: 30000 }); //30000
 
 class ApgInfo extends utils.Adapter {
     /**
@@ -368,8 +368,7 @@ class ApgInfo extends utils.Adapter {
                         console.error('Error in getDataDayAheadEntsoe(): ' + error);
                         this.log.error('Error to get market price (Entsoe) ' + error);
                     }
-                    if (error?.response?.status >= 500) resolve(null);
-                    else reject(error);
+                    reject(error);
                 });
         });
     }
@@ -390,10 +389,28 @@ class ApgInfo extends utils.Adapter {
             jsonExplorer.stateSetCreate('marketprice.today.date', 'date', day0.getTime());
             jsonExplorer.stateSetCreate('marketprice.tomorrow.date', 'date', day1.getTime());
             let prices0 = [], prices1 = [];
-
+            let tomorrow = false;
             if (country == 'ch') {
-                prices0Entsoe = await this.getDataDayAheadEntsoe(false, country);
-                prices1Entsoe = await this.getDataDayAheadEntsoe(true, country);
+                try {
+                    tomorrow = false;
+                    prices0Entsoe = await this.getDataDayAheadEntsoe(tomorrow, country);
+                    tomorrow = true;
+                    prices1Entsoe = await this.getDataDayAheadEntsoe(tomorrow, country);
+                } catch (error) {
+                    if (String(error).includes('read ECONNRESET') || String(error).includes('timeout')) {
+                        this.log.info(`Let's wait 3 minutes and try again...`);
+                        await jsonExplorer.sleep(3 * 60 * 1000);
+                        this.log.info(`OK! Let's try!`);
+                        if (tomorrow == false) {
+                            prices0Entsoe = await this.getDataDayAheadEntsoe(tomorrow, country);
+                            tomorrow = true;
+                            prices1Entsoe = await this.getDataDayAheadEntsoe(tomorrow, country);
+                        } else {
+                            prices1Entsoe = await this.getDataDayAheadEntsoe(tomorrow, country);
+                        }
+                    }
+                    else throw error;
+                }
                 this.log.debug('Today ' + JSON.stringify(prices0Entsoe));
                 this.log.debug('Tomorrow ' + JSON.stringify(prices1Entsoe));
 
@@ -834,11 +851,11 @@ class ApgInfo extends utils.Adapter {
      * @param {any} errorObject Error message for sentry
      */
     sendSentry(errorObject) {
-        if (errorObject.message && errorObject.message.includes('ETIMEDOUT')) return;
+        if (errorObject?.message?.includes('ETIMEDOUT')) return;
         try {
             if (this.supportsFeature && this.supportsFeature('PLUGINS')) {
                 const sentryInstance = this.getPluginInstance('sentry');
-                if (sentryInstance) {
+                if (sentryInstance?.getSentryObject()) {
                     sentryInstance.getSentryObject().captureException(errorObject);
                 }
             }
