@@ -397,10 +397,10 @@ class ApgInfo extends utils.Adapter {
                     tomorrow = true;
                     prices1Entsoe = await this.getDataDayAheadEntsoe(tomorrow, country);
                 } catch (error) {
-                    if (String(error).includes('read ECONNRESET') || String(error).includes('timeout')) {
+                    if (String(error).includes('read ECONNRESET') || String(error).includes('timeout') || String(error).includes('socket hang up')) {
                         this.log.info(`Let's wait 3 minutes and try again...`);
                         await jsonExplorer.sleep(3 * 60 * 1000);
-                        this.log.info(`OK! Let's try!`);
+                        this.log.info(`OK! Let's try again now!`);
                         if (tomorrow == false) {
                             prices0Entsoe = await this.getDataDayAheadEntsoe(tomorrow, country);
                             tomorrow = true;
@@ -695,7 +695,7 @@ class ApgInfo extends utils.Adapter {
             await jsonExplorer.deleteObjectsWithNull('marketprice.details.*');
 
         } catch (error) {
-            let eMsg = `Error in ExecuteRequestDayAhead(): ${error})`;
+            let eMsg = `Error in ExecuteRequestDayAhead(): ${error}`;
             this.log.error(eMsg);
             console.error(eMsg);
             this.sendSentry(error);
