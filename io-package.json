@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "apg-info",
-    "version": "0.1.16",
+    "version": "0.1.17",
     "news": {
+      "0.1.17": {
+        "en": "Add retry mechanism for Entsoe",
+        "de": "Retry Mechanismus für Entsoe hinzufügen",
+        "ru": "Добавить механизм повторного использования Entsoe",
+        "pt": "Adicionar mecanismo de retificação para Entsoe",
+        "nl": "Herhalingsmechanisme voor Entsoe toevoegen",
+        "fr": "Ajouter un mécanisme de réessayer pour Entsoe",
+        "it": "Aggiungi meccanismo di riprovazione per Entsoe",
+        "es": "Add retry mechanism for Entsoe",
+        "pl": "Dodaj mechanizm ponownego testowania dla Entsoe",
+        "uk": "Додати механізм птиху для Entsoe",
+        "zh-cn": "为 Entsoe 添加重试机制"
+      },
       "0.1.16": {
         "en": "Optimize Entsoe (Swiss market) requests\nDefine 30 seconds timeout for all \nBump axios to 1.9.0",
         "de": "Optimieren von Entsoe-Anfragen (Schweizer Markt)\nDefinieren Sie 30 Sekunden Zeit für alle\nBump axios zu 1.9.0",
@@ -80,19 +93,6 @@
         "pl": "poprawić konfigurację interfejsu użytkownika (# 296)",
         "uk": "універсал (#296)",
         "zh-cn": "改进 UI 配置 (# 296)"
-      },
-      "0.1.10": {
-        "en": "fix issue #290\nbump axios to 1.7.7",
-        "de": "problem behoben #290\nstoßaxios bis 1.7.7",
-        "ru": "#290\n1.7.7",
-        "pt": "corrigir problema #290\naxios de choque para 1.7.7",
-        "nl": "probleem #290 oplossen\nbump axios tot 1.7.7",
-        "fr": "correction #290\naxios de bosse à 1.7.7",
-        "it": "problema di correzione #290\nurto assio a 1.7.7",
-        "es": "solucionar el problema #290\naxios de choque a 1.7.7",
-        "pl": "fix issue # 290\naxios bump do 1.7.7",
-        "uk": "виправити проблему #290\nbump axios до 1.7.7",
-        "zh-cn": "固定问题290\n折合轴为1.7.7"
       }
     },
     "titleLang": {
