@@ -363,10 +363,10 @@ class ApgInfo extends utils.Adapter {
                 .catch(error => {
                     if (error?.response?.data) {
                         console.error('Error in getDataDayAheadEntsoe(): ' + error + ' with response ' + JSON.stringify(error.response.data));
-                        this.log.error('Error to get market price (Entsoe) ' + error + ' with response ' + JSON.stringify(error.response.data));
+                        this.log.warn('Error to get market price (Entsoe) ' + error + ' with response ' + JSON.stringify(error.response.data));
                     } else {
                         console.error('Error in getDataDayAheadEntsoe(): ' + error);
-                        this.log.error('Error to get market price (Entsoe) ' + error);
+                        this.log.warn('Error to get market price (Entsoe) ' + error);
                     }
                     reject(error);
                 });

@@ -34,6 +34,9 @@ For more details check https://transparency.entsoe.eu/content/static_content/Sta
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
+### __WORK IN PROGRESS__
+* (HGlab01) Log finetuning
+
 ### 0.1.17 (2025-06-03)
 * (HGlab01) Add retry mechanism for Entsoe
 
