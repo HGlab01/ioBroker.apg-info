@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "apg-info",
-    "version": "0.1.17",
+    "version": "0.1.18",
     "news": {
+      "0.1.18": {
+        "en": "Log finetuning\nBump axios to 1.10.0",
+        "de": "Log Feinabstimmung\nBump axios zu 1.10.0",
+        "ru": "Настройка журнала\nАксиос удара до 1,10,0",
+        "pt": "Afinação do log\nBump axios até 1,10.0",
+        "nl": "Log finetuning\nBump axio's tot 1.10.0",
+        "fr": "Mise au point des registres\nAxios de pompe à 1.10.0",
+        "it": "Finetuning del registro\nAssio di bump a 1.10.0",
+        "es": "Ajuste del registro\nAxios de bomba a 1.10.0",
+        "pl": "Finetuning dziennika\nAxios Bump do 1.10.0",
+        "uk": "Реєстрація\nБампер аксіос до 1.10.0",
+        "zh-cn": "日志微调\n倾斜轴为 1.1.0"
+      },
       "0.1.17": {
         "en": "Add retry mechanism for Entsoe",
         "de": "Retry Mechanismus für Entsoe hinzufügen",
@@ -80,19 +93,6 @@
         "pl": "Napraw brak definicji ostrzeżenia dla 'z _ 19 _ to _ 20'\nNaprawiono brak definicji ostrzeżenia dla 'elementu xx'\nAksykony Bump do 1.8.1",
         "uk": "Визначте визначення попередження, що відсутні для '_19_to_20 Р\nВизначте визначення попередження, що відсутній для 'item xx Р\nБампер аксіос до 1.8.1",
         "zh-cn": "修正“ 从_19_ 到_20” 的警告定义缺失  '\n修正“ xxx” 的警告定义缺失  '\n横轴改为1.8.1"
-      },
-      "0.1.11": {
-        "en": "improve UI config (#296)",
-        "de": "uI config verbessern (#296)",
-        "ru": "улучшение конфигурации пользовательского интерфейса (#296)",
-        "pt": "melhorar a configuração da interface do usuário (#296)",
-        "nl": "verbeteren UI config (#296)",
-        "fr": "améliorer la configuration de l'interface utilisateur (#296)",
-        "it": "migliorare la configurazione dell'interfaccia utente (#296)",
-        "es": "mejorar UI config (#296)",
-        "pl": "poprawić konfigurację interfejsu użytkownika (# 296)",
-        "uk": "універсал (#296)",
-        "zh-cn": "改进 UI 配置 (# 296)"
       }
     },
     "titleLang": {
