@@ -36,6 +36,7 @@ For more details check https://transparency.entsoe.eu/content/static_content/Sta
 -->
 ### __WORK IN PROGRESS__
 * (HGlab01) Log finetuning
+* * (HGlab01) Bump axios to 1.10.0
 
 ### 0.1.17 (2025-06-03)
 * (HGlab01) Add retry mechanism for Entsoe
