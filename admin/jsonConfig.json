@@ -221,7 +221,7 @@
             "type": "panel",
             "label": "Entsoe Token",
             "items": {
-                "token": {
+                "tokenEncrypted": {
                     "newLine": true,
                     "type": "text",
                     "label": {
