@@ -78,30 +78,29 @@ class ApgInfo extends utils.Adapter {
             this.terminate ? this.terminate(utils.EXIT_CODES.UNCAUGHT_EXCEPTION) : process.exit(0);
         }
 
-        if (this.config?.tokenEncrypted) {
-            this.token = this.config.tokenEncrypted;
-        } else {
-            const instanceId = `system.adapter.${this.name}.${this.instance}`;
-            const objInstance = await this.getForeignObjectAsync(instanceId);
-            if (objInstance?.native) {
-                let tokenUnEncrypted = objInstance.native.token;
-                if (tokenUnEncrypted) {
-                    this.log.info(`Let's onetime encrypt the token...`);
-                    objInstance.native.tokenEncrypted = this.encrypt(tokenUnEncrypted);
-                    delete objInstance.native.token;
-                    await this.setForeignObjectAsync(instanceId, objInstance);
-                    this.token = tokenUnEncrypted;
-                    this.log.info(`Token encrypted and saved in instance ${instanceId}`);
+        if (country != 'at' && country != 'de') {
+            if (this.config?.tokenEncrypted) {
+                this.token = this.config.tokenEncrypted;
+            } else {
+                const instanceId = `system.adapter.${this.name}.${this.instance}`;
+                const objInstance = await this.getForeignObjectAsync(instanceId);
+                if (objInstance?.native) {
+                    let tokenUnEncrypted = objInstance.native.token;
+                    if (tokenUnEncrypted) {
+                        this.log.info(`Let's onetime encrypt the token...`);
+                        objInstance.native.tokenEncrypted = this.encrypt(tokenUnEncrypted);
+                        delete objInstance.native.token;
+                        await this.setForeignObjectAsync(instanceId, objInstance);
+                        this.token = tokenUnEncrypted;
+                        this.log.info(`Token encrypted and saved in instance ${instanceId}`);
+                    }
                 }
             }
+            if (!this.token) {
+                this.log.error('No token defined. Please check readme how to request!');
+                this.terminate ? this.terminate(utils.EXIT_CODES.UNCAUGHT_EXCEPTION) : process.exit(0);
+            }
         }
-
-        if (!this.token && country != 'at' && country != 'de') {
-            this.log.error('No token defined. Please check readme how to request!');
-            this.terminate ? this.terminate(utils.EXIT_CODES.UNCAUGHT_EXCEPTION) : process.exit(0);
-        }
-        else this.log.debug('No token defined, but no issue as DE or AT');
-
 
         if (await isOnline() == false) {
             this.log.error('No internet connection detected');
