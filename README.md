@@ -34,7 +34,7 @@ For more details check https://transparency.entsoe.eu/content/static_content/Sta
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### __WORK IN PROGRESS__
+### 0.1.20-alpha.0 (2025-09-25)
 * (HGlab01) prepeare json-explorer v0.2 readiness
 * (HGlab01) Bump axios to 1.12.2
 
@@ -52,9 +52,6 @@ For more details check https://transparency.entsoe.eu/content/static_content/Sta
 * (HGlab01) Optimize Entsoe (Swiss market) requests
 * (HGlab01) Extend timeout for Api calls to 30 seconds 
 * (HGlab01) Bump axios to 1.9.0
-
-### 0.1.15 (2025-04-17)
-* (HGlab01) fix 'Cannot read properties of undefined (reading 'price_amount')'
 
 ## License
 MIT License
