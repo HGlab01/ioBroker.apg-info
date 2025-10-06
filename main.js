@@ -706,14 +706,14 @@ class ApgInfo extends utils.Adapter {
             }
 
             if (prices0) {
-                await jsonExplorer.TraverseJson(prices0, 'marketprice.details.today', true, true);
+                await jsonExplorer.traverseJson(prices0, 'marketprice.details.today', true, true);
             } else {
-                await jsonExplorer.TraverseJson(null, 'marketprice.details.today', true, true);
+                await jsonExplorer.traverseJson(null, 'marketprice.details.today', true, true);
             }
             if (prices1) {
-                await jsonExplorer.TraverseJson(prices1, 'marketprice.details.tomorrow', true, true);
+                await jsonExplorer.traverseJson(prices1, 'marketprice.details.tomorrow', true, true);
             } else {
-                await jsonExplorer.TraverseJson(null, 'marketprice.details.tomorrow', true, true);
+                await jsonExplorer.traverseJson(null, 'marketprice.details.tomorrow', true, true);
             }
 
             let jDay0 = {},

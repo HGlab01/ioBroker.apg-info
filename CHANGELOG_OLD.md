@@ -1,4 +1,7 @@
 # Older changes
+## 0.1.15 (2025-04-17)
+* (HGlab01) fix 'Cannot read properties of undefined (reading 'price_amount')'
+
 ## 0.1.14 (2025-03-30)
 * (HGlab01) Fix switch to summer time begin issue
 * (HGlab01) Bump axios to 1.8.4

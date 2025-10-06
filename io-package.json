@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "apg-info",
-    "version": "0.1.19",
+    "version": "0.1.20-alpha.0",
     "news": {
+      "0.1.20-alpha.0": {
+        "en": "prepeare json-explorer v0.2 readiness\nBump axios to 1.12.2",
+        "de": "prepeare json-explorer v0.2 bereitschaft\nBump axios zu 1.12.2",
+        "ru": "предварительная готовность json-explorer v0.2\nАксиос накачки до 1.12.2",
+        "pt": "prepeare json-explorer v0.2 pronto\nBump axios a 1.12.2",
+        "nl": "prepeare json-explorer v0.2 gereedheid\nBump axios naar 1.12.2",
+        "fr": "prepeare json-explorer v0.2 préparation\nAxios de pompe au 1.12.2",
+        "it": "prepeare json-explorer v0.2 prontezza\nAssio di bump a 1.12.2",
+        "es": "prepeare json-explorer v0.2 preparedness\nAxios de bomba a 1.12.2",
+        "pl": "prekursor json- explorer v0.2 gotowość\nAksykony bumpy do 1.12.2",
+        "uk": "prepeare json-explorer v0.2 готовність\nБампер аксіос до 1.12.2",
+        "zh-cn": "预选json-探索器 v0.2 准备状态\n横轴改为1.12.2"
+      },
       "0.1.19": {
         "en": "use encrypted token in config",
         "de": "verwendung verschlüsselter token in config",
@@ -80,19 +93,6 @@
         "pl": "Napraw przełączanie na czas letni\nAksykony bumpy do 1.8.4\nNapraw ostrzeżenie \"brak definicji atrybutu państwa dla 'pozycji xx'\nFix provider- fee% calculation if base price is negative ([# 354] (https: / / github.com / HGlab01 / ioBroker.apg- info / issues / 354))",
         "uk": "Виправлення перемикача на літній час\nБампер аксіос до 1.8.4\nВиправлення попередження \"Державне визначення атрибутів відсутній для 'item xx'\nФіксаторно-fee% розрахунок, якщо базова ціна негативна ([#354](https://github.com/HGlab01/ioBroker.apg-info/products/354)",
         "zh-cn": "切换到夏令时开始发行\n横轴改为1.8.4\n修复“ 缺少“ xxx” 的状态属性定义\n如果基本价格为负值,则固定提供者-收费百分比计算([#354](https://github.com/HGlab01/ioBroker.apg-info/issues/354))"
-      },
-      "0.1.13": {
-        "en": "Bump axios to 1.8.3",
-        "de": "Bump axios zu 1.8.3",
-        "ru": "Аксиос удара до 1,8.3",
-        "pt": "Bump axios para 1.8.3",
-        "nl": "Bump axio's tot 1.8.3",
-        "fr": "Axios bouffés à 1.8.3",
-        "it": "Assio di bump a 1.8.3",
-        "es": "Axios de bomba a 1.8.3",
-        "pl": "Axios bump do 1.8.3",
-        "uk": "Бампер аксіос до 1.8.3",
-        "zh-cn": "横轴改为1.8.3"
       }
     },
     "titleLang": {
