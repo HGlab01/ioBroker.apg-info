@@ -34,7 +34,7 @@ For more details check https://transparency.entsoe.eu/content/static_content/Sta
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### __WORK IN PROGRESS__
+### 0.1.21-alpha.1 (2025-10-10)
 * (HGlab01) Support quater-hourly tarifs
 * (HGlab01) Bump iobroker-jsonexplorer to 0.2.1
 
