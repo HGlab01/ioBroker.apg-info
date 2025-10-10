@@ -4,7 +4,8 @@ const utils = require('@iobroker/adapter-core');
 const axios = require('axios');
 const convert = require('xml-js');
 const jsonExplorer = require('iobroker-jsonexplorer');
-const stateAttr = require(`${__dirname}/lib/stateAttr.js`); // Load attribute library
+//const stateAttr = require(`${__dirname}/lib/stateAttr.js`); // Load attribute library
+const stateAttr = {};
 const isOnline = require('@esm2cjs/is-online').default;
 const { version } = require('./package.json');
 
@@ -427,6 +428,7 @@ class ApgInfo extends utils.Adapter {
      */
     async executeMarketPrice(country, forecast) {
         let source1 = null;
+        const configTraversJson = { replaceName: true, replaceID: true, level: 3, validateAttribute: false };
 
         try {
             const day0 = cleanDate(new Date());
@@ -447,8 +449,8 @@ class ApgInfo extends utils.Adapter {
 
             await jsonExplorer.traverseJson(prices0, 'marketprice.details.today', true, true, 3);
             await jsonExplorer.traverseJson(prices1, 'marketprice.details.tomorrow', true, true, 3);
-            await jsonExplorer.traverseJson(prices0q, 'marketprice.quarter_hourly.details.today', true, true, 3);
-            await jsonExplorer.traverseJson(prices1q, 'marketprice.quarter_hourly.details.tomorrow', true, true, 3);
+            await jsonExplorer.traverseJson(prices0q, 'marketprice_quarter_hourly.details.today', true, true, 3);
+            await jsonExplorer.traverseJson(prices1q, 'marketprice_quarter_hourly.details.tomorrow', true, true, 3);
 
             const todayProcessed = this._processAndCategorizePrices(prices0, 'today', false);
             const tomorrowProcessed = this._processAndCategorizePrices(prices1, 'tomorrow', false);
@@ -523,19 +525,19 @@ class ApgInfo extends utils.Adapter {
             await this.createCharts(arrAll0, arrAll1, source1, false);
             await this.createCharts(arrAll0q, arrAll1q, null, true);
 
-            await jsonExplorer.traverseJson(jDay0, 'marketprice.today', true, true, 3);
-            await jsonExplorer.traverseJson(jDay0BelowThreshold, 'marketprice.belowThreshold.today', true, true, 3);
-            await jsonExplorer.traverseJson(jDay0AboveThreshold, 'marketprice.aboveThreshold.today', true, true, 3);
-            await jsonExplorer.traverseJson(jDay1, 'marketprice.tomorrow', true, true, 3);
-            await jsonExplorer.traverseJson(jDay1BelowThreshold, 'marketprice.belowThreshold.tomorrow', true, true, 3);
-            await jsonExplorer.traverseJson(jDay1AboveThreshold, 'marketprice.aboveThreshold.tomorrow', true, true, 3);
+            await jsonExplorer.traverseJson(jDay0, 'marketprice.today', configTraversJson);
+            await jsonExplorer.traverseJson(jDay0BelowThreshold, 'marketprice.belowThreshold.today', configTraversJson);
+            await jsonExplorer.traverseJson(jDay0AboveThreshold, 'marketprice.aboveThreshold.today', configTraversJson);
+            await jsonExplorer.traverseJson(jDay1, 'marketprice.tomorrow', configTraversJson);
+            await jsonExplorer.traverseJson(jDay1BelowThreshold, 'marketprice.belowThreshold.tomorrow', configTraversJson);
+            await jsonExplorer.traverseJson(jDay1AboveThreshold, 'marketprice.aboveThreshold.tomorrow', configTraversJson);
 
-            await jsonExplorer.traverseJson(jDay0q, 'marketprice.quarter_hourly.today', true, true, 3);
-            await jsonExplorer.traverseJson(jDay1q, 'marketprice.quarter_hourly.tomorrow', true, true, 3);
-            await jsonExplorer.traverseJson(jDay0BelowThresholdq, 'marketprice.quarter_hourly.belowThreshold.today', true, true, 3);
-            await jsonExplorer.traverseJson(jDay0AboveThresholdq, 'marketprice.quarter_hourly.aboveThreshold.today', true, true, 3);
-            await jsonExplorer.traverseJson(jDay1BelowThresholdq, 'marketprice.quarter_hourly.belowThreshold.tomorrow', true, true, 3);
-            await jsonExplorer.traverseJson(jDay1AboveThresholdq, 'marketprice.quarter_hourly.aboveThreshold.tomorrow', true, true, 3);
+            await jsonExplorer.traverseJson(jDay0q, 'marketprice_quarter_hourly.today', configTraversJson);
+            await jsonExplorer.traverseJson(jDay1q, 'marketprice_quarter_hourly.tomorrow', configTraversJson);
+            await jsonExplorer.traverseJson(jDay0BelowThresholdq, 'marketprice_quarter_hourly.belowThreshold.today', configTraversJson);
+            await jsonExplorer.traverseJson(jDay0AboveThresholdq, 'marketprice_quarter_hourly.aboveThreshold.today', configTraversJson);
+            await jsonExplorer.traverseJson(jDay1BelowThresholdq, 'marketprice_quarter_hourly.belowThreshold.tomorrow', configTraversJson);
+            await jsonExplorer.traverseJson(jDay1AboveThresholdq, 'marketprice_quarter_hourly.aboveThreshold.tomorrow', configTraversJson);
 
             //now it is time to sort by prcie
             arrBelow0.sort(compareSecondColumn);
@@ -627,10 +629,10 @@ class ApgInfo extends utils.Adapter {
                 price1Avgq = Math.round((priceSum1q / (24 * 4)) * 1000) / 1000;
             }
 
-            await jsonExplorer.traverseJson(sortedHours0, 'marketprice.belowThreshold.today_sorted', true, true, 3);
-            await jsonExplorer.traverseJson(sortedHours1, 'marketprice.belowThreshold.tomorrow_sorted', true, true, 3);
-            await jsonExplorer.traverseJson(sortedHoursAll0, 'marketprice.today_sorted', true, true, 3);
-            await jsonExplorer.traverseJson(sortedHoursAll1, 'marketprice.tomorrow_sorted', true, true, 3);
+            await jsonExplorer.traverseJson(sortedHours0, 'marketprice.belowThreshold.today_sorted', configTraversJson);
+            await jsonExplorer.traverseJson(sortedHours1, 'marketprice.belowThreshold.tomorrow_sorted', configTraversJson);
+            await jsonExplorer.traverseJson(sortedHoursAll0, 'marketprice.today_sorted', configTraversJson);
+            await jsonExplorer.traverseJson(sortedHoursAll1, 'marketprice.tomorrow_sorted', configTraversJson);
             await jsonExplorer.stateSetCreate(
                 'marketprice.belowThreshold.today_sorted.short',
                 'today sorted short',
@@ -646,37 +648,37 @@ class ApgInfo extends utils.Adapter {
             await jsonExplorer.stateSetCreate('marketprice.today.average', 'average', price0Avg);
             await jsonExplorer.stateSetCreate('marketprice.tomorrow.average', 'average', price1Avg);
 
-            await jsonExplorer.traverseJson(sortedHours0q, 'marketprice.quarter_hourly.belowThreshold.today_sorted', true, true, 3);
-            await jsonExplorer.traverseJson(sortedHours1q, 'marketprice.quarter_hourly.belowThreshold.tomorrow_sorted', true, true, 3);
-            await jsonExplorer.traverseJson(sortedHoursAll0q, 'marketprice.quarter_hourly.today_sorted', true, true, 3);
-            await jsonExplorer.traverseJson(sortedHoursAll1q, 'marketprice.quarter_hourly.tomorrow_sorted', true, true, 3);
+            await jsonExplorer.traverseJson(sortedHours0q, 'marketprice_quarter_hourly.belowThreshold.today_sorted', configTraversJson);
+            await jsonExplorer.traverseJson(sortedHours1q, 'marketprice_quarter_hourly.belowThreshold.tomorrow_sorted', configTraversJson);
+            await jsonExplorer.traverseJson(sortedHoursAll0q, 'marketprice_quarter_hourly.today_sorted', configTraversJson);
+            await jsonExplorer.traverseJson(sortedHoursAll1q, 'marketprice_quarter_hourly.tomorrow_sorted', configTraversJson);
             await jsonExplorer.stateSetCreate(
-                'marketprice.quarter_hourly.today_sorted.short',
+                'marketprice_quarter_hourly.today_sorted.short',
                 'today sorted short',
                 JSON.stringify(sortedHours0ShortAllq),
             );
             await jsonExplorer.stateSetCreate(
-                'marketprice.quarter_hourly.tomorrow_sorted.short',
+                'marketprice_quarter_hourly.tomorrow_sorted.short',
                 'tomoorrow sorted short',
                 JSON.stringify(sortedHours1ShortAllq),
             );
             await jsonExplorer.stateSetCreate(
-                'marketprice.quarter_hourly.today_sorted.short',
+                'marketprice_quarter_hourly.today_sorted.short',
                 'today sorted short',
                 JSON.stringify(sortedHours0ShortAllq),
             );
             await jsonExplorer.stateSetCreate(
-                'marketprice.quarter_hourly.tomorrow_sorted.short',
+                'marketprice_quarter_hourly.tomorrow_sorted.short',
                 'tomorrow sorted short',
                 JSON.stringify(sortedHours1ShortAllq),
             );
-            await jsonExplorer.stateSetCreate('marketprice.quarter_hourly.today.average', 'average', price0Avgq);
-            await jsonExplorer.stateSetCreate('marketprice.quarter_hourly.tomorrow.average', 'average', price1Avgq);
+            await jsonExplorer.stateSetCreate('marketprice_quarter_hourly.today.average', 'average', price0Avgq);
+            await jsonExplorer.stateSetCreate('marketprice_quarter_hourly.tomorrow.average', 'average', price1Avgq);
 
             await jsonExplorer.checkExpire('marketprice.*');
             await jsonExplorer.deleteObjectsWithNull('marketprice.*Threshold.*');
             await jsonExplorer.deleteObjectsWithNull('marketprice.details.*');
-            await jsonExplorer.deleteObjectsWithNull('marketprice.quarter_hourly.details.*');
+            await jsonExplorer.deleteObjectsWithNull('marketprice_quarter_hourly.details.*');
         } catch (error) {
             let eMsg = `Error in executeMarketPrice(): ${error}`;
             this.log.error(eMsg);
@@ -1199,14 +1201,14 @@ class ApgInfo extends utils.Adapter {
         const roundedMax = Math.ceil((allMax * 1.1) / 5) * 5;
 
         if (quarter_hourly) {
-            await this.createSingleChart(arrayToday, false, null, allMin, roundedMax, 'marketprice.quarter_hourly.today.jsonChart', quarter_hourly);
+            await this.createSingleChart(arrayToday, false, null, allMin, roundedMax, 'marketprice_quarter_hourly.today.jsonChart', quarter_hourly);
             await this.createSingleChart(
                 arrayTomorrow,
                 true,
                 sourceTomorrow,
                 allMin,
                 roundedMax,
-                'marketprice.quarter_hourly.tomorrow.jsonChart',
+                'marketprice_quarter_hourly.tomorrow.jsonChart',
                 quarter_hourly,
             );
         } else {
