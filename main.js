@@ -4,8 +4,7 @@ const utils = require('@iobroker/adapter-core');
 const axios = require('axios');
 const convert = require('xml-js');
 const jsonExplorer = require('iobroker-jsonexplorer');
-//const stateAttr = require(`${__dirname}/lib/stateAttr.js`); // Load attribute library
-const stateAttr = {};
+const stateAttr = require(`${__dirname}/lib/stateAttr.js`); // Load attribute library
 const isOnline = require('@esm2cjs/is-online').default;
 const { version } = require('./package.json');
 
@@ -428,7 +427,7 @@ class ApgInfo extends utils.Adapter {
      */
     async executeMarketPrice(country, forecast) {
         let source1 = null;
-        const configTraversJson = { replaceName: true, replaceID: true, level: 3, validateAttribute: false };
+        const configTraversJsonFalse = { replaceName: true, replaceID: true, level: 3, validateAttribute: false };
 
         try {
             const day0 = cleanDate(new Date());
@@ -447,10 +446,10 @@ class ApgInfo extends utils.Adapter {
                 ({ prices0, prices1, source1, prices0q, prices1q } = await this._getAndProcessMarketData(country, forecast));
             }
 
-            await jsonExplorer.traverseJson(prices0, 'marketprice.details.today', true, true, 3);
-            await jsonExplorer.traverseJson(prices1, 'marketprice.details.tomorrow', true, true, 3);
-            await jsonExplorer.traverseJson(prices0q, 'marketprice_quarter_hourly.details.today', true, true, 3);
-            await jsonExplorer.traverseJson(prices1q, 'marketprice_quarter_hourly.details.tomorrow', true, true, 3);
+            await jsonExplorer.traverseJson(prices0, 'marketprice.details.today', configTraversJsonFalse);
+            await jsonExplorer.traverseJson(prices1, 'marketprice.details.tomorrow', configTraversJsonFalse);
+            await jsonExplorer.traverseJson(prices0q, 'marketprice_quarter_hourly.details.today', configTraversJsonFalse);
+            await jsonExplorer.traverseJson(prices1q, 'marketprice_quarter_hourly.details.tomorrow', configTraversJsonFalse);
 
             const todayProcessed = this._processAndCategorizePrices(prices0, 'today', false);
             const tomorrowProcessed = this._processAndCategorizePrices(prices1, 'tomorrow', false);
@@ -525,19 +524,19 @@ class ApgInfo extends utils.Adapter {
             await this.createCharts(arrAll0, arrAll1, source1, false);
             await this.createCharts(arrAll0q, arrAll1q, null, true);
 
-            await jsonExplorer.traverseJson(jDay0, 'marketprice.today', configTraversJson);
-            await jsonExplorer.traverseJson(jDay0BelowThreshold, 'marketprice.belowThreshold.today', configTraversJson);
-            await jsonExplorer.traverseJson(jDay0AboveThreshold, 'marketprice.aboveThreshold.today', configTraversJson);
-            await jsonExplorer.traverseJson(jDay1, 'marketprice.tomorrow', configTraversJson);
-            await jsonExplorer.traverseJson(jDay1BelowThreshold, 'marketprice.belowThreshold.tomorrow', configTraversJson);
-            await jsonExplorer.traverseJson(jDay1AboveThreshold, 'marketprice.aboveThreshold.tomorrow', configTraversJson);
+            await jsonExplorer.traverseJson(jDay0, 'marketprice.today', configTraversJsonFalse);
+            await jsonExplorer.traverseJson(jDay0BelowThreshold, 'marketprice.belowThreshold.today', configTraversJsonFalse);
+            await jsonExplorer.traverseJson(jDay0AboveThreshold, 'marketprice.aboveThreshold.today', configTraversJsonFalse);
+            await jsonExplorer.traverseJson(jDay1, 'marketprice.tomorrow', configTraversJsonFalse);
+            await jsonExplorer.traverseJson(jDay1BelowThreshold, 'marketprice.belowThreshold.tomorrow', configTraversJsonFalse);
+            await jsonExplorer.traverseJson(jDay1AboveThreshold, 'marketprice.aboveThreshold.tomorrow', configTraversJsonFalse);
 
-            await jsonExplorer.traverseJson(jDay0q, 'marketprice_quarter_hourly.today', configTraversJson);
-            await jsonExplorer.traverseJson(jDay1q, 'marketprice_quarter_hourly.tomorrow', configTraversJson);
-            await jsonExplorer.traverseJson(jDay0BelowThresholdq, 'marketprice_quarter_hourly.belowThreshold.today', configTraversJson);
-            await jsonExplorer.traverseJson(jDay0AboveThresholdq, 'marketprice_quarter_hourly.aboveThreshold.today', configTraversJson);
-            await jsonExplorer.traverseJson(jDay1BelowThresholdq, 'marketprice_quarter_hourly.belowThreshold.tomorrow', configTraversJson);
-            await jsonExplorer.traverseJson(jDay1AboveThresholdq, 'marketprice_quarter_hourly.aboveThreshold.tomorrow', configTraversJson);
+            await jsonExplorer.traverseJson(jDay0q, 'marketprice_quarter_hourly.today', configTraversJsonFalse);
+            await jsonExplorer.traverseJson(jDay1q, 'marketprice_quarter_hourly.tomorrow', configTraversJsonFalse);
+            await jsonExplorer.traverseJson(jDay0BelowThresholdq, 'marketprice_quarter_hourly.belowThreshold.today', configTraversJsonFalse);
+            await jsonExplorer.traverseJson(jDay0AboveThresholdq, 'marketprice_quarter_hourly.aboveThreshold.today', configTraversJsonFalse);
+            await jsonExplorer.traverseJson(jDay1BelowThresholdq, 'marketprice_quarter_hourly.belowThreshold.tomorrow', configTraversJsonFalse);
+            await jsonExplorer.traverseJson(jDay1AboveThresholdq, 'marketprice_quarter_hourly.aboveThreshold.tomorrow', configTraversJsonFalse);
 
             //now it is time to sort by prcie
             arrBelow0.sort(compareSecondColumn);
@@ -629,10 +628,10 @@ class ApgInfo extends utils.Adapter {
                 price1Avgq = Math.round((priceSum1q / (24 * 4)) * 1000) / 1000;
             }
 
-            await jsonExplorer.traverseJson(sortedHours0, 'marketprice.belowThreshold.today_sorted', configTraversJson);
-            await jsonExplorer.traverseJson(sortedHours1, 'marketprice.belowThreshold.tomorrow_sorted', configTraversJson);
-            await jsonExplorer.traverseJson(sortedHoursAll0, 'marketprice.today_sorted', configTraversJson);
-            await jsonExplorer.traverseJson(sortedHoursAll1, 'marketprice.tomorrow_sorted', configTraversJson);
+            await jsonExplorer.traverseJson(sortedHours0, 'marketprice.belowThreshold.today_sorted', configTraversJsonFalse);
+            await jsonExplorer.traverseJson(sortedHours1, 'marketprice.belowThreshold.tomorrow_sorted', configTraversJsonFalse);
+            await jsonExplorer.traverseJson(sortedHoursAll0, 'marketprice.today_sorted', configTraversJsonFalse);
+            await jsonExplorer.traverseJson(sortedHoursAll1, 'marketprice.tomorrow_sorted', configTraversJsonFalse);
             await jsonExplorer.stateSetCreate(
                 'marketprice.belowThreshold.today_sorted.short',
                 'today sorted short',
@@ -648,10 +647,10 @@ class ApgInfo extends utils.Adapter {
             await jsonExplorer.stateSetCreate('marketprice.today.average', 'average', price0Avg);
             await jsonExplorer.stateSetCreate('marketprice.tomorrow.average', 'average', price1Avg);
 
-            await jsonExplorer.traverseJson(sortedHours0q, 'marketprice_quarter_hourly.belowThreshold.today_sorted', configTraversJson);
-            await jsonExplorer.traverseJson(sortedHours1q, 'marketprice_quarter_hourly.belowThreshold.tomorrow_sorted', configTraversJson);
-            await jsonExplorer.traverseJson(sortedHoursAll0q, 'marketprice_quarter_hourly.today_sorted', configTraversJson);
-            await jsonExplorer.traverseJson(sortedHoursAll1q, 'marketprice_quarter_hourly.tomorrow_sorted', configTraversJson);
+            await jsonExplorer.traverseJson(sortedHours0q, 'marketprice_quarter_hourly.belowThreshold.today_sorted', configTraversJsonFalse);
+            await jsonExplorer.traverseJson(sortedHours1q, 'marketprice_quarter_hourly.belowThreshold.tomorrow_sorted', configTraversJsonFalse);
+            await jsonExplorer.traverseJson(sortedHoursAll0q, 'marketprice_quarter_hourly.today_sorted', configTraversJsonFalse);
+            await jsonExplorer.traverseJson(sortedHoursAll1q, 'marketprice_quarter_hourly.tomorrow_sorted', configTraversJsonFalse);
             await jsonExplorer.stateSetCreate(
                 'marketprice_quarter_hourly.today_sorted.short',
                 'today sorted short',

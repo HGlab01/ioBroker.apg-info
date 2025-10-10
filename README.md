@@ -35,7 +35,7 @@ For more details check https://transparency.entsoe.eu/content/static_content/Sta
     ### __WORK IN PROGRESS__
 -->
 ### __WORK IN PROGRESS__
-* (HGlab01) First support (not all features) for quater-hourly tarifs
+* (HGlab01) Support quater-hourly tarifs
 
 ### 0.1.20 (2025-10-06)
 * (HGlab01) prepeare json-explorer v0.2 readiness
