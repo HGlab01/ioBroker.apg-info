@@ -34,7 +34,7 @@ For more details check https://transparency.entsoe.eu/content/static_content/Sta
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### __WORK IN PROGRESS__
+### 0.1.21-alpha.0 (2025-10-10)
 * (HGlab01) Support quater-hourly tarifs
 
 ### 0.1.20 (2025-10-06)
@@ -50,11 +50,6 @@ For more details check https://transparency.entsoe.eu/content/static_content/Sta
 
 ### 0.1.17 (2025-06-03)
 * (HGlab01) Add retry mechanism for Entsoe
-
-### 0.1.16 (2025-05-18)
-* (HGlab01) Optimize Entsoe (Swiss market) requests
-* (HGlab01) Extend timeout for Api calls to 30 seconds 
-* (HGlab01) Bump axios to 1.9.0
 
 ## License
 MIT License
