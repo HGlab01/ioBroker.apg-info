@@ -583,7 +583,7 @@ class ApgInfo extends utils.Adapter {
                 sortedHours1Short[idS] = Number(arrBelow1[idS][0].substring(0, 2));
             }
             for (const idS in arrBelow1q) {
-                sortedHours1q[idS] = [arrBelow1q[idS][0], arrBelow1[idS][1]];
+                sortedHours1q[idS] = [arrBelow1q[idS][0], arrBelow1q[idS][1]];
                 sortedHours1Shortq[idS] = arrBelow1q[idS][0];
             }
             for (const idS in arrAll0) {
@@ -691,7 +691,9 @@ class ApgInfo extends utils.Adapter {
             await jsonExplorer.stateSetCreate('marketprice_quarter_hourly.tomorrow.average', 'average', price1Avgq, false);
 
             await jsonExplorer.checkExpire('marketprice.*');
+            await jsonExplorer.checkExpire('marketprice_quarter_hourly.*');
             await jsonExplorer.deleteObjectsWithNull('marketprice.*Threshold.*');
+            await jsonExplorer.deleteObjectsWithNull('marketprice_quarter_hourly.*Threshold.*');
             await jsonExplorer.deleteObjectsWithNull('marketprice.details.*');
             await jsonExplorer.deleteObjectsWithNull('marketprice_quarter_hourly.details.*');
         } catch (error) {
@@ -769,9 +771,8 @@ class ApgInfo extends utils.Adapter {
 
         let eXaaToday = await this.getDataDayAheadExaa(false, country);
         let eXaaTomorrow = await this.getDataDayAheadExaa(true, country);
-
-        //prices0Awattar = await this.getDataDayAheadAwattar(false, country);
-        prices0Awattar = { data: null };
+        prices0Awattar = await this.getDataDayAheadAwattar(false, country);
+        //prices0Awattar = { data: null };
         if (prices0Awattar && prices0Awattar.data) {
             this.log.debug(`Day ahead result for Awattar today is: ${JSON.stringify(prices0Awattar.data)}`);
         } else {
@@ -786,8 +787,8 @@ class ApgInfo extends utils.Adapter {
                 this.log.warn('No market data for today');
             }
         }
-        //prices1Awattar = await this.getDataDayAheadAwattar(true, country);
-        prices1Awattar = { data: null };
+        prices1Awattar = await this.getDataDayAheadAwattar(true, country);
+        //prices1Awattar = { data: null };
         if (prices1Awattar && prices1Awattar.data) {
             this.log.debug(`Day ahead result for Awattar tomorrow is: ${JSON.stringify(prices1Awattar.data)}`);
         } else {
