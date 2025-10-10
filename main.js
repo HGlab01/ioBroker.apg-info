@@ -1,25 +1,16 @@
 'use strict';
 
-/*
- * Created with @iobroker/create-adapter v1.25.0
- */
-
-// The adapter-core module gives you access to the core ioBroker functions
-// you need to create an adapter
 const utils = require('@iobroker/adapter-core');
-
-// Load your modules here, e.g.:
 const axios = require('axios');
 const convert = require('xml-js');
-
 const jsonExplorer = require('iobroker-jsonexplorer');
 const stateAttr = require(`${__dirname}/lib/stateAttr.js`); // Load attribute library
 const isOnline = require('@esm2cjs/is-online').default;
 const { version } = require('./package.json');
 
-//global variables
-let threshold = 10;
-const MAX_DELAY = 1; //25000
+// Constants
+const MAX_DELAY = 25000; //25000
+
 // @ts-expect-error axios.create is ok
 const axiosInstance = axios.create({ timeout: 30000 }); //30000
 
@@ -45,6 +36,7 @@ class ApgInfo extends utils.Adapter {
         this.charges = 0;
         this.gridCosts = 0;
         this.token = '';
+        this.threshold = 10;
     }
 
     /**
@@ -57,8 +49,8 @@ class ApgInfo extends utils.Adapter {
         jsonExplorer.sendVersionInfo(version);
         this.log.info(`Started with JSON-Explorer version ${jsonExplorer.version}`);
 
-        if (this.config.threshold) {
-            threshold = this.config.threshold;
+        if (this.config.threshold != undefined) {
+            this.threshold = this.config.threshold;
         } else {
             this.log.info('Market price threshold not found and set to 10');
         }
@@ -69,28 +61,17 @@ class ApgInfo extends utils.Adapter {
             this.log.info('Forecast config not found and set to disbaled');
         }
 
-        if (this.config.calculate != undefined) {
-            this.calculate = this.config.calculate;
-        }
+        this.calculate = this.config.calculate ?? false;
+
         if (this.calculate == true) {
-            if (this.config.feeAbsolute != undefined) {
-                this.feeAbsolute = this.config.feeAbsolute;
-            }
-            if (this.config.feeRelative != undefined) {
-                this.feeRelative = this.config.feeRelative / 100;
-            }
-            if (this.config.vat != undefined) {
-                this.vat = this.config.vat / 100;
-            }
-            if (this.config.charges != undefined) {
-                this.charges = this.config.charges / 100;
-            }
-            if (this.config.gridCosts != undefined) {
-                this.gridCosts = this.config.gridCosts;
-            }
+            this.feeAbsolute = this.config.feeAbsolute ?? 0;
+            this.feeRelative = (this.config.feeRelative ?? 0) / 100;
+            this.vat = (this.config.vat ?? 0) / 100;
+            this.charges = (this.config.charges ?? 0) / 100;
+            this.gridCosts = this.config.gridCosts ?? 0;
         }
 
-        if (this.config?.country) {
+        if (this.config.country) {
             country = this.config.country;
         } else {
             this.log.error('Country for market not found. Please confifure in Config');
@@ -98,7 +79,7 @@ class ApgInfo extends utils.Adapter {
         }
 
         if (country != 'at' && country != 'de') {
-            if (this.config?.tokenEncrypted) {
+            if (this.config.tokenEncrypted) {
                 this.token = this.config.tokenEncrypted;
             } else {
                 const instanceId = `system.adapter.${this.name}.${this.instance}`;
@@ -134,9 +115,9 @@ class ApgInfo extends utils.Adapter {
         await jsonExplorer.sleep(callApiDelay);
 
         await jsonExplorer.setLastStartTime();
-        const [resultPeakHours, resultDayAhead] = await Promise.all([this.ExecuteRequestPeakHours(), this.ExecuteRequestDayAhead(country, forecast)]);
+        const [resultPeakHours, resultMarketPrice] = await Promise.all([this.executeRequestPeakHours(), this.executeMarketPrice(country, forecast)]);
 
-        if (resultPeakHours == 'error' || resultDayAhead == 'error') {
+        if (resultPeakHours == 'error' || resultMarketPrice == 'error') {
             this.terminate ? this.terminate(utils.EXIT_CODES.UNCAUGHT_EXCEPTION) : process.exit(0);
         } else {
             this.terminate ? this.terminate(0) : process.exit(0);
@@ -444,8 +425,8 @@ class ApgInfo extends utils.Adapter {
      * @param {string} country country of the market
      * @param {boolean} forecast also checks 10.15 auction for next day
      */
-    async ExecuteRequestDayAhead(country, forecast) {
-        let source1;
+    async executeMarketPrice(country, forecast) {
+        let source1 = null;
 
         try {
             const day0 = cleanDate(new Date());
@@ -464,37 +445,15 @@ class ApgInfo extends utils.Adapter {
                 ({ prices0, prices1, source1, prices0q, prices1q } = await this._getAndProcessMarketData(country, forecast));
             }
 
-            await jsonExplorer.traverseJson(prices0, 'marketprice.details.today', true, true);
-            await jsonExplorer.traverseJson(prices1, 'marketprice.details.tomorrow', true, true);
-            await jsonExplorer.traverseJson(prices0q, 'marketprice.quarter_hourly.details.today', true, true);
-            await jsonExplorer.traverseJson(prices1q, 'marketprice.quarter_hourly.details.tomorrow', true, true);
+            await jsonExplorer.traverseJson(prices0, 'marketprice.details.today', true, true, 3);
+            await jsonExplorer.traverseJson(prices1, 'marketprice.details.tomorrow', true, true, 3);
+            await jsonExplorer.traverseJson(prices0q, 'marketprice.quarter_hourly.details.today', true, true, 3);
+            await jsonExplorer.traverseJson(prices1q, 'marketprice.quarter_hourly.details.tomorrow', true, true, 3);
 
-            const tomorrowProcessed = this._processAndCategorizePrices(prices1, 'tomorrow');
-            const todayProcessed = this._processAndCategorizePrices(prices0, 'today');
-            const todayProcessedQ = this._processAndCategorizePrices(prices0q, 'today', true);
-            const tomorrowProcessedQ = this._processAndCategorizePrices(prices1q, 'tomorrow', true);
-
-            if (!todayProcessedQ) {
-                return 'error';
-            }
-            const {
-                jDay: jDay0q,
-                jDayBelowThreshold: jDay0BelowThresholdq,
-                jDayAboveThreshold: jDay0AboveThresholdq,
-                daysBelow: days0Belowq,
-                daysAbove: days0Aboveq,
-            } = todayProcessedQ;
-
-            if (!tomorrowProcessedQ) {
-                return 'error';
-            }
-            const {
-                jDay: jDay1q,
-                jDayBelowThreshold: jDay1BelowThresholdq,
-                jDayAboveThreshold: jDay1AboveThresholdq,
-                daysBelow: days1Belowq,
-                daysAbove: days1Aboveq,
-            } = tomorrowProcessedQ;
+            const todayProcessed = this._processAndCategorizePrices(prices0, 'today', false);
+            const tomorrowProcessed = this._processAndCategorizePrices(prices1, 'tomorrow', false);
+            const todayProcessedq = this._processAndCategorizePrices(prices0q, 'today', true);
+            const tomorrowProcessedq = this._processAndCategorizePrices(prices1q, 'tomorrow', true);
 
             if (!todayProcessed) {
                 return 'error';
@@ -518,6 +477,28 @@ class ApgInfo extends utils.Adapter {
                 daysAbove: days1Above,
             } = tomorrowProcessed;
 
+            if (!todayProcessedq) {
+                return 'error';
+            }
+            const {
+                jDay: jDay0q,
+                jDayBelowThreshold: jDay0BelowThresholdq,
+                jDayAboveThreshold: jDay0AboveThresholdq,
+                daysBelow: days0Belowq,
+                daysAbove: days0Aboveq,
+            } = todayProcessedq;
+
+            if (!tomorrowProcessedq) {
+                return 'error';
+            }
+            const {
+                jDay: jDay1q,
+                jDayBelowThreshold: jDay1BelowThresholdq,
+                jDayAboveThreshold: jDay1AboveThresholdq,
+                daysBelow: days1Belowq,
+                daysAbove: days1Aboveq,
+            } = tomorrowProcessedq;
+
             //put data into an array
             let arrBelow0 = Object.keys(jDay0BelowThreshold).map(key => [key, jDay0BelowThreshold[key]]);
             let arrBelow1 = Object.keys(jDay1BelowThreshold).map(key => [key, jDay1BelowThreshold[key]]);
@@ -539,24 +520,18 @@ class ApgInfo extends utils.Adapter {
             jDay1BelowThresholdq.numberOfSlots = days1Belowq;
             jDay1AboveThresholdq.numberOfSlots = days1Aboveq;
 
-            this.createChart(arrAll0, arrAll1, source1);
+            await this.createCharts(arrAll0, arrAll1, source1, false);
+            await this.createCharts(arrAll0q, arrAll1q, null, true);
 
-            this.log.debug(`Marketprice jDay0: ${JSON.stringify(jDay0)}`);
-            this.log.debug(`Marketprice jDay0BelowThreshold: ${JSON.stringify(jDay0BelowThreshold)}`);
-            this.log.debug(`Marketprice jDay0AboveThreshold: ${JSON.stringify(jDay0AboveThreshold)}`);
-            this.log.debug(`Marketprice jDay1: ${JSON.stringify(jDay1)}`);
-            this.log.debug(`Marketprice jDay1AboveThreshold: ${JSON.stringify(jDay1AboveThreshold)}`);
-            this.log.debug(`Marketprice jDay1BelowThreshold: ${JSON.stringify(jDay1BelowThreshold)}`);
+            await jsonExplorer.traverseJson(jDay0, 'marketprice.today', true, true, 3);
+            await jsonExplorer.traverseJson(jDay0BelowThreshold, 'marketprice.belowThreshold.today', true, true, 3);
+            await jsonExplorer.traverseJson(jDay0AboveThreshold, 'marketprice.aboveThreshold.today', true, true, 3);
+            await jsonExplorer.traverseJson(jDay1, 'marketprice.tomorrow', true, true, 3);
+            await jsonExplorer.traverseJson(jDay1BelowThreshold, 'marketprice.belowThreshold.tomorrow', true, true, 3);
+            await jsonExplorer.traverseJson(jDay1AboveThreshold, 'marketprice.aboveThreshold.tomorrow', true, true, 3);
 
-            await jsonExplorer.traverseJson(jDay0, 'marketprice.today', true, true);
-            await jsonExplorer.traverseJson(jDay0BelowThreshold, 'marketprice.belowThreshold.today', true, true);
-            await jsonExplorer.traverseJson(jDay0AboveThreshold, 'marketprice.aboveThreshold.today', true, true);
-            await jsonExplorer.traverseJson(jDay1, 'marketprice.tomorrow', true, true);
-            await jsonExplorer.traverseJson(jDay1BelowThreshold, 'marketprice.belowThreshold.tomorrow', true, true);
-            await jsonExplorer.traverseJson(jDay1AboveThreshold, 'marketprice.aboveThreshold.tomorrow', true, true);
-
-            await jsonExplorer.traverseJson(jDay0q, 'marketprice.quarter_hourly.today', true, true);
-            await jsonExplorer.traverseJson(jDay1q, 'marketprice.quarter_hourly.tomorrow', true, true);
+            await jsonExplorer.traverseJson(jDay0q, 'marketprice.quarter_hourly.today', true, true, 3);
+            await jsonExplorer.traverseJson(jDay1q, 'marketprice.quarter_hourly.tomorrow', true, true, 3);
             await jsonExplorer.traverseJson(jDay0BelowThresholdq, 'marketprice.quarter_hourly.belowThreshold.today', true, true, 3);
             await jsonExplorer.traverseJson(jDay0AboveThresholdq, 'marketprice.quarter_hourly.aboveThreshold.today', true, true, 3);
             await jsonExplorer.traverseJson(jDay1BelowThresholdq, 'marketprice.quarter_hourly.belowThreshold.tomorrow', true, true, 3);
@@ -593,6 +568,7 @@ class ApgInfo extends utils.Adapter {
                 priceSum0q = 0,
                 priceSum1 = 0,
                 priceSum1q = 0;
+
             for (const idS in arrBelow0) {
                 sortedHours0[idS] = [arrBelow0[idS][0], arrBelow0[idS][1]];
                 sortedHours0Short[idS] = Number(arrBelow0[idS][0].substring(0, 2));
@@ -651,10 +627,10 @@ class ApgInfo extends utils.Adapter {
                 price1Avgq = Math.round((priceSum1q / (24 * 4)) * 1000) / 1000;
             }
 
-            await jsonExplorer.traverseJson(sortedHours0, 'marketprice.belowThreshold.today_sorted', true, true);
-            await jsonExplorer.traverseJson(sortedHours1, 'marketprice.belowThreshold.tomorrow_sorted', true, true);
-            await jsonExplorer.traverseJson(sortedHoursAll0, 'marketprice.today_sorted', true, true);
-            await jsonExplorer.traverseJson(sortedHoursAll1, 'marketprice.tomorrow_sorted', true, true);
+            await jsonExplorer.traverseJson(sortedHours0, 'marketprice.belowThreshold.today_sorted', true, true, 3);
+            await jsonExplorer.traverseJson(sortedHours1, 'marketprice.belowThreshold.tomorrow_sorted', true, true, 3);
+            await jsonExplorer.traverseJson(sortedHoursAll0, 'marketprice.today_sorted', true, true, 3);
+            await jsonExplorer.traverseJson(sortedHoursAll1, 'marketprice.tomorrow_sorted', true, true, 3);
             await jsonExplorer.stateSetCreate(
                 'marketprice.belowThreshold.today_sorted.short',
                 'today sorted short',
@@ -670,11 +646,10 @@ class ApgInfo extends utils.Adapter {
             await jsonExplorer.stateSetCreate('marketprice.today.average', 'average', price0Avg);
             await jsonExplorer.stateSetCreate('marketprice.tomorrow.average', 'average', price1Avg);
 
-            await jsonExplorer.traverseJson(sortedHours0q, 'marketprice.quarter_hourly.belowThreshold.today_sorted', true, true);
-            await jsonExplorer.traverseJson(sortedHours1q, 'marketprice.quarter_hourly.belowThreshold.tomorrow_sorted', true, true);
-            await jsonExplorer.traverseJson(sortedHoursAll0q, 'marketprice.quarter_hourly.today_sorted', true, true);
-            await jsonExplorer.traverseJson(sortedHoursAll1q, 'marketprice.quarter_hourly.tomorrow_sorted', true, true);
-
+            await jsonExplorer.traverseJson(sortedHours0q, 'marketprice.quarter_hourly.belowThreshold.today_sorted', true, true, 3);
+            await jsonExplorer.traverseJson(sortedHours1q, 'marketprice.quarter_hourly.belowThreshold.tomorrow_sorted', true, true, 3);
+            await jsonExplorer.traverseJson(sortedHoursAll0q, 'marketprice.quarter_hourly.today_sorted', true, true, 3);
+            await jsonExplorer.traverseJson(sortedHoursAll1q, 'marketprice.quarter_hourly.tomorrow_sorted', true, true, 3);
             await jsonExplorer.stateSetCreate(
                 'marketprice.quarter_hourly.today_sorted.short',
                 'today sorted short',
@@ -703,7 +678,7 @@ class ApgInfo extends utils.Adapter {
             await jsonExplorer.deleteObjectsWithNull('marketprice.details.*');
             await jsonExplorer.deleteObjectsWithNull('marketprice.quarter_hourly.details.*');
         } catch (error) {
-            let eMsg = `Error in ExecuteRequestDayAhead(): ${error}`;
+            let eMsg = `Error in executeMarketPrice(): ${error}`;
             this.log.error(eMsg);
             console.error(eMsg);
             this.sendSentry(error);
@@ -730,7 +705,6 @@ class ApgInfo extends utils.Adapter {
                 this.log.error(`No marketprice found in marketprice-result for ${dayString}!`);
                 return null;
             }
-            //this.log.info(JSON.stringify(prices[idS]));
 
             const product = prices[idS].Product;
             const marketprice = this.calcPrice(prices[idS].Price / 10);
@@ -752,7 +726,7 @@ class ApgInfo extends utils.Adapter {
                 range = `${sBeginHour}_to_${sEndHour}`;
             }
             jDay[range] = marketprice;
-            if (marketprice < threshold) {
+            if (marketprice < this.threshold) {
                 jDayBelowThreshold[range] = marketprice;
                 daysBelow++;
             } else {
@@ -1018,7 +992,7 @@ class ApgInfo extends utils.Adapter {
     /**
      * Handles json-object and creates states for peak hours
      */
-    async ExecuteRequestPeakHours() {
+    async executeRequestPeakHours() {
         try {
             let result = await this.getDataPeakHours();
             this.log.debug(`Peak hour result is: ${JSON.stringify(result)}`);
@@ -1088,12 +1062,12 @@ class ApgInfo extends utils.Adapter {
             this.log.debug(`Peak jDay4: ${JSON.stringify(jDay4)}`);
             this.log.debug(`Peak jDayAll: ${JSON.stringify(jDayAll)}`);
 
-            await jsonExplorer.traverseJson(jDay0, 'peakTime.today', true, true);
-            await jsonExplorer.traverseJson(jDay1, 'peakTime.today+1', true, true);
-            await jsonExplorer.traverseJson(jDay2, 'peakTime.today+2', true, true);
-            await jsonExplorer.traverseJson(jDay3, 'peakTime.today+3', true, true);
-            await jsonExplorer.traverseJson(jDay4, 'peakTime.today+4', true, true);
-            await jsonExplorer.traverseJson(jDayAll, 'peakTime.allDays', true, true);
+            await jsonExplorer.traverseJson(jDay0, 'peakTime.today', true, true, 3);
+            await jsonExplorer.traverseJson(jDay1, 'peakTime.today+1', true, true, 3);
+            await jsonExplorer.traverseJson(jDay2, 'peakTime.today+2', true, true, 3);
+            await jsonExplorer.traverseJson(jDay3, 'peakTime.today+3', true, true, 3);
+            await jsonExplorer.traverseJson(jDay4, 'peakTime.today+4', true, true, 3);
+            await jsonExplorer.traverseJson(jDayAll, 'peakTime.allDays', true, true, 3);
 
             await jsonExplorer.checkExpire('peakTime.*');
             jsonExplorer.deleteObjectsWithNull('peakTime.*');
@@ -1117,80 +1091,128 @@ class ApgInfo extends utils.Adapter {
     }
 
     /**
+     * Creates JSON-data for a single chart.
+     *
+     * @param {any[]} dataArray array with market prices
+     * @param {boolean} isTomorrow true if data is for tomorrow
+     * @param {string | null} source source to be used
+     * @param {number} allMin minimum value for y-axis
+     * @param {number} allMax maximum value for y-axis
+     * @param {string} statePath path to the chart state
+     * @param {boolean} quarter_hourly true if data is quarter-hourly
+     */
+    async createSingleChart(dataArray, isTomorrow, source, allMin, allMax, statePath, quarter_hourly) {
+        const chartData = [];
+        if (quarter_hourly == false) {
+            for (const idS in dataArray) {
+                const iHour = parseInt(dataArray[idS][0]); //analysing "00_to_01" with parseInt ignores everything starting with "_"
+                chartData[idS] = { y: dataArray[idS][1], t: calcDate(iHour, isTomorrow) };
+
+                //add the final point for the last hour
+                const maxIndex = chartData.length - 1;
+                if (chartData[maxIndex] && chartData[maxIndex].y && chartData[maxIndex].t) {
+                    chartData[maxIndex + 1] = {
+                        y: chartData[maxIndex].y,
+                        t: chartData[maxIndex].t + 60 * 60 * 1000,
+                    };
+                }
+            }
+        } else {
+            for (const idS in dataArray) {
+                const hours = dataArray[idS][0].substring(0, 2); //analysing "00:00-00:15"
+                const minutes = dataArray[idS][0].substring(3, 5);
+                let date = cleanDate(new Date());
+                if (isTomorrow) {
+                    date = addDays(date, 1);
+                }
+                date.setHours(parseInt(hours));
+                date.setMinutes(parseInt(minutes));
+                chartData[idS] = { y: dataArray[idS][1], t: date.getTime() };
+
+                //add the final point for the last quarter-hour
+                const maxIndex = chartData.length - 1;
+                if (chartData[maxIndex] && chartData[maxIndex].y && chartData[maxIndex].t) {
+                    chartData[maxIndex + 1] = {
+                        y: chartData[maxIndex].y,
+                        t: chartData[maxIndex].t + 15 * 60 * 1000,
+                    };
+                }
+            }
+        }
+
+        const chart = {
+            graphs: [
+                {
+                    type: 'line',
+                    color: 'gray',
+                    line_steppedLine: true,
+                    xAxis_timeFormats: { hour: 'HH' },
+                    xAxis_time_unit: 'hour',
+                    yAxis_min: Math.min(0, allMin),
+                    yAxis_max: allMax,
+                    datalabel_show: 'auto',
+                    datalabel_minDigits: 2,
+                    datalabel_maxDigits: 2,
+                    xAxis_bounds: 'data',
+                    line_pointSize: 5,
+                    line_PointColor: 'rgba(0, 0, 0, 0)',
+                    datalabel_fontSize: 10,
+                    datalabel_color: 'black',
+                    line_UseFillColor: true,
+                    data: chartData,
+                },
+            ],
+        };
+
+        if (isTomorrow && source === 'exaa1015') {
+            chart.graphs[0].color = 'lightgray';
+        }
+
+        await jsonExplorer.stateSetCreate(statePath, 'jsonChart', JSON.stringify(chart));
+    }
+
+    /**
      * Creates JSON-date for charts for today and tomorrow
      *
-     * @param arrayToday aray with market prices for today
-     * @param arrayTomorrow array with market prices for tomorrow
-     * @param sourceTomorrow source to be used
+     * @param {any[]} arrayToday aray with market prices for today
+     * @param {any[]} arrayTomorrow array with market prices for tomorrow
+     * @param {string | null} sourceTomorrow source to be used
+     * @param {boolean} quarter_hourly true if data is quarter-hourly
      */
-    async createChart(arrayToday, arrayTomorrow, sourceTomorrow) {
-        let todayData = [];
-        let tomorrowData = [];
-        let chart = {};
-
+    async createCharts(arrayToday, arrayTomorrow, sourceTomorrow, quarter_hourly) {
         let todayMin = 1000,
             tomorrowMin = 1000;
         let todayMax = 0,
             tomorrowMax = 0;
 
         for (const idS in arrayToday) {
-            let iHour = parseInt(arrayToday[idS][0]); //analysing "00_to_01" with parseInt ignores everything starting with "_"
-            todayData[idS] = { y: arrayToday[idS][1], t: calcDate(iHour, false) };
             todayMin = Math.min(todayMin, Number(arrayToday[idS][1]));
             todayMax = Math.max(todayMax, Number(arrayToday[idS][1]));
         }
         for (const idS in arrayTomorrow) {
-            let iHour = parseInt(arrayTomorrow[idS][0]); //analysing "00_to_01" with parseInt ignores everything starting with "_"
-            tomorrowData[idS] = { y: arrayTomorrow[idS][1], t: calcDate(iHour, true) };
             tomorrowMin = Math.min(tomorrowMin, Number(arrayTomorrow[idS][1]));
             tomorrowMax = Math.max(tomorrowMax, Number(arrayTomorrow[idS][1]));
         }
 
-        let allMin = Math.min(todayMin, tomorrowMin);
-        let allMax = Math.max(todayMax, tomorrowMax);
-        allMax = Math.ceil((allMax * 1.1) / 5) * 5;
+        const allMin = Math.min(todayMin, tomorrowMin);
+        const allMax = Math.max(todayMax, tomorrowMax);
+        const roundedMax = Math.ceil((allMax * 1.1) / 5) * 5;
 
-        let todayMaxIndex = todayData.length - 1;
-        let tomorrowMaxIndex = tomorrowData.length - 1;
-        if (todayData[todayMaxIndex] && todayData[todayMaxIndex].y && todayData[todayMaxIndex].t) {
-            todayData[todayMaxIndex + 1] = {
-                y: todayData[todayMaxIndex].y,
-                t: todayData[todayMaxIndex].t + 60 * 60 * 1000,
-            };
+        if (quarter_hourly) {
+            await this.createSingleChart(arrayToday, false, null, allMin, roundedMax, 'marketprice.quarter_hourly.today.jsonChart', quarter_hourly);
+            await this.createSingleChart(
+                arrayTomorrow,
+                true,
+                sourceTomorrow,
+                allMin,
+                roundedMax,
+                'marketprice.quarter_hourly.tomorrow.jsonChart',
+                quarter_hourly,
+            );
+        } else {
+            await this.createSingleChart(arrayToday, false, null, allMin, roundedMax, 'marketprice.today.jsonChart', quarter_hourly);
+            await this.createSingleChart(arrayTomorrow, true, sourceTomorrow, allMin, roundedMax, 'marketprice.tomorrow.jsonChart', quarter_hourly);
         }
-        if (tomorrowData[tomorrowMaxIndex] && tomorrowData[tomorrowMaxIndex].y && tomorrowData[tomorrowMaxIndex].t) {
-            tomorrowData[tomorrowMaxIndex + 1] = {
-                y: tomorrowData[tomorrowMaxIndex].y,
-                t: tomorrowData[tomorrowMaxIndex].t + 60 * 60 * 1000,
-            };
-        }
-
-        chart.graphs = [];
-        chart.graphs[0] = {};
-        chart.graphs[0].type = 'line';
-        chart.graphs[0].color = 'gray';
-        chart.graphs[0].line_steppedLine = true;
-        chart.graphs[0].xAxis_timeFormats = { hour: 'HH' };
-        chart.graphs[0].xAxis_time_unit = 'hour';
-        chart.graphs[0].yAxis_min = Math.min(0, allMin);
-        chart.graphs[0].yAxis_max = allMax;
-        chart.graphs[0].datalabel_show = 'auto';
-        chart.graphs[0].datalabel_minDigits = 2;
-        chart.graphs[0].datalabel_maxDigits = 2;
-        chart.graphs[0].xAxis_bounds = 'data';
-        chart.graphs[0].line_pointSize = 5;
-        chart.graphs[0].line_PointColor = 'rgba(0, 0, 0, 0)';
-        chart.graphs[0].datalabel_fontSize = 10;
-        chart.graphs[0].datalabel_color = 'black';
-        chart.graphs[0].line_UseFillColor = true;
-
-        chart.graphs[0].data = todayData;
-        await jsonExplorer.stateSetCreate('marketprice.today.jsonChart', 'jsonChart', JSON.stringify(chart));
-        chart.graphs[0].data = tomorrowData;
-        if (sourceTomorrow == 'exaa1015') {
-            chart.graphs[0].color = 'lightgray';
-        }
-        await jsonExplorer.stateSetCreate('marketprice.tomorrow.jsonChart', 'jsonChart', JSON.stringify(chart));
     }
 
     /**
