@@ -34,11 +34,12 @@ For more details check https://transparency.entsoe.eu/content/static_content/Sta
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### 0.1.21-alpha.0 (2025-10-10)
+### __WORK IN PROGRESS__
 * (HGlab01) Support quater-hourly tarifs
+* (HGlab01) Bump iobroker-jsonexplorer to 0.2.1
 
 ### 0.1.20 (2025-10-06)
-* (HGlab01) prepeare json-explorer v0.2 readiness
+* (HGlab01) prepeare iobroker-jsonexplorer readiness for v0.2.0
 * (HGlab01) Bump axios to 1.12.2
 
 ### 0.1.19 (2025-06-23)
