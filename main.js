@@ -9,7 +9,7 @@ const isOnline = require('@esm2cjs/is-online').default;
 const { version } = require('./package.json');
 
 // Constants
-const MAX_DELAY = 25000; //25000
+const MAX_DELAY = 1; //25000
 
 // @ts-expect-error axios.create is ok
 const axiosInstance = axios.create({ timeout: 30000 }); //30000
@@ -171,7 +171,7 @@ class ApgInfo extends utils.Adapter {
                     } else {
                         this.log.debug(`Response in getDataPeakHours(): [${response.status}] ${JSON.stringify(response.data)}`);
                         console.log(`Response in getDataPeakHours(): [${response.status}] ${JSON.stringify(response.data)}`);
-                        resolve(response.data);
+                        resolve(response?.data ?? null);
                     }
                 })
                 .catch(error => {
@@ -217,11 +217,7 @@ class ApgInfo extends utils.Adapter {
                     } else {
                         this.log.debug(`Response in getDataDayAheadExaa(): [${response.status}] ${JSON.stringify(response.data)}`);
                         console.log(`Response in getDataDayAheadExaa(): [${response.status}] ${JSON.stringify(response.data)}`);
-                        if (response.data.data) {
-                            resolve(response.data.data);
-                        } else {
-                            resolve(null);
-                        }
+                        resolve(response?.data?.data ?? null);
                     }
                 })
                 .catch(error => {
@@ -264,14 +260,10 @@ class ApgInfo extends utils.Adapter {
                     } else {
                         this.log.debug(`Response in getDataDayAheadExaa1015(): [${response.status}] ${JSON.stringify(response.data)}`);
                         console.log(`Response in getDataDayAheadExaa1015(): [${response.status}] ${JSON.stringify(response.data)}`);
-                        if (response.data && response.data.AT && response.data.AT.price) {
-                            if (country == 'AT') {
-                                resolve(response.data.AT.price);
-                            } else {
-                                resolve(response.data.DE.price);
-                            }
+                        if (country == 'AT') {
+                            resolve(response?.data?.AT?.price ?? null);
                         } else {
-                            resolve(null);
+                            resolve(response?.data?.DE?.price ?? null);
                         }
                     }
                 })
@@ -398,11 +390,7 @@ class ApgInfo extends utils.Adapter {
                         this.log.debug(`Response in getDataDayAheadEntsoe(): [${response.status}] ${JSON.stringify(response.data)}`);
                         console.log(`Response in getDataDayAheadEntsoe(): [${response.status}] ${JSON.stringify(response.data)}`);
                         let result = xml2js(response.data);
-                        if (result.Publication_MarketDocument) {
-                            resolve(result.Publication_MarketDocument);
-                        } else {
-                            resolve(null);
-                        }
+                        resolve(result?.Publication_MarketDocument ?? null);
                     }
                 })
                 .catch(error => {
@@ -576,7 +564,7 @@ class ApgInfo extends utils.Adapter {
             }
             for (const idS in arrBelow0q) {
                 sortedHours0q[idS] = [arrBelow0q[idS][0], arrBelow0q[idS][1]];
-                sortedHours0Shortq[idS] = Number(arrBelow0q[idS][0].substring(0, 2));
+                sortedHours0Shortq[idS] = arrBelow0q[idS][0].substring(0, 5);
             }
             for (const idS in arrBelow1) {
                 sortedHours1[idS] = [arrBelow1[idS][0], arrBelow1[idS][1]];
@@ -584,7 +572,7 @@ class ApgInfo extends utils.Adapter {
             }
             for (const idS in arrBelow1q) {
                 sortedHours1q[idS] = [arrBelow1q[idS][0], arrBelow1q[idS][1]];
-                sortedHours1Shortq[idS] = arrBelow1q[idS][0];
+                sortedHours1Shortq[idS] = arrBelow1q[idS][0].substring(0, 5);
             }
             for (const idS in arrAll0) {
                 sortedHoursAll0[idS] = [arrAll0[idS][0], arrAll0[idS][1]];
@@ -593,7 +581,7 @@ class ApgInfo extends utils.Adapter {
             }
             for (const idS in arrAll0q) {
                 sortedHoursAll0q[idS] = [arrAll0q[idS][0], arrAll0q[idS][1]];
-                sortedHours0ShortAllq[idS] = arrAll0q[idS][0];
+                sortedHours0ShortAllq[idS] = arrAll0q[idS][0].substring(0, 5);
                 priceSum0q = priceSum0q + arrAll0q[idS][1];
             }
             for (const idS in arrAll1) {
@@ -603,7 +591,7 @@ class ApgInfo extends utils.Adapter {
             }
             for (const idS in arrAll1q) {
                 sortedHoursAll1q[idS] = [arrAll1q[idS][0], arrAll1q[idS][1]];
-                sortedHours1ShortAllq[idS] = arrAll1q[idS][0];
+                sortedHours1ShortAllq[idS] = arrAll1q[idS][0].substring(0, 5);
                 priceSum1q = priceSum1q + arrAll1q[idS][1];
             }
             let price0Avg, price1Avg, price0Avgq, price1Avgq;
@@ -676,15 +664,15 @@ class ApgInfo extends utils.Adapter {
                 false,
             );
             await jsonExplorer.stateSetCreate(
-                'marketprice_quarter_hourly.today_sorted.short',
+                'marketprice_quarter_hourly.belowThreshold.today_sorted.short',
                 'today sorted short',
-                JSON.stringify(sortedHours0ShortAllq),
+                JSON.stringify(sortedHours0Shortq),
                 false,
             );
             await jsonExplorer.stateSetCreate(
-                'marketprice_quarter_hourly.tomorrow_sorted.short',
+                'marketprice_quarter_hourly.belowThreshold.tomorrow_sorted.short',
                 'tomorrow sorted short',
-                JSON.stringify(sortedHours1ShortAllq),
+                JSON.stringify(sortedHours1Shortq),
                 false,
             );
             await jsonExplorer.stateSetCreate('marketprice_quarter_hourly.today.average', 'average', price0Avgq, false);
@@ -774,36 +762,37 @@ class ApgInfo extends utils.Adapter {
         prices0Awattar = await this.getDataDayAheadAwattar(false, country);
         //prices0Awattar = { data: null };
         if (prices0Awattar && prices0Awattar.data) {
-            this.log.debug(`Day ahead result for Awattar today is: ${JSON.stringify(prices0Awattar.data)}`);
+            this.log.debug(`Todays market data result from Awattar is: ${JSON.stringify(prices0Awattar.data)}`);
         } else {
-            this.log.debug(`Day ahead result for Awattar today is: NO DATA`);
+            this.log.debug(`Todays market data result from Awattar is: NO DATA`);
         }
         if (!prices0Awattar || !prices0Awattar.data || !prices0Awattar.data[0]) {
-            this.log.info(`No prices from Awattar for today, let's try Exaa`);
-            //const eXaa = await this.getDataDayAheadExaa(false, country);
+            this.log.info(`No market data from Awattar for today, let's try Exaa`);
             prices0Exaa = eXaaToday?.h ?? null;
-            this.log.debug(`Day ahead result for Exaa today is: ${JSON.stringify(prices0Exaa)}`);
+            this.log.debug(`Todays market data result from Exaa is: ${JSON.stringify(prices0Exaa)}`);
             if (!prices0Exaa) {
-                this.log.warn('No market data for today');
+                this.log.warn('No market data for today!');
             }
         }
         prices1Awattar = await this.getDataDayAheadAwattar(true, country);
         //prices1Awattar = { data: null };
         if (prices1Awattar && prices1Awattar.data) {
-            this.log.debug(`Day ahead result for Awattar tomorrow is: ${JSON.stringify(prices1Awattar.data)}`);
+            this.log.debug(`Tomorrows market data result from Awattar is: ${JSON.stringify(prices1Awattar.data)}`);
         } else {
-            this.log.debug(`Day ahead result for Awattar tomorrow is: NO DATA`);
+            this.log.debug(`Tomorrows market data result from Awattar is: NO DATA`);
         }
         if (!prices1Awattar || !prices1Awattar.data || !prices1Awattar.data[0]) {
-            this.log.info(`No prices from Awattar for tomorrow, let's try Exaa`);
-            //const eXaa = await this.getDataDayAheadExaa(true, country);
+            this.log.info(`No market data from Awattar for tomorrow, let's try Exaa`);
             prices1Exaa = eXaaTomorrow?.h ?? null;
-            this.log.debug(`Day ahead result for Exaa tomorrow is: ${JSON.stringify(prices1Exaa)}`);
+            this.log.debug(`Tomorrows market data result from Exaa is: ${JSON.stringify(prices1Exaa)}`);
             if (!prices1Exaa && forecast) {
-                this.log.info('No prices from Exaa MC, last change Exaa 10.15 auction');
-                const eXaa = await this.getDataDayAheadExaa1015(country);
-                prices1Exaa = eXaa?.h ?? null;
-                this.log.debug(`Day ahead result for Exaa1015 tomorrow is: ${JSON.stringify(prices1Exaa1015)}`);
+                this.log.info('No market data from Exaa MC, last change Exaa 10.15 auction');
+                const eXaa1015 = await this.getDataDayAheadExaa1015(country);
+                prices1Exaa1015 = eXaa1015;
+                if (prices1Exaa1015) {
+                    this.log.info('Market data from Exaa 10.15 auction available');
+                }
+                this.log.debug(`Tomorrows market data result from Exaa 10.15 auction is: ${JSON.stringify(prices1Exaa1015)}`);
             }
         }
 
