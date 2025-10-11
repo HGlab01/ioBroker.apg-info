@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "apg-info",
-    "version": "0.1.21-alpha.1",
+    "version": "0.1.21-alpha.2",
     "news": {
+      "0.1.21-alpha.2": {
+        "en": "Support quater-hourly tarifs\nBump iobroker-jsonexplorer to 0.2.1",
+        "de": "Vier-Stunden-Preise unterstützen\nBump iobroker-jsonexplorer auf 0,2.1",
+        "ru": "Поддержка четырехчасовых тарифов\nBump iobroker-jsonexplorer 0.2.1",
+        "pt": "Suporte de tarifs quater-hora\nBump iobroker-jsonexplorer to 0.2.1",
+        "nl": "Ondersteuning quater-uurly tarifs\nBump iobroker-jsonexplorer naar 0.2.1",
+        "fr": "Soutenir les tarifs horaires\nBump iobroker-jsonExplorer à 0.2.1",
+        "it": "Sostenere le tariffe quater-hourly\nBump iobroker-jsonexplorer a 0.2.1",
+        "es": "Soporte cuáter-hora tarifs\nBomba iobroker-jsonexplorer a 0.2.1",
+        "pl": "Wsparcie quater- hour tarifs\nBump iobroker- jsonexplorer do 0.2.1",
+        "uk": "Підтримка квадроциклів\nBump iobroker-jsonexplorer до 0.2.1",
+        "zh-cn": "支持四时塔里夫\n气泡经纪人-Jsonexplorer改为0.2.1"
+      },
       "0.1.21-alpha.1": {
         "en": "Support quater-hourly tarifs\nBump iobroker-jsonexplorer to 0.2.1",
         "de": "Vier-Stunden-Preise unterstützen\nBump iobroker-jsonexplorer auf 0,2.1",
@@ -80,19 +93,6 @@
         "pl": "Finetuning dziennika\nAxios Bump do 1.10.0",
         "uk": "Реєстрація\nБампер аксіос до 1.10.0",
         "zh-cn": "日志微调\n倾斜轴为 1.1.0"
-      },
-      "0.1.17": {
-        "en": "Add retry mechanism for Entsoe",
-        "de": "Retry Mechanismus für Entsoe hinzufügen",
-        "ru": "Добавить механизм повторного использования Entsoe",
-        "pt": "Adicionar mecanismo de retificação para Entsoe",
-        "nl": "Herhalingsmechanisme voor Entsoe toevoegen",
-        "fr": "Ajouter un mécanisme de réessayer pour Entsoe",
-        "it": "Aggiungi meccanismo di riprovazione per Entsoe",
-        "es": "Add retry mechanism for Entsoe",
-        "pl": "Dodaj mechanizm ponownego testowania dla Entsoe",
-        "uk": "Додати механізм птиху для Entsoe",
-        "zh-cn": "为 Entsoe 添加重试机制"
       }
     },
     "titleLang": {
