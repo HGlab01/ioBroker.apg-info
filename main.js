@@ -9,7 +9,7 @@ const isOnline = require('@esm2cjs/is-online').default;
 const { version } = require('./package.json');
 
 // Constants
-const MAX_DELAY = 1; //25000
+const MAX_DELAY = 25000; //25000
 
 // @ts-expect-error axios.create is ok
 const axiosInstance = axios.create({ timeout: 30000 }); //30000
