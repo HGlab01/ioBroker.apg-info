@@ -114,7 +114,8 @@ class ApgInfo extends utils.Adapter {
         this.log.info(`Delay execution by ${callApiDelay}ms to better spread API calls`);
         await jsonExplorer.sleep(callApiDelay);
         await jsonExplorer.setLastStartTime();
-        const [resultPeakHours, resultMarketPrice] = await Promise.all([this.executeRequestPeakHours(), this.executeMarketPrice(country, forecast)]);
+        const resultPeakHours = await this.executeRequestPeakHours();
+        const resultMarketPrice = await this.executeMarketPrice(country, forecast);
 
         if (resultPeakHours == 'error' || resultMarketPrice == 'error') {
             this.terminate ? this.terminate(utils.EXIT_CODES.UNCAUGHT_EXCEPTION) : process.exit(0);
@@ -757,43 +758,49 @@ class ApgInfo extends utils.Adapter {
     async _getAndProcessMarketData(country, forecast) {
         let prices0Awattar, prices1Awattar, prices0Exaa, prices1Exaa, prices1Exaa1015;
 
-        let eXaaToday = await this.getDataDayAheadExaa(false, country);
-        let eXaaTomorrow = await this.getDataDayAheadExaa(true, country);
-        prices0Awattar = await this.getDataDayAheadAwattar(false, country);
-        //prices0Awattar = { data: null };
-        if (prices0Awattar && prices0Awattar.data) {
-            this.log.debug(`Todays market data result from Awattar is: ${JSON.stringify(prices0Awattar.data)}`);
-        } else {
-            this.log.debug(`Todays market data result from Awattar is: NO DATA`);
-        }
-        if (!prices0Awattar || !prices0Awattar.data || !prices0Awattar.data[0]) {
-            this.log.info(`No market data from Awattar for today, let's try Exaa`);
-            prices0Exaa = eXaaToday?.h ?? null;
-            this.log.debug(`Todays market data result from Exaa is: ${JSON.stringify(prices0Exaa)}`);
-            if (!prices0Exaa) {
+        const eXaaToday = await this.getDataDayAheadExaa(false, country);
+        const eXaaTomorrow = await this.getDataDayAheadExaa(true, country);
+
+        //check for provider for tody
+        prices0Exaa = eXaaToday?.h ?? null;
+        if (prices0Exaa == null) {
+            this.log.info(`No market data from Exaa for today, let's try Awattar`);
+            prices0Awattar = await this.getDataDayAheadAwattar(false, country);
+            if (prices0Awattar?.data?.[0]) {
+                this.log.info('Todays market data from Awattar available');
+                this.log.debug(`Todays market data result from Awattar is: ${JSON.stringify(prices0Awattar)}`);
+            } else {
                 this.log.warn('No market data for today!');
             }
-        }
-        prices1Awattar = await this.getDataDayAheadAwattar(true, country);
-        //prices1Awattar = { data: null };
-        if (prices1Awattar && prices1Awattar.data) {
-            this.log.debug(`Tomorrows market data result from Awattar is: ${JSON.stringify(prices1Awattar.data)}`);
         } else {
-            this.log.debug(`Tomorrows market data result from Awattar is: NO DATA`);
+            this.log.debug(`Todays market data result from Exaa is: ${JSON.stringify(prices0Exaa)}`);
         }
-        if (!prices1Awattar || !prices1Awattar.data || !prices1Awattar.data[0]) {
-            this.log.info(`No market data from Awattar for tomorrow, let's try Exaa`);
-            prices1Exaa = eXaaTomorrow?.h ?? null;
-            this.log.debug(`Tomorrows market data result from Exaa is: ${JSON.stringify(prices1Exaa)}`);
-            if (!prices1Exaa && forecast) {
-                this.log.info('No market data from Exaa MC, last change Exaa 10.15 auction');
-                const eXaa1015 = await this.getDataDayAheadExaa1015(country);
-                prices1Exaa1015 = eXaa1015;
-                if (prices1Exaa1015) {
-                    this.log.info('Market data from Exaa 10.15 auction available');
+
+        //check for provider for tomorrow
+        prices1Exaa = eXaaTomorrow?.h ?? null;
+        if (prices1Exaa == null) {
+            this.log.info(`No market data from Exaa for tomorrow, let's try Awattar`);
+            prices1Awattar = await this.getDataDayAheadAwattar(true, country);
+            if (prices1Awattar?.data?.[0]) {
+                this.log.info('Tomorrows market data from Awattar available');
+                this.log.debug(`Tomorrow market data result from Awattar is: ${JSON.stringify(prices1Awattar)}`);
+            } else {
+                if (forecast) {
+                    this.log.info('No market data from Awattar for tomorrow , last chance Exaa 10.15 auction!');
+                    const eXaa1015 = await this.getDataDayAheadExaa1015(country);
+                    prices1Exaa1015 = eXaa1015;
+                    if (prices1Exaa1015) {
+                        this.log.info('Market data from Exaa 10.15 auction available');
+                    } else {
+                        this.log.info('Bad luck for Exaa 10.15 auction');
+                    }
+                    this.log.debug(`Tomorrows market data result from Exaa 10.15 auction is: ${JSON.stringify(prices1Exaa1015)}`);
+                } else {
+                    this.log.info('No market data from Awattar for tomorrow');
                 }
-                this.log.debug(`Tomorrows market data result from Exaa 10.15 auction is: ${JSON.stringify(prices1Exaa1015)}`);
             }
+        } else {
+            this.log.debug(`Tomorrows market data result from Exaa is: ${JSON.stringify(prices1Exaa)}`);
         }
 
         const todayResult = this._processMarketPrices('today', prices0Awattar, prices0Exaa);
@@ -813,6 +820,7 @@ class ApgInfo extends utils.Adapter {
                 }
             }
         }
+        // Add id to each element in prices1q
         if (prices1q) {
             for (const item of prices1q) {
                 const productText = item.ProductText;
