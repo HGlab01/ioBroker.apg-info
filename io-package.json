@@ -1,8 +1,47 @@
 {
   "common": {
     "name": "apg-info",
-    "version": "0.1.20",
+    "version": "0.1.21-alpha.2",
     "news": {
+      "0.1.21-alpha.2": {
+        "en": "Support quater-hourly tarifs\nBump iobroker-jsonexplorer to 0.2.1",
+        "de": "Vier-Stunden-Preise unterstützen\nBump iobroker-jsonexplorer auf 0,2.1",
+        "ru": "Поддержка четырехчасовых тарифов\nBump iobroker-jsonexplorer 0.2.1",
+        "pt": "Suporte de tarifs quater-hora\nBump iobroker-jsonexplorer to 0.2.1",
+        "nl": "Ondersteuning quater-uurly tarifs\nBump iobroker-jsonexplorer naar 0.2.1",
+        "fr": "Soutenir les tarifs horaires\nBump iobroker-jsonExplorer à 0.2.1",
+        "it": "Sostenere le tariffe quater-hourly\nBump iobroker-jsonexplorer a 0.2.1",
+        "es": "Soporte cuáter-hora tarifs\nBomba iobroker-jsonexplorer a 0.2.1",
+        "pl": "Wsparcie quater- hour tarifs\nBump iobroker- jsonexplorer do 0.2.1",
+        "uk": "Підтримка квадроциклів\nBump iobroker-jsonexplorer до 0.2.1",
+        "zh-cn": "支持四时塔里夫\n气泡经纪人-Jsonexplorer改为0.2.1"
+      },
+      "0.1.21-alpha.1": {
+        "en": "Support quater-hourly tarifs\nBump iobroker-jsonexplorer to 0.2.1",
+        "de": "Vier-Stunden-Preise unterstützen\nBump iobroker-jsonexplorer auf 0,2.1",
+        "ru": "Поддержка четырехчасовых тарифов\nBump iobroker-jsonexplorer 0.2.1",
+        "pt": "Suporte de tarifs quater-hora\nBump iobroker-jsonexplorer to 0.2.1",
+        "nl": "Ondersteuning quater-uurly tarifs\nBump iobroker-jsonexplorer naar 0.2.1",
+        "fr": "Soutenir les tarifs horaires\nBump iobroker-jsonExplorer à 0.2.1",
+        "it": "Sostenere le tariffe quater-hourly\nBump iobroker-jsonexplorer a 0.2.1",
+        "es": "Soporte cuáter-hora tarifs\nBomba iobroker-jsonexplorer a 0.2.1",
+        "pl": "Wsparcie quater- hour tarifs\nBump iobroker- jsonexplorer do 0.2.1",
+        "uk": "Підтримка квадроциклів\nBump iobroker-jsonexplorer до 0.2.1",
+        "zh-cn": "支持四时塔里夫\n气泡经纪人-Jsonexplorer改为0.2.1"
+      },
+      "0.1.21-alpha.0": {
+        "en": "Support quater-hourly tarifs",
+        "de": "Vier-Stunden-Preise unterstützen",
+        "ru": "Поддержка четырехчасовых тарифов",
+        "pt": "Suporte de tarifs quater-hora",
+        "nl": "Ondersteuning quater-uurly tarifs",
+        "fr": "Soutenir les tarifs horaires",
+        "it": "Sostenere le tariffe quater-hourly",
+        "es": "Soporte cuáter-hora tarifs",
+        "pl": "Wsparcie quater- hour tarifs",
+        "uk": "Підтримка квадроциклів",
+        "zh-cn": "支持四时塔里夫"
+      },
       "0.1.20": {
         "en": "prepeare json-explorer v0.2 readiness\nBump axios to 1.12.2",
         "de": "prepeare json-explorer v0.2 bereitschaft\nBump axios zu 1.12.2",
@@ -54,45 +93,6 @@
         "pl": "Finetuning dziennika\nAxios Bump do 1.10.0",
         "uk": "Реєстрація\nБампер аксіос до 1.10.0",
         "zh-cn": "日志微调\n倾斜轴为 1.1.0"
-      },
-      "0.1.17": {
-        "en": "Add retry mechanism for Entsoe",
-        "de": "Retry Mechanismus für Entsoe hinzufügen",
-        "ru": "Добавить механизм повторного использования Entsoe",
-        "pt": "Adicionar mecanismo de retificação para Entsoe",
-        "nl": "Herhalingsmechanisme voor Entsoe toevoegen",
-        "fr": "Ajouter un mécanisme de réessayer pour Entsoe",
-        "it": "Aggiungi meccanismo di riprovazione per Entsoe",
-        "es": "Add retry mechanism for Entsoe",
-        "pl": "Dodaj mechanizm ponownego testowania dla Entsoe",
-        "uk": "Додати механізм птиху для Entsoe",
-        "zh-cn": "为 Entsoe 添加重试机制"
-      },
-      "0.1.16": {
-        "en": "Optimize Entsoe (Swiss market) requests\nDefine 30 seconds timeout for all \nBump axios to 1.9.0",
-        "de": "Optimieren von Entsoe-Anfragen (Schweizer Markt)\nDefinieren Sie 30 Sekunden Zeit für alle\nBump axios zu 1.9.0",
-        "ru": "Оптимизация запросов Entsoe (швейцарский рынок)\n30 секунд тайм-аута для всех\nАксиос удара до 1,9,0",
-        "pt": "Otimizar pedidos de Entsoe (Swiss market)\nDefina 30 segundos timeout para todos\nBump axios para 1.9.0",
-        "nl": "Entsoe-verzoeken (Zwitserse markt) optimaliseren\nDefinieer 30 seconden timeout voor iedereen\nBump axios naar 1.9.0",
-        "fr": "Optimiser les demandes d'Entsoe (marché suisse)\nDéfinissez 30 secondes de délai pour tous\nAxios bouffés à 1,9.0",
-        "it": "Ottimizzare le richieste Entsoe (Swiss market)\nDefinire 30 secondi timeout per tutti\nAssio di bump a 1.9.0",
-        "es": "Optimize Entsoe (mercado suizo)\nDefinir 30 segundos de tiempo para todos\nAxios de bomba a 1.9.0",
-        "pl": "Optymalizacja wniosków Entsoe (rynek szwajcarski)\nZdefiniuj czas 30 sekund dla wszystkich\nAxios bump do 1.9.0",
-        "uk": "Optimize Entsoe (Swiss ринку) запитів\nВизначення 30 секунд для всіх\nБампер аксіос до 1.9.0",
-        "zh-cn": "优化Entsoe(瑞士市场)请求\n为所有人定义30秒的超时\n横轴为1.9.0"
-      },
-      "0.1.15": {
-        "en": "fix 'Cannot read properties of undefined (reading 'price_amount')'",
-        "de": "'Cannot read properties of undefiniert (reading 'price_amount') '",
-        "ru": "исправить «Не могу прочитать свойства неопределенного» (чтение «цена_сумма») \"",
-        "pt": "corrigir 'Não é possível ler propriedades indefinidas (ler 'price_amount') '",
-        "nl": "fix 'Kan eigenschappen van ongedefinieerde niet lezen' (lezen van 'prijs_bedrag') '",
-        "fr": "correction 'Impossible de lire les propriétés non définies (lecture de 'prix_montant') '",
-        "it": "fix 'Cannot leggere proprietà di non definita (leggi 'price_amount') '",
-        "es": "fijar 'No puede leer propiedades de undefinido (leer 'price_amount') '",
-        "pl": "fix 'Nie można odczytać właściwości nieokreślone (czytanie' price _ amount ')'",
-        "uk": "виправити 'Неможливо прочитати властивості невизначеного (читання 'price_amount') Р",
-        "zh-cn": "固定“ 无法读取未定义的属性( 正在读取 price_ amount) ”  '"
       }
     },
     "titleLang": {

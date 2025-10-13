@@ -1,4 +1,9 @@
 # Older changes
+## 0.1.16 (2025-05-18)
+* (HGlab01) Optimize Entsoe (Swiss market) requests
+* (HGlab01) Extend timeout for Api calls to 30 seconds 
+* (HGlab01) Bump axios to 1.9.0
+
 ## 0.1.15 (2025-04-17)
 * (HGlab01) fix 'Cannot read properties of undefined (reading 'price_amount')'
 
