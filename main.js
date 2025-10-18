@@ -435,10 +435,10 @@ class ApgInfo extends utils.Adapter {
                 ({ prices0, prices1, source1, prices0q, prices1q } = await this._getAndProcessMarketData(country, forecast));
             }
 
-            await jsonExplorer.traverseJson(prices0, 'marketprice.details.today', configTraversJsonFalse);
-            await jsonExplorer.traverseJson(prices1, 'marketprice.details.tomorrow', configTraversJsonFalse);
-            await jsonExplorer.traverseJson(prices0q, 'marketprice_quarter_hourly.details.today', configTraversJsonFalse);
-            await jsonExplorer.traverseJson(prices1q, 'marketprice_quarter_hourly.details.tomorrow', configTraversJsonFalse);
+            jsonExplorer.traverseJson(prices0, 'marketprice.details.today', configTraversJsonFalse);
+            jsonExplorer.traverseJson(prices1, 'marketprice.details.tomorrow', configTraversJsonFalse);
+            jsonExplorer.traverseJson(prices0q, 'marketprice_quarter_hourly.details.today', configTraversJsonFalse);
+            jsonExplorer.traverseJson(prices1q, 'marketprice_quarter_hourly.details.tomorrow', configTraversJsonFalse);
 
             const todayProcessed = this._processAndCategorizePrices(prices0, 'today', false);
             const tomorrowProcessed = this._processAndCategorizePrices(prices1, 'tomorrow', false);
