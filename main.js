@@ -524,6 +524,12 @@ class ApgInfo extends utils.Adapter {
             await jsonExplorer.traverseJson(jDay1BelowThresholdq, 'marketprice_quarter_hourly.belowThreshold.tomorrow', configTraversJsonFalse);
             await jsonExplorer.traverseJson(jDay1AboveThresholdq, 'marketprice_quarter_hourly.aboveThreshold.tomorrow', configTraversJsonFalse);
 
+            //copy objets to use this for charts later
+            const arrAll0Copy = structuredClone(arrAll0);
+            const arrAll1Copy = structuredClone(arrAll1);
+            const arrAll0qCopy = structuredClone(arrAll0q);
+            const arrAll1qCopy = structuredClone(arrAll1q);
+
             //now it is time to sort by prcie
             arrBelow0.sort(compareSecondColumn);
             arrBelow1.sort(compareSecondColumn);
@@ -676,8 +682,8 @@ class ApgInfo extends utils.Adapter {
             await jsonExplorer.stateSetCreate('marketprice_quarter_hourly.today.average', 'average', price0Avgq, false);
             await jsonExplorer.stateSetCreate('marketprice_quarter_hourly.tomorrow.average', 'average', price1Avgq, false);
 
-            await this.createCharts(arrAll0, arrAll1, source1, false);
-            await this.createCharts(arrAll0q, arrAll1q, null, true);
+            await this.createCharts(arrAll0Copy, arrAll1Copy, source1, false);
+            await this.createCharts(arrAll0qCopy, arrAll1qCopy, null, true);
 
             await jsonExplorer.checkExpire('marketprice.*');
             await jsonExplorer.checkExpire('marketprice_quarter_hourly.*');
