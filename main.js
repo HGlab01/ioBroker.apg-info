@@ -114,8 +114,8 @@ class ApgInfo extends utils.Adapter {
         this.log.info(`Delay execution by ${callApiDelay}ms to better spread API calls`);
         await jsonExplorer.sleep(callApiDelay);
         await jsonExplorer.setLastStartTime();
-        const resultPeakHours = await this.executeRequestPeakHours();
-        const resultMarketPrice = await this.executeMarketPrice(country, forecast);
+
+        const [resultPeakHours, resultMarketPrice] = await Promise.all([this.executeRequestPeakHours(), this.executeMarketPrice(country, forecast)]);
 
         if (resultPeakHours == 'error' || resultMarketPrice == 'error') {
             this.terminate ? this.terminate(utils.EXIT_CODES.UNCAUGHT_EXCEPTION) : process.exit(0);
@@ -758,10 +758,9 @@ class ApgInfo extends utils.Adapter {
     async _getAndProcessMarketData(country, forecast) {
         let prices0Awattar, prices1Awattar, prices0Exaa, prices1Exaa, prices1Exaa1015;
 
-        const eXaaToday = await this.getDataDayAheadExaa(false, country);
-        const eXaaTomorrow = await this.getDataDayAheadExaa(true, country);
+        const [eXaaToday, eXaaTomorrow] = await Promise.all([this.getDataDayAheadExaa(false, country), this.getDataDayAheadExaa(true, country)]);
 
-        //check for provider for tody
+        //check for provider for today
         prices0Exaa = eXaaToday?.h ?? null;
         if (prices0Exaa == null) {
             this.log.info(`No market data from Exaa for today, let's try Awattar`);
