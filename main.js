@@ -435,10 +435,10 @@ class ApgInfo extends utils.Adapter {
                 ({ prices0, prices1, source1, prices0q, prices1q } = await this._getAndProcessMarketData(country, forecast));
             }
 
-            jsonExplorer.traverseJson(prices0, 'marketprice.details.today', configTraversJsonFalse);
-            jsonExplorer.traverseJson(prices1, 'marketprice.details.tomorrow', configTraversJsonFalse);
-            jsonExplorer.traverseJson(prices0q, 'marketprice_quarter_hourly.details.today', configTraversJsonFalse);
-            jsonExplorer.traverseJson(prices1q, 'marketprice_quarter_hourly.details.tomorrow', configTraversJsonFalse);
+            await jsonExplorer.traverseJson(prices0, 'marketprice.details.today', configTraversJsonFalse);
+            await jsonExplorer.traverseJson(prices1, 'marketprice.details.tomorrow', configTraversJsonFalse);
+            await jsonExplorer.traverseJson(prices0q, 'marketprice_quarter_hourly.details.today', configTraversJsonFalse);
+            await jsonExplorer.traverseJson(prices1q, 'marketprice_quarter_hourly.details.tomorrow', configTraversJsonFalse);
 
             const todayProcessed = this._processAndCategorizePrices(prices0, 'today', false);
             const tomorrowProcessed = this._processAndCategorizePrices(prices1, 'tomorrow', false);
@@ -509,9 +509,6 @@ class ApgInfo extends utils.Adapter {
             jDay0AboveThresholdq.numberOfSlots = days0Aboveq;
             jDay1BelowThresholdq.numberOfSlots = days1Belowq;
             jDay1AboveThresholdq.numberOfSlots = days1Aboveq;
-
-            await this.createCharts(arrAll0, arrAll1, source1, false);
-            await this.createCharts(arrAll0q, arrAll1q, null, true);
 
             await jsonExplorer.traverseJson(jDay0, 'marketprice.today', configTraversJsonFalse);
             await jsonExplorer.traverseJson(jDay0BelowThreshold, 'marketprice.belowThreshold.today', configTraversJsonFalse);
@@ -678,6 +675,9 @@ class ApgInfo extends utils.Adapter {
             );
             await jsonExplorer.stateSetCreate('marketprice_quarter_hourly.today.average', 'average', price0Avgq, false);
             await jsonExplorer.stateSetCreate('marketprice_quarter_hourly.tomorrow.average', 'average', price1Avgq, false);
+
+            await this.createCharts(arrAll0, arrAll1, source1, false);
+            await this.createCharts(arrAll0q, arrAll1q, null, true);
 
             await jsonExplorer.checkExpire('marketprice.*');
             await jsonExplorer.checkExpire('marketprice_quarter_hourly.*');
