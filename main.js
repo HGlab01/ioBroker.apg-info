@@ -10,9 +10,10 @@ const { version } = require('./package.json');
 
 // Constants
 const MAX_DELAY = 25000; //25000
+const API_TIMEOUT = 20000; //20000
 
 // @ts-expect-error axios.create is ok
-const axiosInstance = axios.create({ timeout: 30000 }); //30000
+const axiosInstance = axios.create({ timeout: API_TIMEOUT });
 
 class ApgInfo extends utils.Adapter {
     /**
@@ -139,22 +140,47 @@ class ApgInfo extends utils.Adapter {
         }
     }
 
-    /*
     /**
-     * Is called if a subscribed state changes
-     * @param {string} id
-     * @param {ioBroker.State | null | undefined} state
+     * Makes an API call with retry logic.
+     *
+     * @param {string} uri The URI to call.
+     * @param {string} methodName The name of the calling method for logging.
+     * @param {(response: any) => any} processResponse A function to process the successful response.
+     * @returns {Promise<any>} The processed response or null on final server error.
      */
-    /*
-    onStateChange(id, state) {
-        if (state) {
-            // The state was changed
-            this.log.debug(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
-        } else {
-            // The state was deleted
-            this.log.debug(`state ${id} deleted`);
+    async _apiCallWithRetry(uri, methodName, processResponse) {
+        let attempts = 0;
+        const maxAttempts = 3;
+        let delay = 10 * 1000; // 10 seconds
+
+        while (attempts < maxAttempts) {
+            try {
+                const response = await axiosInstance.get(uri);
+                if (response?.data == null) {
+                    throw new Error(`Respone empty for URL ${uri} with status code ${response.status}`);
+                }
+                this.log.debug(`Response in ${methodName}(): [${response.status}] ${JSON.stringify(response.data)}`);
+                console.log(`Response in ${methodName}(): [${response.status}] ${JSON.stringify(response.data)}`);
+                return processResponse(response);
+            } catch (error) {
+                attempts++;
+                if (attempts >= maxAttempts) {
+                    // @ts-expect-error response may exist
+                    const errorMessage = error.response?.data ? `with response ${JSON.stringify(error.response.data)}` : '';
+                    this.log.error(`Error in ${methodName}() attempt ${attempts}/${maxAttempts}: ${error} ${errorMessage}`);
+                    console.error(`Error in ${methodName}() attempt ${attempts}/${maxAttempts}: ${error} ${errorMessage}`);
+                    // @ts-expect-error response may exist
+                    if (error.response?.status >= 500) {
+                        return null; // On final attempt for server errors, resolve with null
+                    }
+                    throw error; // Otherwise rethrow
+                }
+                this.log.info(`Retrying in ${delay / 1000}s for ${methodName}...`);
+                await jsonExplorer.sleep(delay);
+                delay *= 2; // Exponential backoff (10s, 20s)
+            }
         }
-    }*/
+    }
 
     /**
      * Retrieves peak hours from REST-API
@@ -163,33 +189,7 @@ class ApgInfo extends utils.Adapter {
         let uri = `https://awareness.cloud.apg.at/api/v1/PeakHourStatus`;
         this.log.debug(`API-Call ${uri}`);
         console.log(`API-Call ${uri}`);
-        return new Promise((resolve, reject) => {
-            axiosInstance
-                .get(uri)
-                .then(response => {
-                    if (!response || !response.data) {
-                        throw new Error(`getDataPeakHours(): Respone empty for URL ${uri} with status code ${response.status}`);
-                    } else {
-                        this.log.debug(`Response in getDataPeakHours(): [${response.status}] ${JSON.stringify(response.data)}`);
-                        console.log(`Response in getDataPeakHours(): [${response.status}] ${JSON.stringify(response.data)}`);
-                        resolve(response?.data ?? null);
-                    }
-                })
-                .catch(error => {
-                    if (error?.response?.data) {
-                        console.error(`Error in getDataPeakHours(): ${error} with response ${JSON.stringify(error.response.data)}`);
-                        this.log.error(`Error to get peak hours ${error} with response ${JSON.stringify(error.response.data)}`);
-                    } else {
-                        console.error(`Error in getDataPeakHours(): ${error}`);
-                        this.log.error(`Error to get peak hours ${error}`);
-                    }
-                    if (error?.response?.status >= 500) {
-                        resolve(null);
-                    } else {
-                        reject(error);
-                    }
-                });
-        });
+        return this._apiCallWithRetry(uri, 'getDataPeakHours', response => response?.data ?? null);
     }
 
     /**
@@ -209,33 +209,7 @@ class ApgInfo extends utils.Adapter {
         this.log.debug(`API-Call ${uri}`);
         console.log(`API-Call ${uri}`);
 
-        return new Promise((resolve, reject) => {
-            axiosInstance
-                .get(uri)
-                .then(response => {
-                    if (!response || !response.data) {
-                        throw new Error(`getDataDayAheadExaa(): Respone empty for URL ${uri} with status code ${response.status}`);
-                    } else {
-                        this.log.debug(`Response in getDataDayAheadExaa(): [${response.status}] ${JSON.stringify(response.data)}`);
-                        console.log(`Response in getDataDayAheadExaa(): [${response.status}] ${JSON.stringify(response.data)}`);
-                        resolve(response?.data?.data ?? null);
-                    }
-                })
-                .catch(error => {
-                    if (error?.response?.data) {
-                        console.error(`Error in getDataDayAheadExaa(): ${error} with response ${JSON.stringify(error.response.data)}`);
-                        this.log.error(`Error to get market price (Exaa) ${error} with response ${JSON.stringify(error.response.data)}`);
-                    } else {
-                        console.error(`Error in getDataDayAheadExaa(): ${error}`);
-                        this.log.error(`Error to get market price (Exaa) ${error}`);
-                    }
-                    if (error?.response?.status >= 500) {
-                        resolve(null);
-                    } else {
-                        reject(error);
-                    }
-                });
-        });
+        return this._apiCallWithRetry(uri, 'getDataDayAheadExaa', response => response?.data?.data ?? null);
     }
 
     /**
@@ -252,36 +226,11 @@ class ApgInfo extends utils.Adapter {
         this.log.debug(`API-Call ${uri}`);
         console.log(`API-Call ${uri}`);
 
-        return new Promise((resolve, reject) => {
-            axiosInstance
-                .get(uri)
-                .then(response => {
-                    if (!response || !response.data) {
-                        throw new Error(`getDataDayAheadExaa1015(): Respone empty for URL ${uri} with status code ${response.status}`);
-                    } else {
-                        this.log.debug(`Response in getDataDayAheadExaa1015(): [${response.status}] ${JSON.stringify(response.data)}`);
-                        console.log(`Response in getDataDayAheadExaa1015(): [${response.status}] ${JSON.stringify(response.data)}`);
-                        if (country == 'AT') {
-                            resolve(response?.data?.AT?.price ?? null);
-                        } else {
-                            resolve(response?.data?.DE?.price ?? null);
-                        }
-                    }
-                })
-                .catch(error => {
-                    if (error?.response?.data) {
-                        console.error(`Error in getDataDayAheadExaa1015(): ${error} with response ${JSON.stringify(error.response.data)}`);
-                        this.log.error(`Error to get market price (Exaa1015) ${error} with response ${JSON.stringify(error.response.data)}`);
-                    } else {
-                        console.error(`Error in getDataDayAheadExaa1015(): ${error}`);
-                        this.log.error(`Error to get market price (Exaa1015) ${error}`);
-                    }
-                    if (error?.response?.status >= 500) {
-                        resolve(null);
-                    } else {
-                        reject(error);
-                    }
-                });
+        return this._apiCallWithRetry(uri, 'getDataDayAheadExaa1015', response => {
+            if (country === 'AT') {
+                return response?.data?.AT?.price ?? null;
+            }
+            return response?.data?.DE?.price ?? null;
         });
     }
 
@@ -313,33 +262,7 @@ class ApgInfo extends utils.Adapter {
         }
         this.log.debug(`API-Call ${uri}`);
         console.log(`API-Call ${uri}`);
-        return new Promise((resolve, reject) => {
-            axiosInstance
-                .get(uri)
-                .then(response => {
-                    if (!response || !response.data) {
-                        throw new Error(`getDataDayAheadAwattar(): Respone empty for URL ${uri} with status code ${response.status}`);
-                    } else {
-                        this.log.debug(`Response in getDataDayAheadAwattar(): [${response.status}] ${JSON.stringify(response.data)}`);
-                        console.log(`Response in getDataDayAheadAwattar(): [${response.status}] ${JSON.stringify(response.data)}`);
-                        resolve(response.data);
-                    }
-                })
-                .catch(error => {
-                    if (error?.response?.data) {
-                        console.error(`Error in getDataDayAheadAwattar(): ${error} with response ${JSON.stringify(error.response.data)}`);
-                        this.log.error(`Error to get market price (Awattar) ${error} with response ${JSON.stringify(error.response.data)}`);
-                    } else {
-                        console.error(`Error in getDataDayAheadAwattar(): ${error}`);
-                        this.log.error(`Error to get market price (Awattar) ${error}`);
-                    }
-                    if (error?.response?.status >= 500) {
-                        resolve(null);
-                    } else {
-                        reject(error);
-                    }
-                });
-        });
+        return this._apiCallWithRetry(uri, 'getDataDayAheadAwattar', response => response.data);
     }
 
     /**
@@ -381,29 +304,9 @@ class ApgInfo extends utils.Adapter {
         this.log.debug(`API-Call ${uri}`);
         console.log(`API-Call ${uri}`);
 
-        return new Promise((resolve, reject) => {
-            axiosInstance
-                .get(uri)
-                .then(response => {
-                    if (!response || !response.data) {
-                        throw new Error(`getDataDayAheadEntsoe(): Respone empty for URL ${uri} with status code ${response.status}`);
-                    } else {
-                        this.log.debug(`Response in getDataDayAheadEntsoe(): [${response.status}] ${JSON.stringify(response.data)}`);
-                        console.log(`Response in getDataDayAheadEntsoe(): [${response.status}] ${JSON.stringify(response.data)}`);
-                        let result = xml2js(response.data);
-                        resolve(result?.Publication_MarketDocument ?? null);
-                    }
-                })
-                .catch(error => {
-                    if (error?.response?.data) {
-                        console.error(`Error in getDataDayAheadEntsoe(): ${error} with response ${JSON.stringify(error.response.data)}`);
-                        this.log.warn(`Error to get market price (Entsoe) ${error} with response ${JSON.stringify(error.response.data)}`);
-                    } else {
-                        console.error(`Error in getDataDayAheadEntsoe(): ${error}`);
-                        this.log.warn(`Error to get market price (Entsoe) ${error}`);
-                    }
-                    reject(error);
-                });
+        return this._apiCallWithRetry(uri, 'getDataDayAheadEntsoe', response => {
+            const result = response?.data == null ? null : xml2js(response.data);
+            return result?.Publication_MarketDocument ?? null;
         });
     }
 
@@ -1103,7 +1006,7 @@ class ApgInfo extends utils.Adapter {
                 }
             }*/
         } catch (error) {
-            let eMsg = `Error in ExecuteRequestPeakHours(): ${error})`;
+            let eMsg = `Error in ExecuteRequestPeakHours(): ${error}`;
             this.log.error(eMsg);
             console.error(eMsg);
             this.sendSentry(error);
