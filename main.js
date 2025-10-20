@@ -63,6 +63,8 @@ class ApgInfo extends utils.Adapter {
         }
 
         this.calculate = this.config.calculate ?? false;
+        this.peakHours = this.config.peakHours ?? false;
+        this.marketPrices = this.config.marketPrices ?? false;
 
         if (this.calculate == true) {
             this.feeAbsolute = this.config.feeAbsolute ?? 0;
@@ -317,6 +319,9 @@ class ApgInfo extends utils.Adapter {
      * @param {boolean} forecast also checks 10.15 auction for next day
      */
     async executeMarketPrice(country, forecast) {
+        if (this.marketPrices == false) {
+            return null;
+        }
         this.log.debug('Execute market price retrieval');
         let source1 = null;
         const configTraversJsonFalse = { replaceName: true, replaceID: true, level: 3, validateAttribute: false };
@@ -916,6 +921,9 @@ class ApgInfo extends utils.Adapter {
      * Handles json-object and creates states for peak hours
      */
     async executeRequestPeakHours() {
+        if (this.peakHours == false) {
+            return null;
+        }
         try {
             let result = await this.getDataPeakHours();
             this.log.debug(`Peak hour result is: ${JSON.stringify(result)}`);

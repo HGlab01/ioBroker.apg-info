@@ -184,6 +184,8 @@
     "threshold": 10,
     "country": "at",
     "forecast": false,
+    "peakHours": true,
+    "marketPrices": true,
     "calculate": false,
     "feeAbsolute": 1.49,
     "feeRelative": 0,
