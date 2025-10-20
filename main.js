@@ -320,6 +320,10 @@ class ApgInfo extends utils.Adapter {
      */
     async executeMarketPrice(country, forecast) {
         if (this.marketPrices == false) {
+            const statesToDelete = await this.getStatesAsync(`marketprice*`);
+            for (const idS in statesToDelete) {
+                await this.delObjectAsync(idS);
+            }
             return null;
         }
         this.log.debug('Execute market price retrieval');
@@ -922,6 +926,10 @@ class ApgInfo extends utils.Adapter {
      */
     async executeRequestPeakHours() {
         if (this.peakHours == false) {
+            const statesToDelete = await this.getStatesAsync(`peakTime.*`);
+            for (const idS in statesToDelete) {
+                await this.delObjectAsync(idS);
+            }
             return null;
         }
         try {
