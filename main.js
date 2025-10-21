@@ -10,9 +10,10 @@ const { version } = require('./package.json');
 
 // Constants
 const MAX_DELAY = 25000; //25000
+const API_TIMEOUT = 20000; //20000
 
 // @ts-expect-error axios.create is ok
-const axiosInstance = axios.create({ timeout: 30000 }); //30000
+const axiosInstance = axios.create({ timeout: API_TIMEOUT });
 
 class ApgInfo extends utils.Adapter {
     /**
@@ -62,6 +63,8 @@ class ApgInfo extends utils.Adapter {
         }
 
         this.calculate = this.config.calculate ?? false;
+        this.peakHours = this.config.peakHours ?? false;
+        this.marketPrices = this.config.marketPrices ?? false;
 
         if (this.calculate == true) {
             this.feeAbsolute = this.config.feeAbsolute ?? 0;
@@ -114,8 +117,8 @@ class ApgInfo extends utils.Adapter {
         this.log.info(`Delay execution by ${callApiDelay}ms to better spread API calls`);
         await jsonExplorer.sleep(callApiDelay);
         await jsonExplorer.setLastStartTime();
-        const resultPeakHours = await this.executeRequestPeakHours();
-        const resultMarketPrice = await this.executeMarketPrice(country, forecast);
+
+        const [resultPeakHours, resultMarketPrice] = await Promise.all([this.executeRequestPeakHours(), this.executeMarketPrice(country, forecast)]);
 
         if (resultPeakHours == 'error' || resultMarketPrice == 'error') {
             this.terminate ? this.terminate(utils.EXIT_CODES.UNCAUGHT_EXCEPTION) : process.exit(0);
@@ -139,22 +142,47 @@ class ApgInfo extends utils.Adapter {
         }
     }
 
-    /*
     /**
-     * Is called if a subscribed state changes
-     * @param {string} id
-     * @param {ioBroker.State | null | undefined} state
+     * Makes an API call with retry logic.
+     *
+     * @param {string} uri The URI to call.
+     * @param {string} methodName The name of the calling method for logging.
+     * @param {(response: any) => any} processResponse A function to process the successful response.
+     * @returns {Promise<any>} The processed response or null on final server error.
      */
-    /*
-    onStateChange(id, state) {
-        if (state) {
-            // The state was changed
-            this.log.debug(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
-        } else {
-            // The state was deleted
-            this.log.debug(`state ${id} deleted`);
+    async _apiCallWithRetry(uri, methodName, processResponse) {
+        let attempts = 0;
+        const maxAttempts = 3;
+        let delay = 10 * 1000; // 10 seconds
+
+        while (attempts < maxAttempts) {
+            try {
+                const response = await axiosInstance.get(uri);
+                if (response?.data == null) {
+                    throw new Error(`Respone empty for URL ${uri} with status code ${response.status}`);
+                }
+                this.log.debug(`Response in ${methodName}(): [${response.status}] ${JSON.stringify(response.data)}`);
+                console.log(`Response in ${methodName}(): [${response.status}] ${JSON.stringify(response.data)}`);
+                return processResponse(response);
+            } catch (error) {
+                attempts++;
+                if (attempts >= maxAttempts) {
+                    // @ts-expect-error response may exist
+                    const errorMessage = error.response?.data ? `with response ${JSON.stringify(error.response.data)}` : '';
+                    this.log.error(`Error in ${methodName}() attempt ${attempts}/${maxAttempts}: ${error} ${errorMessage}`);
+                    console.error(`Error in ${methodName}() attempt ${attempts}/${maxAttempts}: ${error} ${errorMessage}`);
+                    // @ts-expect-error response may exist
+                    if (error.response?.status >= 500) {
+                        return null; // On final attempt for server errors, resolve with null
+                    }
+                    throw error; // Otherwise rethrow
+                }
+                this.log.info(`Retrying in ${delay / 1000}s for ${methodName}...`);
+                await jsonExplorer.sleep(delay);
+                delay *= 2; // Exponential backoff (10s, 20s)
+            }
         }
-    }*/
+    }
 
     /**
      * Retrieves peak hours from REST-API
@@ -163,33 +191,7 @@ class ApgInfo extends utils.Adapter {
         let uri = `https://awareness.cloud.apg.at/api/v1/PeakHourStatus`;
         this.log.debug(`API-Call ${uri}`);
         console.log(`API-Call ${uri}`);
-        return new Promise((resolve, reject) => {
-            axiosInstance
-                .get(uri)
-                .then(response => {
-                    if (!response || !response.data) {
-                        throw new Error(`getDataPeakHours(): Respone empty for URL ${uri} with status code ${response.status}`);
-                    } else {
-                        this.log.debug(`Response in getDataPeakHours(): [${response.status}] ${JSON.stringify(response.data)}`);
-                        console.log(`Response in getDataPeakHours(): [${response.status}] ${JSON.stringify(response.data)}`);
-                        resolve(response?.data ?? null);
-                    }
-                })
-                .catch(error => {
-                    if (error?.response?.data) {
-                        console.error(`Error in getDataPeakHours(): ${error} with response ${JSON.stringify(error.response.data)}`);
-                        this.log.error(`Error to get peak hours ${error} with response ${JSON.stringify(error.response.data)}`);
-                    } else {
-                        console.error(`Error in getDataPeakHours(): ${error}`);
-                        this.log.error(`Error to get peak hours ${error}`);
-                    }
-                    if (error?.response?.status >= 500) {
-                        resolve(null);
-                    } else {
-                        reject(error);
-                    }
-                });
-        });
+        return this._apiCallWithRetry(uri, 'getDataPeakHours', response => response?.data ?? null);
     }
 
     /**
@@ -198,7 +200,7 @@ class ApgInfo extends utils.Adapter {
      * @param {boolean} tomorrow true means it is the next day, false means today
      * @param {string} country country of the market
      */
-    async getDataDayAheadExaa(tomorrow, country) {
+    async getDataExaa(tomorrow, country) {
         let day = cleanDate(new Date());
         if (tomorrow) {
             day = addDays(day, 1);
@@ -209,33 +211,7 @@ class ApgInfo extends utils.Adapter {
         this.log.debug(`API-Call ${uri}`);
         console.log(`API-Call ${uri}`);
 
-        return new Promise((resolve, reject) => {
-            axiosInstance
-                .get(uri)
-                .then(response => {
-                    if (!response || !response.data) {
-                        throw new Error(`getDataDayAheadExaa(): Respone empty for URL ${uri} with status code ${response.status}`);
-                    } else {
-                        this.log.debug(`Response in getDataDayAheadExaa(): [${response.status}] ${JSON.stringify(response.data)}`);
-                        console.log(`Response in getDataDayAheadExaa(): [${response.status}] ${JSON.stringify(response.data)}`);
-                        resolve(response?.data?.data ?? null);
-                    }
-                })
-                .catch(error => {
-                    if (error?.response?.data) {
-                        console.error(`Error in getDataDayAheadExaa(): ${error} with response ${JSON.stringify(error.response.data)}`);
-                        this.log.error(`Error to get market price (Exaa) ${error} with response ${JSON.stringify(error.response.data)}`);
-                    } else {
-                        console.error(`Error in getDataDayAheadExaa(): ${error}`);
-                        this.log.error(`Error to get market price (Exaa) ${error}`);
-                    }
-                    if (error?.response?.status >= 500) {
-                        resolve(null);
-                    } else {
-                        reject(error);
-                    }
-                });
-        });
+        return this._apiCallWithRetry(uri, 'getDataExaa', response => response?.data?.data ?? null);
     }
 
     /**
@@ -243,7 +219,7 @@ class ApgInfo extends utils.Adapter {
      *
      * @param {string} country country of the market
      */
-    async getDataDayAheadExaa1015(country) {
+    async getDataExaa1015(country) {
         country = country.toUpperCase();
         const day = addDays(cleanDate(new Date()), 1);
 
@@ -252,36 +228,11 @@ class ApgInfo extends utils.Adapter {
         this.log.debug(`API-Call ${uri}`);
         console.log(`API-Call ${uri}`);
 
-        return new Promise((resolve, reject) => {
-            axiosInstance
-                .get(uri)
-                .then(response => {
-                    if (!response || !response.data) {
-                        throw new Error(`getDataDayAheadExaa1015(): Respone empty for URL ${uri} with status code ${response.status}`);
-                    } else {
-                        this.log.debug(`Response in getDataDayAheadExaa1015(): [${response.status}] ${JSON.stringify(response.data)}`);
-                        console.log(`Response in getDataDayAheadExaa1015(): [${response.status}] ${JSON.stringify(response.data)}`);
-                        if (country == 'AT') {
-                            resolve(response?.data?.AT?.price ?? null);
-                        } else {
-                            resolve(response?.data?.DE?.price ?? null);
-                        }
-                    }
-                })
-                .catch(error => {
-                    if (error?.response?.data) {
-                        console.error(`Error in getDataDayAheadExaa1015(): ${error} with response ${JSON.stringify(error.response.data)}`);
-                        this.log.error(`Error to get market price (Exaa1015) ${error} with response ${JSON.stringify(error.response.data)}`);
-                    } else {
-                        console.error(`Error in getDataDayAheadExaa1015(): ${error}`);
-                        this.log.error(`Error to get market price (Exaa1015) ${error}`);
-                    }
-                    if (error?.response?.status >= 500) {
-                        resolve(null);
-                    } else {
-                        reject(error);
-                    }
-                });
+        return this._apiCallWithRetry(uri, 'getDataExaa1015', response => {
+            if (country === 'AT') {
+                return response?.data?.AT?.price ?? null;
+            }
+            return response?.data?.DE?.price ?? null;
         });
     }
 
@@ -291,7 +242,7 @@ class ApgInfo extends utils.Adapter {
      * @param {boolean} tomorrow true means it is the next day, false means today
      * @param {string} country country of the market
      */
-    async getDataDayAheadAwattar(tomorrow, country) {
+    async getDataAwattar(tomorrow, country) {
         const day0 = cleanDate(new Date());
         let start = 0;
         let end = 0;
@@ -313,33 +264,7 @@ class ApgInfo extends utils.Adapter {
         }
         this.log.debug(`API-Call ${uri}`);
         console.log(`API-Call ${uri}`);
-        return new Promise((resolve, reject) => {
-            axiosInstance
-                .get(uri)
-                .then(response => {
-                    if (!response || !response.data) {
-                        throw new Error(`getDataDayAheadAwattar(): Respone empty for URL ${uri} with status code ${response.status}`);
-                    } else {
-                        this.log.debug(`Response in getDataDayAheadAwattar(): [${response.status}] ${JSON.stringify(response.data)}`);
-                        console.log(`Response in getDataDayAheadAwattar(): [${response.status}] ${JSON.stringify(response.data)}`);
-                        resolve(response.data);
-                    }
-                })
-                .catch(error => {
-                    if (error?.response?.data) {
-                        console.error(`Error in getDataDayAheadAwattar(): ${error} with response ${JSON.stringify(error.response.data)}`);
-                        this.log.error(`Error to get market price (Awattar) ${error} with response ${JSON.stringify(error.response.data)}`);
-                    } else {
-                        console.error(`Error in getDataDayAheadAwattar(): ${error}`);
-                        this.log.error(`Error to get market price (Awattar) ${error}`);
-                    }
-                    if (error?.response?.status >= 500) {
-                        resolve(null);
-                    } else {
-                        reject(error);
-                    }
-                });
-        });
+        return this._apiCallWithRetry(uri, 'getDataAwattar', response => response.data);
     }
 
     /**
@@ -348,7 +273,7 @@ class ApgInfo extends utils.Adapter {
      * @param {boolean} tomorrow means it is the next day, false means today
      * @param {string} country country of the market
      */
-    async getDataDayAheadEntsoe(tomorrow, country) {
+    async getDataEntsoe(tomorrow, country) {
         const url = 'https://web-api.tp.entsoe.eu/api?documentType=A44';
         const securityToken = this.token;
 
@@ -381,29 +306,9 @@ class ApgInfo extends utils.Adapter {
         this.log.debug(`API-Call ${uri}`);
         console.log(`API-Call ${uri}`);
 
-        return new Promise((resolve, reject) => {
-            axiosInstance
-                .get(uri)
-                .then(response => {
-                    if (!response || !response.data) {
-                        throw new Error(`getDataDayAheadEntsoe(): Respone empty for URL ${uri} with status code ${response.status}`);
-                    } else {
-                        this.log.debug(`Response in getDataDayAheadEntsoe(): [${response.status}] ${JSON.stringify(response.data)}`);
-                        console.log(`Response in getDataDayAheadEntsoe(): [${response.status}] ${JSON.stringify(response.data)}`);
-                        let result = xml2js(response.data);
-                        resolve(result?.Publication_MarketDocument ?? null);
-                    }
-                })
-                .catch(error => {
-                    if (error?.response?.data) {
-                        console.error(`Error in getDataDayAheadEntsoe(): ${error} with response ${JSON.stringify(error.response.data)}`);
-                        this.log.warn(`Error to get market price (Entsoe) ${error} with response ${JSON.stringify(error.response.data)}`);
-                    } else {
-                        console.error(`Error in getDataDayAheadEntsoe(): ${error}`);
-                        this.log.warn(`Error to get market price (Entsoe) ${error}`);
-                    }
-                    reject(error);
-                });
+        return this._apiCallWithRetry(uri, 'getDataEntsoe', response => {
+            const result = response?.data == null ? null : xml2js(response.data);
+            return result?.Publication_MarketDocument ?? null;
         });
     }
 
@@ -414,6 +319,13 @@ class ApgInfo extends utils.Adapter {
      * @param {boolean} forecast also checks 10.15 auction for next day
      */
     async executeMarketPrice(country, forecast) {
+        if (this.marketPrices == false) {
+            const statesToDelete = await this.getStatesAsync(`marketprice*`);
+            for (const idS in statesToDelete) {
+                await this.delObjectAsync(idS);
+            }
+            return null;
+        }
         this.log.debug('Execute market price retrieval');
         let source1 = null;
         const configTraversJsonFalse = { replaceName: true, replaceID: true, level: 3, validateAttribute: false };
@@ -510,9 +422,6 @@ class ApgInfo extends utils.Adapter {
             jDay1BelowThresholdq.numberOfSlots = days1Belowq;
             jDay1AboveThresholdq.numberOfSlots = days1Aboveq;
 
-            await this.createCharts(arrAll0, arrAll1, source1, false);
-            await this.createCharts(arrAll0q, arrAll1q, null, true);
-
             await jsonExplorer.traverseJson(jDay0, 'marketprice.today', configTraversJsonFalse);
             await jsonExplorer.traverseJson(jDay0BelowThreshold, 'marketprice.belowThreshold.today', configTraversJsonFalse);
             await jsonExplorer.traverseJson(jDay0AboveThreshold, 'marketprice.aboveThreshold.today', configTraversJsonFalse);
@@ -526,6 +435,12 @@ class ApgInfo extends utils.Adapter {
             await jsonExplorer.traverseJson(jDay0AboveThresholdq, 'marketprice_quarter_hourly.aboveThreshold.today', configTraversJsonFalse);
             await jsonExplorer.traverseJson(jDay1BelowThresholdq, 'marketprice_quarter_hourly.belowThreshold.tomorrow', configTraversJsonFalse);
             await jsonExplorer.traverseJson(jDay1AboveThresholdq, 'marketprice_quarter_hourly.aboveThreshold.tomorrow', configTraversJsonFalse);
+
+            //copy objets to use this for charts later
+            const arrAll0Copy = structuredClone(arrAll0);
+            const arrAll1Copy = structuredClone(arrAll1);
+            const arrAll0qCopy = structuredClone(arrAll0q);
+            const arrAll1qCopy = structuredClone(arrAll1q);
 
             //now it is time to sort by prcie
             arrBelow0.sort(compareSecondColumn);
@@ -679,6 +594,9 @@ class ApgInfo extends utils.Adapter {
             await jsonExplorer.stateSetCreate('marketprice_quarter_hourly.today.average', 'average', price0Avgq, false);
             await jsonExplorer.stateSetCreate('marketprice_quarter_hourly.tomorrow.average', 'average', price1Avgq, false);
 
+            await this.createCharts(arrAll0Copy, arrAll1Copy, source1, false);
+            await this.createCharts(arrAll0qCopy, arrAll1qCopy, null, true);
+
             await jsonExplorer.checkExpire('marketprice.*');
             await jsonExplorer.checkExpire('marketprice_quarter_hourly.*');
             await jsonExplorer.deleteObjectsWithNull('marketprice.*Threshold.*');
@@ -758,14 +676,13 @@ class ApgInfo extends utils.Adapter {
     async _getAndProcessMarketData(country, forecast) {
         let prices0Awattar, prices1Awattar, prices0Exaa, prices1Exaa, prices1Exaa1015;
 
-        const eXaaToday = await this.getDataDayAheadExaa(false, country);
-        const eXaaTomorrow = await this.getDataDayAheadExaa(true, country);
+        const [eXaaToday, eXaaTomorrow] = await Promise.all([this.getDataExaa(false, country), this.getDataExaa(true, country)]);
 
-        //check for provider for tody
+        //check for provider for today
         prices0Exaa = eXaaToday?.h ?? null;
         if (prices0Exaa == null) {
             this.log.info(`No market data from Exaa for today, let's try Awattar`);
-            prices0Awattar = await this.getDataDayAheadAwattar(false, country);
+            prices0Awattar = await this.getDataAwattar(false, country);
             if (prices0Awattar?.data?.[0]) {
                 this.log.info('Todays market data from Awattar available');
                 this.log.debug(`Todays market data result from Awattar is: ${JSON.stringify(prices0Awattar)}`);
@@ -780,14 +697,14 @@ class ApgInfo extends utils.Adapter {
         prices1Exaa = eXaaTomorrow?.h ?? null;
         if (prices1Exaa == null) {
             this.log.info(`No market data from Exaa for tomorrow, let's try Awattar`);
-            prices1Awattar = await this.getDataDayAheadAwattar(true, country);
+            prices1Awattar = await this.getDataAwattar(true, country);
             if (prices1Awattar?.data?.[0]) {
                 this.log.info('Tomorrows market data from Awattar available');
                 this.log.debug(`Tomorrow market data result from Awattar is: ${JSON.stringify(prices1Awattar)}`);
             } else {
                 if (forecast) {
                     this.log.info('No market data from Awattar for tomorrow , last chance Exaa 10.15 auction!');
-                    const eXaa1015 = await this.getDataDayAheadExaa1015(country);
+                    const eXaa1015 = await this.getDataExaa1015(country);
                     prices1Exaa1015 = eXaa1015;
                     if (prices1Exaa1015) {
                         this.log.info('Market data from Exaa 10.15 auction available');
@@ -851,19 +768,13 @@ class ApgInfo extends utils.Adapter {
         let prices0Entsoe, prices1Entsoe;
 
         try {
-            [prices0Entsoe, prices1Entsoe] = await Promise.all([
-                this.getDataDayAheadEntsoe(false, country),
-                this.getDataDayAheadEntsoe(true, country),
-            ]);
+            [prices0Entsoe, prices1Entsoe] = await Promise.all([this.getDataEntsoe(false, country), this.getDataEntsoe(true, country)]);
         } catch (error) {
             if (String(error).includes('read ECONNRESET') || String(error).includes('timeout') || String(error).includes('socket hang up')) {
                 this.log.info(`Entsoe request failed. Let's wait 3 minutes and try again...`);
                 await jsonExplorer.sleep(3 * 60 * 1000);
                 this.log.info(`OK! Let's try again now!`);
-                [prices0Entsoe, prices1Entsoe] = await Promise.all([
-                    this.getDataDayAheadEntsoe(false, country),
-                    this.getDataDayAheadEntsoe(true, country),
-                ]);
+                [prices0Entsoe, prices1Entsoe] = await Promise.all([this.getDataEntsoe(false, country), this.getDataEntsoe(true, country)]);
             } else {
                 throw error;
             }
@@ -1008,6 +919,13 @@ class ApgInfo extends utils.Adapter {
      * Handles json-object and creates states for peak hours
      */
     async executeRequestPeakHours() {
+        if (this.peakHours == false) {
+            const statesToDelete = await this.getStatesAsync(`peakTime.*`);
+            for (const idS in statesToDelete) {
+                await this.delObjectAsync(idS);
+            }
+            return null;
+        }
         try {
             let result = await this.getDataPeakHours();
             this.log.debug(`Peak hour result is: ${JSON.stringify(result)}`);
@@ -1098,7 +1016,7 @@ class ApgInfo extends utils.Adapter {
                 }
             }*/
         } catch (error) {
-            let eMsg = `Error in ExecuteRequestPeakHours(): ${error})`;
+            let eMsg = `Error in ExecuteRequestPeakHours(): ${error}`;
             this.log.error(eMsg);
             console.error(eMsg);
             this.sendSentry(error);

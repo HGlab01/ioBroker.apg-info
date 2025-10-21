@@ -29,9 +29,9 @@
                     "newLine": true,
                     "xs": 12,
                     "sm": 12,
-                    "md": 2,
-                    "lg": 1,
-                    "xl": 1
+                    "md": 3,
+                    "lg": 2,
+                    "xl": 2
                 },
                 "country": {
                     "type": "select",
@@ -96,8 +96,31 @@
                     "xl": 4
                 },
                 "forecast": {
+                    "newLine": true,
                     "type": "checkbox",
                     "label": "Forecast based on 10.15 auction (works in AT and DE)",
+                    "default": false,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 4,
+                    "xl": 4
+                },
+                "peakHours": {
+                    "newLine": true,
+                    "type": "checkbox",
+                    "label": "Check peak hours (works for Austria)",
+                    "default": false,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 4,
+                    "xl": 4
+                },
+                "marketPrices": {
+                    "newLine": true,
+                    "type": "checkbox",
+                    "label": "Check market prices",
                     "default": false,
                     "xs": 12,
                     "sm": 12,
@@ -134,9 +157,9 @@
                     "hidden": "!data.calculate",
                     "xs": 12,
                     "sm": 12,
-                    "md": 2,
-                    "lg": 1,
-                    "xl": 1
+                    "md": 3,
+                    "lg": 2,
+                    "xl": 2
                 },
                 "feeRelative": {
                     "type": "number",
@@ -147,9 +170,9 @@
                     "hidden": "!data.calculate",
                     "xs": 12,
                     "sm": 12,
-                    "md": 2,
-                    "lg": 1,
-                    "xl": 1
+                    "md": 3,
+                    "lg": 2,
+                    "xl": 2
                 },
                 "charges": {
                     "type": "number",
@@ -160,9 +183,9 @@
                     "hidden": "!data.calculate",
                     "xs": 12,
                     "sm": 12,
-                    "md": 2,
-                    "lg": 1,
-                    "xl": 1
+                    "md": 3,
+                    "lg": 2,
+                    "xl": 2
                 },
                 "gridCosts": {
                     "type": "number",
@@ -173,9 +196,9 @@
                     "hidden": "!data.calculate",
                     "xs": 12,
                     "sm": 12,
-                    "md": 2,
-                    "lg": 1,
-                    "xl": 1
+                    "md": 3,
+                    "lg": 2,
+                    "xl": 2
                 },
                 "vat": {
                     "type": "number",
@@ -186,9 +209,9 @@
                     "hidden": "!data.calculate",
                     "xs": 12,
                     "sm": 12,
-                    "md": 2,
-                    "lg": 1,
-                    "xl": 1
+                    "md": 3,
+                    "lg": 2,
+                    "xl": 2
                 },
                 "_text0": {
                     "type": "staticText",
