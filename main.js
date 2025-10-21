@@ -200,7 +200,7 @@ class ApgInfo extends utils.Adapter {
      * @param {boolean} tomorrow true means it is the next day, false means today
      * @param {string} country country of the market
      */
-    async getDataDayAheadExaa(tomorrow, country) {
+    async getDataExaa(tomorrow, country) {
         let day = cleanDate(new Date());
         if (tomorrow) {
             day = addDays(day, 1);
@@ -211,7 +211,7 @@ class ApgInfo extends utils.Adapter {
         this.log.debug(`API-Call ${uri}`);
         console.log(`API-Call ${uri}`);
 
-        return this._apiCallWithRetry(uri, 'getDataDayAheadExaa', response => response?.data?.data ?? null);
+        return this._apiCallWithRetry(uri, 'getDataExaa', response => response?.data?.data ?? null);
     }
 
     /**
@@ -219,7 +219,7 @@ class ApgInfo extends utils.Adapter {
      *
      * @param {string} country country of the market
      */
-    async getDataDayAheadExaa1015(country) {
+    async getDataExaa1015(country) {
         country = country.toUpperCase();
         const day = addDays(cleanDate(new Date()), 1);
 
@@ -228,7 +228,7 @@ class ApgInfo extends utils.Adapter {
         this.log.debug(`API-Call ${uri}`);
         console.log(`API-Call ${uri}`);
 
-        return this._apiCallWithRetry(uri, 'getDataDayAheadExaa1015', response => {
+        return this._apiCallWithRetry(uri, 'getDataExaa1015', response => {
             if (country === 'AT') {
                 return response?.data?.AT?.price ?? null;
             }
@@ -242,7 +242,7 @@ class ApgInfo extends utils.Adapter {
      * @param {boolean} tomorrow true means it is the next day, false means today
      * @param {string} country country of the market
      */
-    async getDataDayAheadAwattar(tomorrow, country) {
+    async getDataAwattar(tomorrow, country) {
         const day0 = cleanDate(new Date());
         let start = 0;
         let end = 0;
@@ -264,7 +264,7 @@ class ApgInfo extends utils.Adapter {
         }
         this.log.debug(`API-Call ${uri}`);
         console.log(`API-Call ${uri}`);
-        return this._apiCallWithRetry(uri, 'getDataDayAheadAwattar', response => response.data);
+        return this._apiCallWithRetry(uri, 'getDataAwattar', response => response.data);
     }
 
     /**
@@ -273,7 +273,7 @@ class ApgInfo extends utils.Adapter {
      * @param {boolean} tomorrow means it is the next day, false means today
      * @param {string} country country of the market
      */
-    async getDataDayAheadEntsoe(tomorrow, country) {
+    async getDataEntsoe(tomorrow, country) {
         const url = 'https://web-api.tp.entsoe.eu/api?documentType=A44';
         const securityToken = this.token;
 
@@ -306,7 +306,7 @@ class ApgInfo extends utils.Adapter {
         this.log.debug(`API-Call ${uri}`);
         console.log(`API-Call ${uri}`);
 
-        return this._apiCallWithRetry(uri, 'getDataDayAheadEntsoe', response => {
+        return this._apiCallWithRetry(uri, 'getDataEntsoe', response => {
             const result = response?.data == null ? null : xml2js(response.data);
             return result?.Publication_MarketDocument ?? null;
         });
@@ -676,13 +676,13 @@ class ApgInfo extends utils.Adapter {
     async _getAndProcessMarketData(country, forecast) {
         let prices0Awattar, prices1Awattar, prices0Exaa, prices1Exaa, prices1Exaa1015;
 
-        const [eXaaToday, eXaaTomorrow] = await Promise.all([this.getDataDayAheadExaa(false, country), this.getDataDayAheadExaa(true, country)]);
+        const [eXaaToday, eXaaTomorrow] = await Promise.all([this.getDataExaa(false, country), this.getDataExaa(true, country)]);
 
         //check for provider for today
         prices0Exaa = eXaaToday?.h ?? null;
         if (prices0Exaa == null) {
             this.log.info(`No market data from Exaa for today, let's try Awattar`);
-            prices0Awattar = await this.getDataDayAheadAwattar(false, country);
+            prices0Awattar = await this.getDataAwattar(false, country);
             if (prices0Awattar?.data?.[0]) {
                 this.log.info('Todays market data from Awattar available');
                 this.log.debug(`Todays market data result from Awattar is: ${JSON.stringify(prices0Awattar)}`);
@@ -697,14 +697,14 @@ class ApgInfo extends utils.Adapter {
         prices1Exaa = eXaaTomorrow?.h ?? null;
         if (prices1Exaa == null) {
             this.log.info(`No market data from Exaa for tomorrow, let's try Awattar`);
-            prices1Awattar = await this.getDataDayAheadAwattar(true, country);
+            prices1Awattar = await this.getDataAwattar(true, country);
             if (prices1Awattar?.data?.[0]) {
                 this.log.info('Tomorrows market data from Awattar available');
                 this.log.debug(`Tomorrow market data result from Awattar is: ${JSON.stringify(prices1Awattar)}`);
             } else {
                 if (forecast) {
                     this.log.info('No market data from Awattar for tomorrow , last chance Exaa 10.15 auction!');
-                    const eXaa1015 = await this.getDataDayAheadExaa1015(country);
+                    const eXaa1015 = await this.getDataExaa1015(country);
                     prices1Exaa1015 = eXaa1015;
                     if (prices1Exaa1015) {
                         this.log.info('Market data from Exaa 10.15 auction available');
@@ -768,19 +768,13 @@ class ApgInfo extends utils.Adapter {
         let prices0Entsoe, prices1Entsoe;
 
         try {
-            [prices0Entsoe, prices1Entsoe] = await Promise.all([
-                this.getDataDayAheadEntsoe(false, country),
-                this.getDataDayAheadEntsoe(true, country),
-            ]);
+            [prices0Entsoe, prices1Entsoe] = await Promise.all([this.getDataEntsoe(false, country), this.getDataEntsoe(true, country)]);
         } catch (error) {
             if (String(error).includes('read ECONNRESET') || String(error).includes('timeout') || String(error).includes('socket hang up')) {
                 this.log.info(`Entsoe request failed. Let's wait 3 minutes and try again...`);
                 await jsonExplorer.sleep(3 * 60 * 1000);
                 this.log.info(`OK! Let's try again now!`);
-                [prices0Entsoe, prices1Entsoe] = await Promise.all([
-                    this.getDataDayAheadEntsoe(false, country),
-                    this.getDataDayAheadEntsoe(true, country),
-                ]);
+                [prices0Entsoe, prices1Entsoe] = await Promise.all([this.getDataEntsoe(false, country), this.getDataEntsoe(true, country)]);
             } else {
                 throw error;
             }
