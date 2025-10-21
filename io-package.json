@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "apg-info",
-    "version": "0.1.21",
+    "version": "0.1.22",
     "news": {
+      "0.1.22": {
+        "en": "Implement retry mechanism for API calls\nadd turn on/off for peak hours and market prices",
+        "de": "Implementieren Retry-Mechanismus für API-Anrufe\nan-/ausschalten für spitzenzeiten und marktpreise",
+        "ru": "Внедрение механизма retry для вызовов API\nдобавить включение / выключение в часы пик и рыночные цены",
+        "pt": "Implementar mecanismo de repetição para chamadas de API\nadicionar ligar/desligar para horas de pico e preços de mercado",
+        "nl": "Implementeer opnieuw proberen mechanisme voor API-oproepen\nhet toevoegen van aan/uit voor piekuren en marktprijzen",
+        "fr": "Mettre en place un mécanisme de ré-essai pour les appels API\najouter la mise en marche/arrêt pour les heures de pointe et les prix du marché",
+        "it": "Meccanismo di implementazione per le chiamate API\naggiungere turn on/off per ore di punta e prezzi di mercato",
+        "es": "Implementar el mecanismo de reingreso para llamadas API\nañadir encendido / apagado para horas pico y precios del mercado",
+        "pl": "Wdrożenie mechanizmu ponownego testowania połączeń API\ndodać włączenie / wyłączenie dla godzin szczytu i cen rynkowych",
+        "uk": "Впровадження механізму птиху для викликів API\nдодайте зворотній зв’язок за попередні години та ринкові ціни",
+        "zh-cn": "执行 API 调用重试机制\n增加高峰时数和市场价格的开启/关闭"
+      },
       "0.1.21": {
         "en": "Support quater-hourly tarifs\nBump iobroker-jsonexplorer to 0.2.1",
         "de": "Vier-Stunden-Preise unterstützen\nBump iobroker-jsonexplorer auf 0,2.1",
@@ -80,19 +93,6 @@
         "pl": "prekursor json- explorer v0.2 gotowość\nAksykony bumpy do 1.12.2",
         "uk": "prepeare json-explorer v0.2 готовність\nБампер аксіос до 1.12.2",
         "zh-cn": "预选json-探索器 v0.2 准备状态\n横轴改为1.12.2"
-      },
-      "0.1.19": {
-        "en": "use encrypted token in config",
-        "de": "verwendung verschlüsselter token in config",
-        "ru": "использовать зашифрованный токен в конфигурации",
-        "pt": "usar o token criptografado na configuração",
-        "nl": "gebruik versleuteld token in config",
-        "fr": "utiliser un jeton chiffré dans config",
-        "it": "utilizzare token crittografato in configurazione",
-        "es": "uso encriptado token en config",
-        "pl": "użyj szyfrowanego symbolu w konfigu",
-        "uk": "використовуйте зашифрований токен в конфігурації",
-        "zh-cn": "在配置中使用加密的令牌"
       }
     },
     "titleLang": {

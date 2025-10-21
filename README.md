@@ -34,8 +34,8 @@ For more details check https://transparency.entsoe.eu/content/static_content/Sta
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### __WORK IN PROGRESS__
-* (HGlab01) Implement retry mechanis for API calls
+### 0.1.22 (2025-10-21)
+* (HGlab01) Implement retry mechanism for API calls
 * (HGlab01) add turn on/off for peak hours and market prices
 
 ### 0.1.21 (2025-10-13)
@@ -52,9 +52,6 @@ For more details check https://transparency.entsoe.eu/content/static_content/Sta
 ### 0.1.18 (2025-06-16)
 * (HGlab01) Log finetuning
 * (HGlab01) Bump axios to 1.10.0
-
-### 0.1.17 (2025-06-03)
-* (HGlab01) Add retry mechanism for Entsoe
 
 ## License
 MIT License

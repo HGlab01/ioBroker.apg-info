@@ -1,4 +1,7 @@
 # Older changes
+## 0.1.17 (2025-06-03)
+* (HGlab01) Add retry mechanism for Entsoe
+
 ## 0.1.16 (2025-05-18)
 * (HGlab01) Optimize Entsoe (Swiss market) requests
 * (HGlab01) Extend timeout for Api calls to 30 seconds 
