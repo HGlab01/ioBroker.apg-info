@@ -1,7 +1,7 @@
 {
   "common": {
     "name": "apg-info",
-    "version": "0.1.22-alpha.0",
+    "version": "0.1.22",
     "news": {
       "0.1.22-alpha.0": {
         "en": "Implement retry mechanism for API calls\nadd turn on/off for peak hours and market prices",
