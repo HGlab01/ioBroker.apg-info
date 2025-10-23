@@ -40,7 +40,6 @@
     "axios": "^1.12.2",
     "cheerio": "^1.1.2",
     "iobroker-jsonexplorer": "^0.2.1",
-    "jsdom": "^27.0.1",
     "xml-js": "^1.6.11"
   },
   "description": "APG Info",
