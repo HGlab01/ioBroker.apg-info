@@ -10,7 +10,7 @@ const { getDataExaa1015, getDataExaa, getDataAwattar, getDataPeakHours, getDataE
 const { addDays, cleanDate, calcDate, pad, compareSecondColumn } = require('./lib/helpers.js');
 
 // Constants
-const MAX_DELAY = 1; //25000
+const MAX_DELAY = 25000; //25000
 const API_TIMEOUT = 20000; //20000
 
 class ApgInfo extends utils.Adapter {
@@ -543,8 +543,8 @@ class ApgInfo extends utils.Adapter {
                     this.log.info('No market data for tomorrow!');
                 }
             }
-            todayResultq = this._processMarketPrices('today', prices0Awattar, prices0Exaa, null, prices0Epex);
-            tomorrowResultq = this._processMarketPrices('tomorrow', prices1Awattar, prices1Exaa, prices1Exaa1015, prices1Epex);
+            todayResultq = this._processMarketPrices('today', prices0Awattar, prices0Exaa, null, prices0Epex, true);
+            tomorrowResultq = this._processMarketPrices('tomorrow', prices1Awattar, prices1Exaa, prices1Exaa1015, prices1Epex, true);
         }
 
         if (hourly) {
@@ -589,8 +589,8 @@ class ApgInfo extends utils.Adapter {
             } else {
                 this.log.debug(`Tomorrows market data result from Exaa is: ${JSON.stringify(prices1Exaa)}`);
             }
-            todayResult = this._processMarketPrices('today', prices0Awattar, prices0Exaa, null, prices0Epex);
-            tomorrowResult = this._processMarketPrices('tomorrow', prices1Awattar, prices1Exaa, prices1Exaa1015, prices1Epex);
+            todayResult = this._processMarketPrices('today', prices0Awattar, prices0Exaa, null, prices0Epex, false);
+            tomorrowResult = this._processMarketPrices('tomorrow', prices1Awattar, prices1Exaa, prices1Exaa1015, prices1Epex, false);
         }
 
         return {
@@ -650,9 +650,10 @@ class ApgInfo extends utils.Adapter {
      * @param {any} exaaData - Data from EXAA Market Coupling API.
      * @param {any} exaa1015Data - Optional data from EXAA 10:15 auction API (for tomorrow).
      * @param {any} epexData - Data from Epex Market
+     * @param {boolean} quater - quater hourly data yes/no
      * @returns {{prices: any[], source: string}} The processed prices and the source name.
      */
-    _processMarketPrices(day, awattarData, exaaData, exaa1015Data, epexData) {
+    _processMarketPrices(day, awattarData, exaaData, exaa1015Data, epexData, quater) {
         let prices = [];
         let source = '';
 
@@ -671,7 +672,11 @@ class ApgInfo extends utils.Adapter {
         }
 
         if (source) {
-            jsonExplorer.stateSetCreate(`marketprice.${day}.source`, 'Source', source);
+            if (quater) {
+                jsonExplorer.stateSetCreate(`marketprice_quarter_hourly.${day}.source`, 'Source', source);
+            } else {
+                jsonExplorer.stateSetCreate(`marketprice.${day}.source`, 'Source', source);
+            }
         }
 
         return { prices, source };
