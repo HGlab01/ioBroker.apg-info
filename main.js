@@ -2,18 +2,16 @@
 
 const utils = require('@iobroker/adapter-core');
 const axios = require('axios');
-const convert = require('xml-js');
 const jsonExplorer = require('iobroker-jsonexplorer');
-const stateAttr = require(`${__dirname}/lib/stateAttr.js`); // Load attribute library
+const stateAttr = require(`./lib/stateAttr.js`); // Load attribute library
 const isOnline = require('@esm2cjs/is-online').default;
 const { version } = require('./package.json');
+const { getDataExaa1015, getDataExaa, getDataAwattar, getDataPeakHours, getDataEntsoe } = require('./lib/getData.js');
+const { addDays, cleanDate, calcDate, pad, compareSecondColumn } = require('./lib/helpers.js');
 
 // Constants
-const MAX_DELAY = 25000; //25000
+const MAX_DELAY = 1; //25000
 const API_TIMEOUT = 20000; //20000
-
-// @ts-expect-error axios.create is ok
-const axiosInstance = axios.create({ timeout: API_TIMEOUT });
 
 class ApgInfo extends utils.Adapter {
     /**
@@ -25,7 +23,9 @@ class ApgInfo extends utils.Adapter {
             name: 'apg-info',
         });
         this.on('ready', this.onReady.bind(this));
-        //this.on('objectChange', this.onObjectChange.bind(this));
+        // @ts-expect-error axiosInstance type
+        this.axiosInstance = axios.create({ timeout: API_TIMEOUT });
+        this.jsonExplorer = jsonExplorer;
         //this.on('stateChange', this.onStateChange.bind(this));
         //this.on('message', this.onMessage.bind(this));
         this.on('unload', this.onUnload.bind(this));
@@ -140,176 +140,6 @@ class ApgInfo extends utils.Adapter {
         } catch {
             callback();
         }
-    }
-
-    /**
-     * Makes an API call with retry logic.
-     *
-     * @param {string} uri The URI to call.
-     * @param {string} methodName The name of the calling method for logging.
-     * @param {(response: any) => any} processResponse A function to process the successful response.
-     * @returns {Promise<any>} The processed response or null on final server error.
-     */
-    async _apiCallWithRetry(uri, methodName, processResponse) {
-        let attempts = 0;
-        const maxAttempts = 3;
-        let delay = 10 * 1000; // 10 seconds
-
-        while (attempts < maxAttempts) {
-            try {
-                const response = await axiosInstance.get(uri);
-                if (response?.data == null) {
-                    throw new Error(`Respone empty for URL ${uri} with status code ${response.status}`);
-                }
-                this.log.debug(`Response in ${methodName}(): [${response.status}] ${JSON.stringify(response.data)}`);
-                console.log(`Response in ${methodName}(): [${response.status}] ${JSON.stringify(response.data)}`);
-                return processResponse(response);
-            } catch (error) {
-                attempts++;
-                if (attempts >= maxAttempts) {
-                    // @ts-expect-error response may exist
-                    const errorMessage = error.response?.data ? `with response ${JSON.stringify(error.response.data)}` : '';
-                    this.log.error(`Error in ${methodName}() attempt ${attempts}/${maxAttempts}: ${error} ${errorMessage}`);
-                    console.error(`Error in ${methodName}() attempt ${attempts}/${maxAttempts}: ${error} ${errorMessage}`);
-                    // @ts-expect-error response may exist
-                    if (error.response?.status >= 500) {
-                        return null; // On final attempt for server errors, resolve with null
-                    }
-                    throw error; // Otherwise rethrow
-                }
-                this.log.info(`Retrying in ${delay / 1000}s for ${methodName}...`);
-                await jsonExplorer.sleep(delay);
-                delay *= 2; // Exponential backoff (10s, 20s)
-            }
-        }
-    }
-
-    /**
-     * Retrieves peak hours from REST-API
-     */
-    async getDataPeakHours() {
-        let uri = `https://awareness.cloud.apg.at/api/v1/PeakHourStatus`;
-        this.log.debug(`API-Call ${uri}`);
-        console.log(`API-Call ${uri}`);
-        return this._apiCallWithRetry(uri, 'getDataPeakHours', response => response?.data ?? null);
-    }
-
-    /**
-     * Retrieves marketdata from REST-API from Exaa
-     *
-     * @param {boolean} tomorrow true means it is the next day, false means today
-     * @param {string} country country of the market
-     */
-    async getDataExaa(tomorrow, country) {
-        let day = cleanDate(new Date());
-        if (tomorrow) {
-            day = addDays(day, 1);
-        }
-
-        const dateStringToday = `${day.getFullYear()}-${day.getMonth() + 1}-${day.getDate()}`;
-        const uri = `https://www.exaa.at/data/trading-results?delivery_day=${dateStringToday}&market=${country}&auction=market_coupling`;
-        this.log.debug(`API-Call ${uri}`);
-        console.log(`API-Call ${uri}`);
-
-        return this._apiCallWithRetry(uri, 'getDataExaa', response => response?.data?.data ?? null);
-    }
-
-    /**
-     * Retrieves marketdata from REST-API from Exaa
-     *
-     * @param {string} country country of the market
-     */
-    async getDataExaa1015(country) {
-        country = country.toUpperCase();
-        const day = addDays(cleanDate(new Date()), 1);
-
-        const dateStringToday = `${day.getFullYear()}-${day.getMonth() + 1}-${day.getDate()}`;
-        const uri = `https://www.exaa.at/data/market-results?delivery_day=${dateStringToday}&market=${country}&auction=1015`;
-        this.log.debug(`API-Call ${uri}`);
-        console.log(`API-Call ${uri}`);
-
-        return this._apiCallWithRetry(uri, 'getDataExaa1015', response => {
-            if (country === 'AT') {
-                return response?.data?.AT?.price ?? null;
-            }
-            return response?.data?.DE?.price ?? null;
-        });
-    }
-
-    /**
-     * Retrieves marketdata from REST-API from Awattar
-     *
-     * @param {boolean} tomorrow true means it is the next day, false means today
-     * @param {string} country country of the market
-     */
-    async getDataAwattar(tomorrow, country) {
-        const day0 = cleanDate(new Date());
-        let start = 0;
-        let end = 0;
-        if (tomorrow) {
-            let day1 = addDays(day0, 1);
-            start = day1.getTime();
-            day1.setHours(23, 59, 59);
-            end = day1.getTime() + 2000;
-        } else {
-            start = day0.getTime();
-            day0.setHours(23, 59, 59);
-            end = day0.getTime() + 2000;
-        }
-        let uri = '';
-        if (country == 'at') {
-            uri = `https://api.awattar.at/v1/marketdata?start=${start}&end=${end}`;
-        } else {
-            uri = `https://api.awattar.de/v1/marketdata?start=${start}&end=${end}`;
-        }
-        this.log.debug(`API-Call ${uri}`);
-        console.log(`API-Call ${uri}`);
-        return this._apiCallWithRetry(uri, 'getDataAwattar', response => response.data);
-    }
-
-    /**
-     * Retrieves marketdata from REST-API from entsoe
-     *
-     * @param {boolean} tomorrow means it is the next day, false means today
-     * @param {string} country country of the market
-     */
-    async getDataEntsoe(tomorrow, country) {
-        const url = 'https://web-api.tp.entsoe.eu/api?documentType=A44';
-        const securityToken = this.token;
-
-        let day = cleanDate(new Date());
-        if (tomorrow) {
-            day = addDays(day, 1);
-        }
-        const dayPlus = addDays(day, 1);
-
-        const datebegin = day.getFullYear() + pad(day.getMonth() + 1, 2) + pad(day.getDate(), 2);
-        const dateend = dayPlus.getFullYear() + pad(dayPlus.getMonth() + 1, 2) + pad(dayPlus.getDate(), 2);
-
-        let domain = '';
-
-        switch (country) {
-            case 'ch':
-                domain = '10YCH-SWISSGRIDZ';
-                break;
-            case 'at':
-                domain = '10YAT-APG------L';
-                break;
-            case 'de':
-                domain = '10Y1001A1001A82H';
-                break;
-            default:
-                this.log.error('Country not found in definitions');
-        }
-
-        const uri = `${url}&securityToken=${securityToken}&periodStart=${datebegin}0000&periodEnd=${dateend}0000&in_Domain=${domain}&Out_Domain=${domain}`;
-        this.log.debug(`API-Call ${uri}`);
-        console.log(`API-Call ${uri}`);
-
-        return this._apiCallWithRetry(uri, 'getDataEntsoe', response => {
-            const result = response?.data == null ? null : xml2js(response.data);
-            return result?.Publication_MarketDocument ?? null;
-        });
     }
 
     /**
@@ -676,13 +506,13 @@ class ApgInfo extends utils.Adapter {
     async _getAndProcessMarketData(country, forecast) {
         let prices0Awattar, prices1Awattar, prices0Exaa, prices1Exaa, prices1Exaa1015;
 
-        const [eXaaToday, eXaaTomorrow] = await Promise.all([this.getDataExaa(false, country), this.getDataExaa(true, country)]);
+        const [eXaaToday, eXaaTomorrow] = await Promise.all([getDataExaa(this, false, country), getDataExaa(this, true, country)]);
 
         //check for provider for today
         prices0Exaa = eXaaToday?.h ?? null;
         if (prices0Exaa == null) {
             this.log.info(`No market data from Exaa for today, let's try Awattar`);
-            prices0Awattar = await this.getDataAwattar(false, country);
+            prices0Awattar = await getDataAwattar(this, false, country);
             if (prices0Awattar?.data?.[0]) {
                 this.log.info('Todays market data from Awattar available');
                 this.log.debug(`Todays market data result from Awattar is: ${JSON.stringify(prices0Awattar)}`);
@@ -697,14 +527,14 @@ class ApgInfo extends utils.Adapter {
         prices1Exaa = eXaaTomorrow?.h ?? null;
         if (prices1Exaa == null) {
             this.log.info(`No market data from Exaa for tomorrow, let's try Awattar`);
-            prices1Awattar = await this.getDataAwattar(true, country);
+            prices1Awattar = await getDataAwattar(this, true, country);
             if (prices1Awattar?.data?.[0]) {
                 this.log.info('Tomorrows market data from Awattar available');
                 this.log.debug(`Tomorrow market data result from Awattar is: ${JSON.stringify(prices1Awattar)}`);
             } else {
                 if (forecast) {
                     this.log.info('No market data from Awattar for tomorrow , last chance Exaa 10.15 auction!');
-                    const eXaa1015 = await this.getDataExaa1015(country);
+                    const eXaa1015 = await getDataExaa1015(this, country);
                     prices1Exaa1015 = eXaa1015;
                     if (prices1Exaa1015) {
                         this.log.info('Market data from Exaa 10.15 auction available');
@@ -768,13 +598,13 @@ class ApgInfo extends utils.Adapter {
         let prices0Entsoe, prices1Entsoe;
 
         try {
-            [prices0Entsoe, prices1Entsoe] = await Promise.all([this.getDataEntsoe(false, country), this.getDataEntsoe(true, country)]);
+            [prices0Entsoe, prices1Entsoe] = await Promise.all([getDataEntsoe(this, false, country), getDataEntsoe(this, true, country)]);
         } catch (error) {
             if (String(error).includes('read ECONNRESET') || String(error).includes('timeout') || String(error).includes('socket hang up')) {
                 this.log.info(`Entsoe request failed. Let's wait 3 minutes and try again...`);
                 await jsonExplorer.sleep(3 * 60 * 1000);
                 this.log.info(`OK! Let's try again now!`);
-                [prices0Entsoe, prices1Entsoe] = await Promise.all([this.getDataEntsoe(false, country), this.getDataEntsoe(true, country)]);
+                [prices0Entsoe, prices1Entsoe] = await Promise.all([getDataEntsoe(this, false, country), getDataEntsoe(this, true, country)]);
             } else {
                 throw error;
             }
@@ -927,7 +757,7 @@ class ApgInfo extends utils.Adapter {
             return null;
         }
         try {
-            let result = await this.getDataPeakHours();
+            let result = await getDataPeakHours(this);
             this.log.debug(`Peak hour result is: ${JSON.stringify(result)}`);
 
             if (!result || !result.StatusInfos) {
@@ -1190,7 +1020,7 @@ class ApgInfo extends utils.Adapter {
     }
 }
 
-// @ts-expect-error parent is a valid property on module
+// @ts-expect-error parent is valid in compact mode
 if (module.parent) {
     // Export the constructor in compact mode
     /**
@@ -1200,85 +1030,4 @@ if (module.parent) {
 } else {
     // otherwise start the instance directly
     new ApgInfo();
-}
-
-/**************************************************** */
-/*         H E L P E R S                              */
-/**************************************************** */
-
-/**
- * sets time to 00:00:00.00000
- *
- * @param {Date} date date to be changed
- */
-function cleanDate(date) {
-    date.setHours(0, 0, 0, 0);
-    return date;
-}
-
-/**
- * @param {number} hour hour of the day (0-23)
- * @param {boolean} tomorrow if true, calculates for tomorrow, otherwise for today
- * @returns {number} returns timestamp for given hour of the day
- */
-function calcDate(hour, tomorrow = false) {
-    let date = cleanDate(new Date());
-    if (tomorrow) {
-        date = addDays(date, 1);
-    }
-    date.setHours(hour);
-    return date.getTime();
-}
-
-/**
- * adds days to a date
- *
- * @param {Date} date origin date
- * @param {number} numberOfDays number of days which origin date shall be added (positive and negative allowes)
- */
-function addDays(date, numberOfDays) {
-    let newDate = new Date(date.getTime());
-    newDate.setDate(newDate.getDate() + numberOfDays);
-    return cleanDate(newDate);
-}
-
-function compareSecondColumn(a, b) {
-    if (a[1] === b[1]) {
-        return 0;
-    }
-
-    return a[1] < b[1] ? -1 : 1;
-}
-
-/**
- * @param {number} num number
- * @param {number} length length
- * @returns {string} returns a string with leading zeros based on given number
- */
-function pad(num, length) {
-    if (num == null) {
-        num = 0;
-    }
-    let l = Math.floor(length);
-    let sn = String(num);
-    let snl = sn.length;
-    if (snl >= l) {
-        return sn;
-    }
-    return '0'.repeat(l - snl) + sn;
-}
-
-/**
- * @param {string} xmlString XML string to be converted
- * @returns {object} returns JSON object converted from XML string
- */
-function xml2js(xmlString) {
-    // @ts-expect-error replaceAll is a valid method
-    xmlString = xmlString.replaceAll(`price.amount`, `price_amount`);
-    const jsonResult = JSON.parse(
-        convert.xml2json(xmlString, {
-            compact: true,
-        }),
-    );
-    return jsonResult;
 }
