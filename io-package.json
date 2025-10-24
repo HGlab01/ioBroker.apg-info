@@ -183,6 +183,8 @@
   "native": {
     "threshold": 10,
     "country": "at",
+    "quarterHourly": true,
+    "hourly": true,
     "forecast": false,
     "peakHours": true,
     "marketPrices": true,
