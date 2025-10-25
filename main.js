@@ -10,7 +10,7 @@ const { getDataExaa1015, getDataExaa, getDataAwattar, getDataPeakHours, getDataE
 const { addDays, cleanDate, calcDate, pad, compareSecondColumn } = require('./lib/helpers.js');
 
 // Constants
-const MAX_DELAY = 25000; //25000
+const MAX_DELAY = 1; //25000
 const API_TIMEOUT = 20000; //20000
 
 class ApgInfo extends utils.Adapter {
@@ -540,6 +540,12 @@ class ApgInfo extends utils.Adapter {
             }
             todayResultq = this._processMarketPrices('today', prices0Awattar, prices0Exaa, null, prices0Epex, true);
             tomorrowResultq = this._processMarketPrices('tomorrow', prices1Awattar, prices1Exaa, prices1Exaa1015, prices1Epex, true);
+        } else {
+            //delte all states for quarter-hourly
+            const statesToDelete = await this.getStatesAsync(`marketprice_quarter_hourly.*`);
+            for (const idS in statesToDelete) {
+                await this.delObjectAsync(idS);
+            }
         }
 
         if (this.hourly) {
@@ -587,6 +593,12 @@ class ApgInfo extends utils.Adapter {
             }
             todayResult = this._processMarketPrices('today', prices0Awattar, prices0Exaa, null, prices0Epex, false);
             tomorrowResult = this._processMarketPrices('tomorrow', prices1Awattar, prices1Exaa, prices1Exaa1015, prices1Epex, false);
+        } else {
+            //delete all stats for hourly
+            const statesToDelete = await this.getStatesAsync(`marketprice.*`);
+            for (const idS in statesToDelete) {
+                await this.delObjectAsync(idS);
+            }
         }
 
         return {
@@ -743,7 +755,7 @@ class ApgInfo extends utils.Adapter {
     }
 
     /**
-     * Converts data from the EXAA 10:15 auction API to the internal price format.
+     * Converts data from the EXAA API to the internal price format.
      *
      * @param {any} exaaData - The raw data from EXAA auction.
      * @returns {any[]} The converted price data.
@@ -768,6 +780,7 @@ class ApgInfo extends utils.Adapter {
                 delete item.AuctionDay;
             }
         }
+        exaaData = exaaData.filter(item => item.id != null);
         return exaaData;
     }
 
@@ -1037,7 +1050,7 @@ class ApgInfo extends utils.Adapter {
         const allMax = Math.max(todayMax, tomorrowMax);
         const roundedMax = Math.ceil((allMax * 1.1) / 5) * 5;
 
-        if (quarter_hourly) {
+        if (quarter_hourly == true && this.quarterHourly == true) {
             await this.createSingleChart(arrayToday, false, null, allMin, roundedMax, 'marketprice_quarter_hourly.today.jsonChart', quarter_hourly);
             await this.createSingleChart(
                 arrayTomorrow,
@@ -1048,7 +1061,8 @@ class ApgInfo extends utils.Adapter {
                 'marketprice_quarter_hourly.tomorrow.jsonChart',
                 quarter_hourly,
             );
-        } else {
+        }
+        if (quarter_hourly == false && this.hourly == true) {
             await this.createSingleChart(arrayToday, false, null, allMin, roundedMax, 'marketprice.today.jsonChart', quarter_hourly);
             await this.createSingleChart(arrayTomorrow, true, sourceTomorrow, allMin, roundedMax, 'marketprice.tomorrow.jsonChart', quarter_hourly);
         }
