@@ -765,7 +765,7 @@ class ApgInfo extends utils.Adapter {
         if (exaaData?.[0] != null && exaaData[0].ProductText?.substring(0, 1) == 'q') {
             for (const item of exaaData) {
                 let productText = item.ProductText;
-                productText = productText.replaceAll('02a', '02'); // for winter/summer time to replace 02a:00 to 02:00
+                //productText = productText.replaceAll('02a', '02'); // for winter/summer time to replace 02a:00 to 02:00
                 item.ProductText = productText;
                 const regexZeit = /(\d{2}:\d{2}\s*-\s*\d{2}:\d{2})/;
                 const matchZeit = productText.match(regexZeit);
