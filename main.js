@@ -10,7 +10,7 @@ const { getDataExaa1015, getDataExaa, getDataAwattar, getDataPeakHours, getDataE
 const { addDays, cleanDate, calcDate, pad, compareSecondColumn } = require('./lib/helpers.js');
 
 // Constants
-const MAX_DELAY = 1; //25000
+const MAX_DELAY = 25000; //25000
 const API_TIMEOUT = 20000; //20000
 
 class ApgInfo extends utils.Adapter {
@@ -764,7 +764,10 @@ class ApgInfo extends utils.Adapter {
         //only for quarter-hourly data we have to extract the id from ProductText
         if (exaaData?.[0] != null && exaaData[0].ProductText?.substring(0, 1) == 'q') {
             for (const item of exaaData) {
-                const productText = item.ProductText;
+                let productText = item.ProductText;
+                productText = productText.replaceAll('02a', '02'); // for winter/summer time to replace 02a:00 to 02:00
+                productText = productText.replaceAll('02b', '02');
+                item.ProductText = productText;
                 const regexZeit = /(\d{2}:\d{2}\s*-\s*\d{2}:\d{2})/;
                 const matchZeit = productText.match(regexZeit);
                 if (matchZeit && matchZeit.length > 1) {
