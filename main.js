@@ -10,7 +10,7 @@ const { getDataExaa1015, getDataExaa, getDataAwattar, getDataPeakHours, getDataE
 const { addDays, cleanDate, calcDate, pad, compareSecondColumn } = require('./lib/helpers.js');
 
 // Constants
-const MAX_DELAY = 25000; //25000
+const MAX_DELAY = 1; //25000
 const API_TIMEOUT = 20000; //20000
 
 class ApgInfo extends utils.Adapter {
@@ -77,28 +77,26 @@ class ApgInfo extends utils.Adapter {
             this.terminate ? this.terminate(utils.EXIT_CODES.UNCAUGHT_EXCEPTION) : process.exit(0);
         }
 
-        if (country != 'at' && country != 'de') {
-            if (this.config.tokenEncrypted) {
-                this.token = this.config.tokenEncrypted;
-            } else {
-                const instanceId = `system.adapter.${this.name}.${this.instance}`;
-                const objInstance = await this.getForeignObjectAsync(instanceId);
-                if (objInstance?.native) {
-                    let tokenUnEncrypted = objInstance.native.token;
-                    if (tokenUnEncrypted) {
-                        this.log.info(`Let's onetime encrypt the token...`);
-                        objInstance.native.tokenEncrypted = this.encrypt(tokenUnEncrypted);
-                        delete objInstance.native.token;
-                        await this.setForeignObjectAsync(instanceId, objInstance);
-                        this.token = tokenUnEncrypted;
-                        this.log.info(`Token encrypted and saved in instance ${instanceId}`);
-                    }
+        if (this.config.tokenEncrypted) {
+            this.token = this.config.tokenEncrypted;
+        } else {
+            const instanceId = `system.adapter.${this.name}.${this.instance}`;
+            const objInstance = await this.getForeignObjectAsync(instanceId);
+            if (objInstance?.native) {
+                let tokenUnEncrypted = objInstance.native.token;
+                if (tokenUnEncrypted) {
+                    this.log.info(`Let's onetime encrypt the token...`);
+                    objInstance.native.tokenEncrypted = this.encrypt(tokenUnEncrypted);
+                    delete objInstance.native.token;
+                    await this.setForeignObjectAsync(instanceId, objInstance);
+                    this.token = tokenUnEncrypted;
+                    this.log.info(`Token encrypted and saved in instance ${instanceId}`);
                 }
             }
-            if (!this.token) {
-                this.log.error('No token defined. Please check readme how to request!');
-                this.terminate ? this.terminate(utils.EXIT_CODES.UNCAUGHT_EXCEPTION) : process.exit(0);
-            }
+        }
+        if (!this.token && country != 'at' && country != 'de') {
+            this.log.error('No token defined. Please check readme how to request!');
+            this.terminate ? this.terminate(utils.EXIT_CODES.UNCAUGHT_EXCEPTION) : process.exit(0);
         }
 
         if ((await isOnline()) == false) {
@@ -507,6 +505,7 @@ class ApgInfo extends utils.Adapter {
         let todayResult, tomorrowResult, todayResultq, tomorrowResultq;
 
         const [eXaaToday, eXaaTomorrow] = await Promise.all([getDataExaa(this, false, country), getDataExaa(this, true, country)]);
+        const entsoePrices = await this._getAndProcessEntsoeData(country);
 
         //check for provider for today for quarter-hourly
         if (this.quarterHourly) {
@@ -538,8 +537,13 @@ class ApgInfo extends utils.Adapter {
                     this.log.info('No quarter-hourly market data for tomorrow!');
                 }
             }
-            todayResultq = this._processMarketPrices('today', prices0Awattar, prices0Exaa, null, prices0Epex, true);
-            tomorrowResultq = this._processMarketPrices('tomorrow', prices1Awattar, prices1Exaa, prices1Exaa1015, prices1Epex, true);
+            if (entsoePrices) {
+                todayResultq = { prices: entsoePrices.prices0 ?? [], source: 'entsoe' };
+                tomorrowResultq = { prices: entsoePrices.prices1 ?? [], source: 'entsoe' };
+            } else {
+                todayResultq = this._processMarketPrices('today', prices0Awattar, prices0Exaa, null, prices0Epex, true);
+                tomorrowResultq = this._processMarketPrices('tomorrow', prices1Awattar, prices1Exaa, prices1Exaa1015, prices1Epex, true);
+            }
         } else {
             //delte all states for quarter-hourly
             const statesToDelete = await this.getStatesAsync(`marketprice_quarter_hourly.*`);
@@ -620,18 +624,7 @@ class ApgInfo extends utils.Adapter {
     async _getAndProcessEntsoeData(country) {
         let prices0Entsoe, prices1Entsoe;
 
-        try {
-            [prices0Entsoe, prices1Entsoe] = await Promise.all([getDataEntsoe(this, false, country), getDataEntsoe(this, true, country)]);
-        } catch (error) {
-            if (String(error).includes('read ECONNRESET') || String(error).includes('timeout') || String(error).includes('socket hang up')) {
-                this.log.info(`Entsoe request failed. Let's wait 3 minutes and try again...`);
-                await jsonExplorer.sleep(3 * 60 * 1000);
-                this.log.info(`OK! Let's try again now!`);
-                [prices0Entsoe, prices1Entsoe] = await Promise.all([getDataEntsoe(this, false, country), getDataEntsoe(this, true, country)]);
-            } else {
-                throw error;
-            }
-        }
+        [prices0Entsoe, prices1Entsoe] = await Promise.all([getDataEntsoe(this, false, country), getDataEntsoe(this, true, country)]);
 
         this.log.debug(`Entsoe Today: ${JSON.stringify(prices0Entsoe)}`);
         this.log.debug(`Entsoe Tomorrow: ${JSON.stringify(prices1Entsoe)}`);
@@ -827,8 +820,23 @@ class ApgInfo extends utils.Adapter {
             prices[ii] = {};
             const price = parseFloat(point[i].price_amount._text);
             const sHour = pad(point[i].position._text, 2);
+
+            //quater-hourly
+            if (length > 50) {
+                const slot = parseInt(point[i].position._text) - 1;
+                const nextSlot = slot + 1;
+                const hour = pad(Math.floor(slot / 4), 2);
+                const minute = pad((slot % 4) * 15, 2);
+                const nextHour = pad(Math.floor(nextSlot / 4), 2);
+                const nextMinute = pad((nextSlot % 4) * 15, 2);
+
+                prices[ii].Product = `Q${sHour}`;
+                prices[ii].ProductText = `Q${sHour} (${hour}:${minute}-${nextHour}:${nextMinute})`;
+                prices[ii].id = `${hour}:${minute}-${nextHour}:${nextMinute}`;
+            } else {
+                prices[ii].Product = `H${sHour}`;
+            }
             prices[ii].Price = price;
-            prices[ii].Product = `H${sHour}`;
         }
         return prices;
     }
