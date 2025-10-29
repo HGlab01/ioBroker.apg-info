@@ -2,18 +2,16 @@
 
 const utils = require('@iobroker/adapter-core');
 const axios = require('axios');
-const convert = require('xml-js');
 const jsonExplorer = require('iobroker-jsonexplorer');
-const stateAttr = require(`${__dirname}/lib/stateAttr.js`); // Load attribute library
+const stateAttr = require(`./lib/stateAttr.js`); // Load attribute library
 const isOnline = require('@esm2cjs/is-online').default;
 const { version } = require('./package.json');
+const { getDataExaa1015, getDataExaa, getDataAwattar, getDataPeakHours, getDataEntsoe, getDataEpex } = require('./lib/getData.js');
+const { addDays, cleanDate, calcDate, pad, compareSecondColumn } = require('./lib/helpers.js');
 
 // Constants
 const MAX_DELAY = 25000; //25000
 const API_TIMEOUT = 20000; //20000
-
-// @ts-expect-error axios.create is ok
-const axiosInstance = axios.create({ timeout: API_TIMEOUT });
 
 class ApgInfo extends utils.Adapter {
     /**
@@ -25,7 +23,9 @@ class ApgInfo extends utils.Adapter {
             name: 'apg-info',
         });
         this.on('ready', this.onReady.bind(this));
-        //this.on('objectChange', this.onObjectChange.bind(this));
+        // @ts-expect-error axiosInstance type
+        this.axiosInstance = axios.create({ timeout: API_TIMEOUT });
+        this.jsonExplorer = jsonExplorer;
         //this.on('stateChange', this.onStateChange.bind(this));
         //this.on('message', this.onMessage.bind(this));
         this.on('unload', this.onUnload.bind(this));
@@ -45,7 +45,6 @@ class ApgInfo extends utils.Adapter {
      */
     async onReady() {
         let country = '';
-        let forecast = false;
         // Initialize adapter
         jsonExplorer.sendVersionInfo(version);
         this.log.info(`Started with JSON-Explorer version ${jsonExplorer.version}`);
@@ -56,15 +55,12 @@ class ApgInfo extends utils.Adapter {
             this.log.info('Market price threshold not found and set to 10');
         }
 
-        if (this.config.forecast != undefined) {
-            forecast = this.config.forecast;
-        } else {
-            this.log.info('Forecast config not found and set to disbaled');
-        }
-
+        const forecast = this.config.forecast ?? false;
         this.calculate = this.config.calculate ?? false;
         this.peakHours = this.config.peakHours ?? false;
         this.marketPrices = this.config.marketPrices ?? false;
+        this.quarterHourly = this.config.quarterHourly ?? false;
+        this.hourly = this.config.hourly ?? false;
 
         if (this.calculate == true) {
             this.feeAbsolute = this.config.feeAbsolute ?? 0;
@@ -140,176 +136,6 @@ class ApgInfo extends utils.Adapter {
         } catch {
             callback();
         }
-    }
-
-    /**
-     * Makes an API call with retry logic.
-     *
-     * @param {string} uri The URI to call.
-     * @param {string} methodName The name of the calling method for logging.
-     * @param {(response: any) => any} processResponse A function to process the successful response.
-     * @returns {Promise<any>} The processed response or null on final server error.
-     */
-    async _apiCallWithRetry(uri, methodName, processResponse) {
-        let attempts = 0;
-        const maxAttempts = 3;
-        let delay = 10 * 1000; // 10 seconds
-
-        while (attempts < maxAttempts) {
-            try {
-                const response = await axiosInstance.get(uri);
-                if (response?.data == null) {
-                    throw new Error(`Respone empty for URL ${uri} with status code ${response.status}`);
-                }
-                this.log.debug(`Response in ${methodName}(): [${response.status}] ${JSON.stringify(response.data)}`);
-                console.log(`Response in ${methodName}(): [${response.status}] ${JSON.stringify(response.data)}`);
-                return processResponse(response);
-            } catch (error) {
-                attempts++;
-                if (attempts >= maxAttempts) {
-                    // @ts-expect-error response may exist
-                    const errorMessage = error.response?.data ? `with response ${JSON.stringify(error.response.data)}` : '';
-                    this.log.error(`Error in ${methodName}() attempt ${attempts}/${maxAttempts}: ${error} ${errorMessage}`);
-                    console.error(`Error in ${methodName}() attempt ${attempts}/${maxAttempts}: ${error} ${errorMessage}`);
-                    // @ts-expect-error response may exist
-                    if (error.response?.status >= 500) {
-                        return null; // On final attempt for server errors, resolve with null
-                    }
-                    throw error; // Otherwise rethrow
-                }
-                this.log.info(`Retrying in ${delay / 1000}s for ${methodName}...`);
-                await jsonExplorer.sleep(delay);
-                delay *= 2; // Exponential backoff (10s, 20s)
-            }
-        }
-    }
-
-    /**
-     * Retrieves peak hours from REST-API
-     */
-    async getDataPeakHours() {
-        let uri = `https://awareness.cloud.apg.at/api/v1/PeakHourStatus`;
-        this.log.debug(`API-Call ${uri}`);
-        console.log(`API-Call ${uri}`);
-        return this._apiCallWithRetry(uri, 'getDataPeakHours', response => response?.data ?? null);
-    }
-
-    /**
-     * Retrieves marketdata from REST-API from Exaa
-     *
-     * @param {boolean} tomorrow true means it is the next day, false means today
-     * @param {string} country country of the market
-     */
-    async getDataExaa(tomorrow, country) {
-        let day = cleanDate(new Date());
-        if (tomorrow) {
-            day = addDays(day, 1);
-        }
-
-        const dateStringToday = `${day.getFullYear()}-${day.getMonth() + 1}-${day.getDate()}`;
-        const uri = `https://www.exaa.at/data/trading-results?delivery_day=${dateStringToday}&market=${country}&auction=market_coupling`;
-        this.log.debug(`API-Call ${uri}`);
-        console.log(`API-Call ${uri}`);
-
-        return this._apiCallWithRetry(uri, 'getDataExaa', response => response?.data?.data ?? null);
-    }
-
-    /**
-     * Retrieves marketdata from REST-API from Exaa
-     *
-     * @param {string} country country of the market
-     */
-    async getDataExaa1015(country) {
-        country = country.toUpperCase();
-        const day = addDays(cleanDate(new Date()), 1);
-
-        const dateStringToday = `${day.getFullYear()}-${day.getMonth() + 1}-${day.getDate()}`;
-        const uri = `https://www.exaa.at/data/market-results?delivery_day=${dateStringToday}&market=${country}&auction=1015`;
-        this.log.debug(`API-Call ${uri}`);
-        console.log(`API-Call ${uri}`);
-
-        return this._apiCallWithRetry(uri, 'getDataExaa1015', response => {
-            if (country === 'AT') {
-                return response?.data?.AT?.price ?? null;
-            }
-            return response?.data?.DE?.price ?? null;
-        });
-    }
-
-    /**
-     * Retrieves marketdata from REST-API from Awattar
-     *
-     * @param {boolean} tomorrow true means it is the next day, false means today
-     * @param {string} country country of the market
-     */
-    async getDataAwattar(tomorrow, country) {
-        const day0 = cleanDate(new Date());
-        let start = 0;
-        let end = 0;
-        if (tomorrow) {
-            let day1 = addDays(day0, 1);
-            start = day1.getTime();
-            day1.setHours(23, 59, 59);
-            end = day1.getTime() + 2000;
-        } else {
-            start = day0.getTime();
-            day0.setHours(23, 59, 59);
-            end = day0.getTime() + 2000;
-        }
-        let uri = '';
-        if (country == 'at') {
-            uri = `https://api.awattar.at/v1/marketdata?start=${start}&end=${end}`;
-        } else {
-            uri = `https://api.awattar.de/v1/marketdata?start=${start}&end=${end}`;
-        }
-        this.log.debug(`API-Call ${uri}`);
-        console.log(`API-Call ${uri}`);
-        return this._apiCallWithRetry(uri, 'getDataAwattar', response => response.data);
-    }
-
-    /**
-     * Retrieves marketdata from REST-API from entsoe
-     *
-     * @param {boolean} tomorrow means it is the next day, false means today
-     * @param {string} country country of the market
-     */
-    async getDataEntsoe(tomorrow, country) {
-        const url = 'https://web-api.tp.entsoe.eu/api?documentType=A44';
-        const securityToken = this.token;
-
-        let day = cleanDate(new Date());
-        if (tomorrow) {
-            day = addDays(day, 1);
-        }
-        const dayPlus = addDays(day, 1);
-
-        const datebegin = day.getFullYear() + pad(day.getMonth() + 1, 2) + pad(day.getDate(), 2);
-        const dateend = dayPlus.getFullYear() + pad(dayPlus.getMonth() + 1, 2) + pad(dayPlus.getDate(), 2);
-
-        let domain = '';
-
-        switch (country) {
-            case 'ch':
-                domain = '10YCH-SWISSGRIDZ';
-                break;
-            case 'at':
-                domain = '10YAT-APG------L';
-                break;
-            case 'de':
-                domain = '10Y1001A1001A82H';
-                break;
-            default:
-                this.log.error('Country not found in definitions');
-        }
-
-        const uri = `${url}&securityToken=${securityToken}&periodStart=${datebegin}0000&periodEnd=${dateend}0000&in_Domain=${domain}&Out_Domain=${domain}`;
-        this.log.debug(`API-Call ${uri}`);
-        console.log(`API-Call ${uri}`);
-
-        return this._apiCallWithRetry(uri, 'getDataEntsoe', response => {
-            const result = response?.data == null ? null : xml2js(response.data);
-            return result?.Publication_MarketDocument ?? null;
-        });
     }
 
     /**
@@ -674,86 +500,113 @@ class ApgInfo extends utils.Adapter {
      * @returns {Promise<{prices0: any[], prices1: any[], source1: string |null, prices0q: any,  prices1q: any}>} An object containing the processed prices for today and tomorrow and the source for tomorrow.
      */
     async _getAndProcessMarketData(country, forecast) {
-        let prices0Awattar, prices1Awattar, prices0Exaa, prices1Exaa, prices1Exaa1015;
+        const todayDate = cleanDate(new Date());
+        const tomorrowDate = addDays(todayDate, 1);
 
-        const [eXaaToday, eXaaTomorrow] = await Promise.all([this.getDataExaa(false, country), this.getDataExaa(true, country)]);
+        let prices0Awattar, prices1Awattar, prices0Exaa, prices1Exaa, prices1Exaa1015, prices0Epex, prices1Epex;
+        let todayResult, tomorrowResult, todayResultq, tomorrowResultq;
 
-        //check for provider for today
-        prices0Exaa = eXaaToday?.h ?? null;
-        if (prices0Exaa == null) {
-            this.log.info(`No market data from Exaa for today, let's try Awattar`);
-            prices0Awattar = await this.getDataAwattar(false, country);
-            if (prices0Awattar?.data?.[0]) {
-                this.log.info('Todays market data from Awattar available');
-                this.log.debug(`Todays market data result from Awattar is: ${JSON.stringify(prices0Awattar)}`);
-            } else {
-                this.log.warn('No market data for today!');
-            }
-        } else {
-            this.log.debug(`Todays market data result from Exaa is: ${JSON.stringify(prices0Exaa)}`);
-        }
+        const [eXaaToday, eXaaTomorrow] = await Promise.all([getDataExaa(this, false, country), getDataExaa(this, true, country)]);
 
-        //check for provider for tomorrow
-        prices1Exaa = eXaaTomorrow?.h ?? null;
-        if (prices1Exaa == null) {
-            this.log.info(`No market data from Exaa for tomorrow, let's try Awattar`);
-            prices1Awattar = await this.getDataAwattar(true, country);
-            if (prices1Awattar?.data?.[0]) {
-                this.log.info('Tomorrows market data from Awattar available');
-                this.log.debug(`Tomorrow market data result from Awattar is: ${JSON.stringify(prices1Awattar)}`);
-            } else {
-                if (forecast) {
-                    this.log.info('No market data from Awattar for tomorrow , last chance Exaa 10.15 auction!');
-                    const eXaa1015 = await this.getDataExaa1015(country);
-                    prices1Exaa1015 = eXaa1015;
-                    if (prices1Exaa1015) {
-                        this.log.info('Market data from Exaa 10.15 auction available');
-                    } else {
-                        this.log.info('Bad luck for Exaa 10.15 auction');
-                    }
-                    this.log.debug(`Tomorrows market data result from Exaa 10.15 auction is: ${JSON.stringify(prices1Exaa1015)}`);
+        //check for provider for today for quarter-hourly
+        if (this.quarterHourly) {
+            this.log.info(`Let's check for quarter-hourly market data`);
+            prices0Exaa = eXaaToday?.q ?? null;
+            if (prices0Exaa == null) {
+                this.log.info(`No quarter-hourly market data from Exaa for today, let's try Epex`);
+                prices0Epex = await getDataEpex(this, false, country);
+                if (prices0Epex?.data?.[0] && new Date(prices0Epex.meta.deliveryDate).getTime() === todayDate.getTime()) {
+                    this.log.info('Todays quarter-hourly market data from Epex available');
+                    this.log.debug(`Todays quarter-hourly market data result from Epex is: ${JSON.stringify(prices0Epex)}`);
+                    prices0Epex = prices0Epex.data;
                 } else {
-                    this.log.info('No market data from Awattar for tomorrow');
+                    prices0Epex = null;
+                    this.log.warn('No quarter-hourly market data for today!');
                 }
             }
+            //Tomorrow
+            prices1Exaa = eXaaTomorrow?.q ?? null;
+            if (prices1Exaa == null) {
+                this.log.info(`No quarter-hourly market data from Exaa for tomorrow, let's try Epex`);
+                prices1Epex = await getDataEpex(this, true, country);
+                if (prices1Epex?.data?.[0] && new Date(prices1Epex.meta.deliveryDate).getTime() === tomorrowDate.getTime()) {
+                    this.log.info('Tomorrows quarter-hourly market data from Epex available');
+                    this.log.debug(`Tomorrows quarter-hourly market data result from Epex is: ${JSON.stringify(prices1Epex)}`);
+                    prices1Epex = prices1Epex.data;
+                } else {
+                    prices1Epex = null;
+                    this.log.info('No quarter-hourly market data for tomorrow!');
+                }
+            }
+            todayResultq = this._processMarketPrices('today', prices0Awattar, prices0Exaa, null, prices0Epex, true);
+            tomorrowResultq = this._processMarketPrices('tomorrow', prices1Awattar, prices1Exaa, prices1Exaa1015, prices1Epex, true);
         } else {
-            this.log.debug(`Tomorrows market data result from Exaa is: ${JSON.stringify(prices1Exaa)}`);
-        }
-
-        const todayResult = this._processMarketPrices('today', prices0Awattar, prices0Exaa);
-        const tomorrowResult = this._processMarketPrices('tomorrow', prices1Awattar, prices1Exaa, prices1Exaa1015);
-
-        let prices0q = eXaaToday?.q ?? null;
-        let prices1q = eXaaTomorrow?.q ?? null;
-
-        // Add id to each element in prices0q
-        if (prices0q) {
-            for (const item of prices0q) {
-                const productText = item.ProductText;
-                const regexZeit = /(\d{2}:\d{2}\s*-\s*\d{2}:\d{2})/;
-                const matchZeit = productText.match(regexZeit);
-                if (matchZeit && matchZeit.length > 1) {
-                    item.id = matchZeit[1].replace(/ /g, '');
-                }
+            //delte all states for quarter-hourly
+            const statesToDelete = await this.getStatesAsync(`marketprice_quarter_hourly.*`);
+            for (const idS in statesToDelete) {
+                await this.delObjectAsync(idS);
             }
         }
-        // Add id to each element in prices1q
-        if (prices1q) {
-            for (const item of prices1q) {
-                const productText = item.ProductText;
-                const regexZeit = /(\d{2}:\d{2}\s*-\s*\d{2}:\d{2})/;
-                const matchZeit = productText.match(regexZeit);
-                if (matchZeit && matchZeit.length > 1) {
-                    item.id = matchZeit[1].replace(/ /g, '');
+
+        if (this.hourly) {
+            this.log.info(`Let's check for hourly market data`);
+            //check for provider for today for hourly
+            prices0Exaa = eXaaToday?.h ?? null;
+            if (prices0Exaa == null) {
+                this.log.info(`No hourly market data from Exaa for today, let's try Awattar`);
+                prices0Awattar = await getDataAwattar(this, false, country);
+                if (prices0Awattar?.data?.[0]) {
+                    this.log.info('Todays hourly market data from Awattar available');
+                    this.log.debug(`Todays hourly market data result from Awattar is: ${JSON.stringify(prices0Awattar)}`);
+                } else {
+                    this.log.warn('No hourly market data for today!');
                 }
+            } else {
+                this.log.debug(`Todays hourly market data result from Exaa is: ${JSON.stringify(prices0Exaa)}`);
+            }
+
+            //check for provider for tomorrow
+            prices1Exaa = eXaaTomorrow?.h ?? null;
+            if (prices1Exaa == null) {
+                this.log.info(`No hourly market data from Exaa for tomorrow, let's try Awattar`);
+                prices1Awattar = await getDataAwattar(this, true, country);
+                if (prices1Awattar?.data?.[0]) {
+                    this.log.info('Tomorrows hourly market data from Awattar available');
+                    this.log.debug(`Tomorrow hourly market data result from Awattar is: ${JSON.stringify(prices1Awattar)}`);
+                } else {
+                    if (forecast) {
+                        this.log.info('No hourly market data from Awattar for tomorrow , last chance Exaa 10.15 auction!');
+                        const eXaa1015 = await getDataExaa1015(this, country);
+                        prices1Exaa1015 = eXaa1015;
+                        if (prices1Exaa1015) {
+                            this.log.info('Market hourly data from Exaa 10.15 auction available');
+                        } else {
+                            this.log.info('Bad luck for Exaa 10.15 auction');
+                        }
+                        this.log.debug(`Tomorrows hourly market data result from Exaa 10.15 auction is: ${JSON.stringify(prices1Exaa1015)}`);
+                    } else {
+                        this.log.info('No hourly market data from Awattar for tomorrow');
+                    }
+                }
+            } else {
+                this.log.debug(`Tomorrows hourly market data result from Exaa is: ${JSON.stringify(prices1Exaa)}`);
+            }
+            todayResult = this._processMarketPrices('today', prices0Awattar, prices0Exaa, null, prices0Epex, false);
+            tomorrowResult = this._processMarketPrices('tomorrow', prices1Awattar, prices1Exaa, prices1Exaa1015, prices1Epex, false);
+        } else {
+            //delete all stats for hourly
+            const statesToDelete = await this.getStatesAsync(`marketprice.*`);
+            for (const idS in statesToDelete) {
+                await this.delObjectAsync(idS);
             }
         }
+
         return {
-            prices0: todayResult.prices ?? [],
-            prices1: tomorrowResult.prices ?? [],
-            source1: tomorrowResult.source ?? undefined,
-            prices0q: prices0q ?? [],
-            prices1q: prices1q ?? [],
+            prices0: todayResult?.prices ?? [],
+            prices1: tomorrowResult?.prices ?? [],
+            source1: tomorrowResult?.source ?? null,
+            prices0q: todayResultq?.prices ?? [],
+            prices1q: tomorrowResultq?.prices ?? [],
         };
     }
 
@@ -768,13 +621,13 @@ class ApgInfo extends utils.Adapter {
         let prices0Entsoe, prices1Entsoe;
 
         try {
-            [prices0Entsoe, prices1Entsoe] = await Promise.all([this.getDataEntsoe(false, country), this.getDataEntsoe(true, country)]);
+            [prices0Entsoe, prices1Entsoe] = await Promise.all([getDataEntsoe(this, false, country), getDataEntsoe(this, true, country)]);
         } catch (error) {
             if (String(error).includes('read ECONNRESET') || String(error).includes('timeout') || String(error).includes('socket hang up')) {
                 this.log.info(`Entsoe request failed. Let's wait 3 minutes and try again...`);
                 await jsonExplorer.sleep(3 * 60 * 1000);
                 this.log.info(`OK! Let's try again now!`);
-                [prices0Entsoe, prices1Entsoe] = await Promise.all([this.getDataEntsoe(false, country), this.getDataEntsoe(true, country)]);
+                [prices0Entsoe, prices1Entsoe] = await Promise.all([getDataEntsoe(this, false, country), getDataEntsoe(this, true, country)]);
             } else {
                 throw error;
             }
@@ -803,15 +656,17 @@ class ApgInfo extends utils.Adapter {
      * @param {'today' | 'tomorrow'} day - The day to process ('today' or 'tomorrow').
      * @param {any} awattarData - Data from Awattar API.
      * @param {any} exaaData - Data from EXAA Market Coupling API.
-     * @param {any} [exaa1015Data] - Optional data from EXAA 10:15 auction API (for tomorrow).
+     * @param {any} exaa1015Data - Optional data from EXAA 10:15 auction API (for tomorrow).
+     * @param {any} epexData - Data from Epex Market
+     * @param {boolean} quater - quater hourly data yes/no
      * @returns {{prices: any[], source: string}} The processed prices and the source name.
      */
-    _processMarketPrices(day, awattarData, exaaData, exaa1015Data) {
+    _processMarketPrices(day, awattarData, exaaData, exaa1015Data, epexData, quater) {
         let prices = [];
         let source = '';
 
         if (exaaData) {
-            prices = exaaData;
+            prices = this._convertExaaData(exaaData);
             source = 'exaaMC';
         } else if (day === 'tomorrow' && exaa1015Data) {
             prices = this._convertExaa1015Data(exaa1015Data);
@@ -819,10 +674,17 @@ class ApgInfo extends utils.Adapter {
         } else if (awattarData?.data?.[0]) {
             prices = this._convertAwattarData(awattarData);
             source = 'awattar';
+        } else if (epexData) {
+            prices = this._convertEpexData(epexData);
+            source = 'epex';
         }
 
         if (source) {
-            jsonExplorer.stateSetCreate(`marketprice.${day}.source`, 'Source', source);
+            if (quater) {
+                jsonExplorer.stateSetCreate(`marketprice_quarter_hourly.${day}.source`, 'Source', source);
+            } else {
+                jsonExplorer.stateSetCreate(`marketprice.${day}.source`, 'Source', source);
+            }
         }
 
         return { prices, source };
@@ -864,6 +726,62 @@ class ApgInfo extends utils.Adapter {
         }
         this.log.debug(`prices1Exaa1015 converted to: ${JSON.stringify(prices)}`);
         return prices;
+    }
+
+    /**
+     * Converts data from the EXAA 10:15 auction API to the internal price format.
+     *
+     * @param {any} epexData - The raw data from EXAA 10:15 auction.
+     * @returns {any[]} The converted price data.
+     */
+    _convertEpexData(epexData) {
+        let data = epexData ?? null;
+        const prices = [];
+        for (const idS in data) {
+            prices[idS] = {};
+            const index = data[idS]['index'];
+            const ersteStelle = Math.ceil(index / 4);
+            const zweiteStelle = index % 4 === 0 ? 4 : index % 4;
+            const prod = `Q${pad(ersteStelle, 2)}_${zweiteStelle}`;
+            prices[idS].Price = data[idS]['Price(€/MWh)'];
+            prices[idS].Product = prod;
+            prices[idS].ProductText = `${prod} (${data[idS].start}-${data[idS].end})`;
+            //prices[idS].SellVolume = data[idS]['Sell Volume(MWh)'];
+            //prices[idS].TotalVol = data[idS]['Volume(MWh)'];
+            prices[idS].id = `${data[idS].start}-${data[idS].end}`;
+        }
+        this.log.debug(`pricesEpex converted to: ${JSON.stringify(prices)}`);
+        return prices;
+    }
+
+    /**
+     * Converts data from the EXAA API to the internal price format.
+     *
+     * @param {any} exaaData - The raw data from EXAA auction.
+     * @returns {any[]} The converted price data.
+     */
+    _convertExaaData(exaaData) {
+        //only for quarter-hourly data we have to extract the id from ProductText
+        if (exaaData?.[0] != null && exaaData[0].ProductText?.substring(0, 1) == 'q') {
+            for (const item of exaaData) {
+                const productText = item.ProductText;
+                const regexZeit = /(\d{2}:\d{2}\s*-\s*\d{2}:\d{2})/;
+                const matchZeit = productText.match(regexZeit);
+                if (matchZeit && matchZeit.length > 1) {
+                    item.id = matchZeit[1].replace(/ /g, '');
+                }
+            }
+        }
+        if (exaaData?.[0] != null) {
+            for (const item of exaaData) {
+                delete item.SellVolume;
+                delete item.TotalVol;
+                delete item.BuyVolume;
+                delete item.AuctionDay;
+            }
+        }
+        exaaData = exaaData.filter(item => item.id != null);
+        return exaaData;
     }
 
     /**
@@ -927,7 +845,7 @@ class ApgInfo extends utils.Adapter {
             return null;
         }
         try {
-            let result = await this.getDataPeakHours();
+            let result = await getDataPeakHours(this);
             this.log.debug(`Peak hour result is: ${JSON.stringify(result)}`);
 
             if (!result || !result.StatusInfos) {
@@ -1132,7 +1050,7 @@ class ApgInfo extends utils.Adapter {
         const allMax = Math.max(todayMax, tomorrowMax);
         const roundedMax = Math.ceil((allMax * 1.1) / 5) * 5;
 
-        if (quarter_hourly) {
+        if (quarter_hourly == true && this.quarterHourly == true) {
             await this.createSingleChart(arrayToday, false, null, allMin, roundedMax, 'marketprice_quarter_hourly.today.jsonChart', quarter_hourly);
             await this.createSingleChart(
                 arrayTomorrow,
@@ -1143,7 +1061,8 @@ class ApgInfo extends utils.Adapter {
                 'marketprice_quarter_hourly.tomorrow.jsonChart',
                 quarter_hourly,
             );
-        } else {
+        }
+        if (quarter_hourly == false && this.hourly == true) {
             await this.createSingleChart(arrayToday, false, null, allMin, roundedMax, 'marketprice.today.jsonChart', quarter_hourly);
             await this.createSingleChart(arrayTomorrow, true, sourceTomorrow, allMin, roundedMax, 'marketprice.tomorrow.jsonChart', quarter_hourly);
         }
@@ -1190,7 +1109,7 @@ class ApgInfo extends utils.Adapter {
     }
 }
 
-// @ts-expect-error parent is a valid property on module
+// @ts-expect-error parent is valid in compact mode
 if (module.parent) {
     // Export the constructor in compact mode
     /**
@@ -1200,85 +1119,4 @@ if (module.parent) {
 } else {
     // otherwise start the instance directly
     new ApgInfo();
-}
-
-/**************************************************** */
-/*         H E L P E R S                              */
-/**************************************************** */
-
-/**
- * sets time to 00:00:00.00000
- *
- * @param {Date} date date to be changed
- */
-function cleanDate(date) {
-    date.setHours(0, 0, 0, 0);
-    return date;
-}
-
-/**
- * @param {number} hour hour of the day (0-23)
- * @param {boolean} tomorrow if true, calculates for tomorrow, otherwise for today
- * @returns {number} returns timestamp for given hour of the day
- */
-function calcDate(hour, tomorrow = false) {
-    let date = cleanDate(new Date());
-    if (tomorrow) {
-        date = addDays(date, 1);
-    }
-    date.setHours(hour);
-    return date.getTime();
-}
-
-/**
- * adds days to a date
- *
- * @param {Date} date origin date
- * @param {number} numberOfDays number of days which origin date shall be added (positive and negative allowes)
- */
-function addDays(date, numberOfDays) {
-    let newDate = new Date(date.getTime());
-    newDate.setDate(newDate.getDate() + numberOfDays);
-    return cleanDate(newDate);
-}
-
-function compareSecondColumn(a, b) {
-    if (a[1] === b[1]) {
-        return 0;
-    }
-
-    return a[1] < b[1] ? -1 : 1;
-}
-
-/**
- * @param {number} num number
- * @param {number} length length
- * @returns {string} returns a string with leading zeros based on given number
- */
-function pad(num, length) {
-    if (num == null) {
-        num = 0;
-    }
-    let l = Math.floor(length);
-    let sn = String(num);
-    let snl = sn.length;
-    if (snl >= l) {
-        return sn;
-    }
-    return '0'.repeat(l - snl) + sn;
-}
-
-/**
- * @param {string} xmlString XML string to be converted
- * @returns {object} returns JSON object converted from XML string
- */
-function xml2js(xmlString) {
-    // @ts-expect-error replaceAll is a valid method
-    xmlString = xmlString.replaceAll(`price.amount`, `price_amount`);
-    const jsonResult = JSON.parse(
-        convert.xml2json(xmlString, {
-            compact: true,
-        }),
-    );
-    return jsonResult;
 }

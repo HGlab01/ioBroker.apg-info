@@ -1,6 +1,6 @@
 {
   "name": "iobroker.apg-info",
-  "version": "0.1.22",
+  "version": "0.1.23-alpha.0",
   "author": {
     "name": "HGlab01",
     "email": "myiobrokeradapters@gmail.com"
@@ -38,6 +38,7 @@
     "@esm2cjs/is-online": "^10.0.0",
     "@iobroker/adapter-core": "^3.3.2",
     "axios": "^1.12.2",
+    "cheerio": "^1.1.2",
     "iobroker-jsonexplorer": "^0.2.1",
     "xml-js": "^1.6.11"
   },

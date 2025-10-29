@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "apg-info",
-    "version": "0.1.22",
+    "version": "0.1.23-alpha.0",
     "news": {
+      "0.1.23-alpha.0": {
+        "en": "extend to two market data providers for quarter-hourly market prices\nadd turn on/off quarter-hourly and hourly market prices\nrefactorings",
+        "de": "sich auf zwei marktdatenanbieter für viertelstündige marktpreise erstrecken\nvierteljährliche und stündliche marktpreise\nrefaktoren",
+        "ru": "распространяется на двух поставщиков рыночных данных для квартальных рыночных цен\nдобавить включение/выключение квартально-часовых и почасовых рыночных цен\nрефакторинг",
+        "pt": "alargar a dois fornecedores de dados de mercado para preços de mercado trimestrais por hora\nadicionar ligar/desligar os preços de mercado trimestrais e horários\nrefractários",
+        "nl": "uitbreiding tot twee aanbieders van marktgegevens voor kwartaalmarktprijzen\ntoe te voegen aan/uit kwartaal- en uurmarktprijzen\nrefactoring",
+        "fr": "étendre à deux fournisseurs de données du marché les prix du marché trimestriels\najouter les prix trimestriels et horaires du marché\ndes refacturations",
+        "it": "estendere a due fornitori di dati di mercato per i prezzi di mercato trimestrali\naggiungere i prezzi di mercato trimestrali e orali di turn-off\nrefactorings",
+        "es": "ampliar a dos proveedores de datos de mercado para los precios trimestrales del mercado\nañadir los precios trimestrales y por hora del mercado\nrefactorings",
+        "pl": "rozszerzenie na dwóch dostawców danych rynkowych w odniesieniu do kwartalnych cen rynkowych\ndodawanie włączania / wyłączania kwartalnych i godzinowych cen rynkowych\nrefakturowanie",
+        "uk": "продовження двох постачальників даних ринку на щоквартальні ринкові ціни\nдодавати обороти/виключити щоквартально-часові ринкові ціни\nрефакторинги",
+        "zh-cn": "向两个市场数据提供者提供季度/小时市场价格\n增加每季度和每小时的市场价格\n重构内容"
+      },
       "0.1.22-alpha.0": {
         "en": "Implement retry mechanism for API calls\nadd turn on/off for peak hours and market prices",
         "de": "Implementieren Retry-Mechanismus für API-Anrufe\nan-/ausschalten für spitzenzeiten und marktpreise",
@@ -80,19 +93,6 @@
         "pl": "Wsparcie quater- hour tarifs",
         "uk": "Підтримка квадроциклів",
         "zh-cn": "支持四时塔里夫"
-      },
-      "0.1.20": {
-        "en": "prepeare json-explorer v0.2 readiness\nBump axios to 1.12.2",
-        "de": "prepeare json-explorer v0.2 bereitschaft\nBump axios zu 1.12.2",
-        "ru": "предварительная готовность json-explorer v0.2\nАксиос накачки до 1.12.2",
-        "pt": "prepeare json-explorer v0.2 pronto\nBump axios a 1.12.2",
-        "nl": "prepeare json-explorer v0.2 gereedheid\nBump axios naar 1.12.2",
-        "fr": "prepeare json-explorer v0.2 préparation\nAxios de pompe au 1.12.2",
-        "it": "prepeare json-explorer v0.2 prontezza\nAssio di bump a 1.12.2",
-        "es": "prepeare json-explorer v0.2 preparedness\nAxios de bomba a 1.12.2",
-        "pl": "prekursor json- explorer v0.2 gotowość\nAksykony bumpy do 1.12.2",
-        "uk": "prepeare json-explorer v0.2 готовність\nБампер аксіос до 1.12.2",
-        "zh-cn": "预选json-探索器 v0.2 准备状态\n横轴改为1.12.2"
       }
     },
     "titleLang": {
@@ -183,6 +183,8 @@
   "native": {
     "threshold": 10,
     "country": "at",
+    "quarterHourly": true,
+    "hourly": true,
     "forecast": false,
     "peakHours": true,
     "marketPrices": true,
