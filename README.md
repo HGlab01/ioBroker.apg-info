@@ -34,7 +34,7 @@ For more details check https://transparency.entsoe.eu/content/static_content/Sta
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### 0.1.23-alpha.0 (2025-10-27)
+### 0.1.23 (2025-10-29)
 * (HGlab01) extend to two market data providers for quarter-hourly market prices
 * (HGlab01) add turn on/off quarter-hourly and hourly market prices
 * (HGlab01) refactorings
