@@ -164,9 +164,10 @@ class ApgInfo extends utils.Adapter {
                 prices1 = [],
                 prices1q = [];
             if (country == 'ch') {
-                const entsoePrices = await this._getAndProcessEntsoeData(country);
-                prices0 = entsoePrices.prices0 ?? [];
-                prices1 = entsoePrices.prices1 ?? [];
+                [prices0, prices1] = await Promise.all([
+                    (await this._getAndProcessEntsoeData(false, country, false))?.prices,
+                    (await this._getAndProcessEntsoeData(true, country, false))?.prices,
+                ]);
             } else {
                 ({ prices0, prices1, source1, prices0q, prices1q } = await this._getAndProcessMarketData(country, forecast));
             }
@@ -500,50 +501,68 @@ class ApgInfo extends utils.Adapter {
     async _getAndProcessMarketData(country, forecast) {
         const todayDate = cleanDate(new Date());
         const tomorrowDate = addDays(todayDate, 1);
-
+        let prices0Entsoe = null,
+            prices1Entsoe = null;
         let prices0Awattar, prices1Awattar, prices0Exaa, prices1Exaa, prices1Exaa1015, prices0Epex, prices1Epex;
         let todayResult, tomorrowResult, todayResultq, tomorrowResultq;
+        const useEntsoe = this.token == null || this.token.length < 10 ? false : true;
 
         const [eXaaToday, eXaaTomorrow] = await Promise.all([getDataExaa(this, false, country), getDataExaa(this, true, country)]);
-        const entsoePrices = await this._getAndProcessEntsoeData(country);
 
         //check for provider for today for quarter-hourly
         if (this.quarterHourly) {
             this.log.info(`Let's check for quarter-hourly market data`);
             prices0Exaa = eXaaToday?.q ?? null;
             if (prices0Exaa == null) {
-                this.log.info(`No quarter-hourly market data from Exaa for today, let's try Epex`);
-                prices0Epex = await getDataEpex(this, false, country);
-                if (prices0Epex?.data?.[0] && new Date(prices0Epex.meta.deliveryDate).getTime() === todayDate.getTime()) {
-                    this.log.info('Todays quarter-hourly market data from Epex available');
-                    this.log.debug(`Todays quarter-hourly market data result from Epex is: ${JSON.stringify(prices0Epex)}`);
-                    prices0Epex = prices0Epex.data;
+                this.log.info(`No quarter-hourly market data from Exaa for today, let's try Entsoe`);
+                if (useEntsoe) {
+                    prices0Entsoe = await this._getAndProcessEntsoeData(false, country, false);
                 } else {
-                    prices0Epex = null;
-                    this.log.warn('No quarter-hourly market data for today!');
+                    this.log.info(`No token defined for Entsoe, skipped! Let's continue with Epex`);
+                }
+                if (useEntsoe && prices0Entsoe?.prices == null) {
+                    this.log.info(`No quarter-hourly market data from Entsoe for today, let's try Epex`);
+                    prices0Epex = await getDataEpex(this, false, country);
+                    if (prices0Epex?.data?.[0] && new Date(prices0Epex.meta.deliveryDate).getTime() === todayDate.getTime()) {
+                        this.log.info('Todays quarter-hourly market data from Epex available');
+                        this.log.debug(`Todays quarter-hourly market data result from Epex is: ${JSON.stringify(prices0Epex)}`);
+                        prices0Epex = prices0Epex.data;
+                    } else {
+                        prices0Epex = null;
+                        this.log.warn('No quarter-hourly market data for today!');
+                    }
                 }
             }
+
             //Tomorrow
             prices1Exaa = eXaaTomorrow?.q ?? null;
             if (prices1Exaa == null) {
-                this.log.info(`No quarter-hourly market data from Exaa for tomorrow, let's try Epex`);
-                prices1Epex = await getDataEpex(this, true, country);
-                if (prices1Epex?.data?.[0] && new Date(prices1Epex.meta.deliveryDate).getTime() === tomorrowDate.getTime()) {
-                    this.log.info('Tomorrows quarter-hourly market data from Epex available');
-                    this.log.debug(`Tomorrows quarter-hourly market data result from Epex is: ${JSON.stringify(prices1Epex)}`);
-                    prices1Epex = prices1Epex.data;
+                this.log.info(`No quarter-hourly market data from Exaa for tomorrow, let's try Entsoe`);
+                if (useEntsoe) {
+                    prices1Entsoe = await this._getAndProcessEntsoeData(true, country, forecast);
                 } else {
-                    prices1Epex = null;
-                    this.log.info('No quarter-hourly market data for tomorrow!');
+                    this.log.info(`No token defined for Entsoe, skipped! Let's continue with Epex`);
+                }
+                if (useEntsoe && prices1Entsoe?.prices == null) {
+                    this.log.info(`No quarter-hourly market data from Entsoe for tomorrow, let's try Epex`);
+                    prices1Epex = await getDataEpex(this, true, country);
+                    if (prices1Epex?.data?.[0] && new Date(prices1Epex.meta.deliveryDate).getTime() === tomorrowDate.getTime()) {
+                        this.log.info('Tomorrows quarter-hourly market data from Epex available');
+                        this.log.debug(`Tomorrows quarter-hourly market data result from Epex is: ${JSON.stringify(prices0Epex)}`);
+                        prices1Epex = prices1Epex.data;
+                    } else {
+                        prices1Epex = null;
+                        this.log.warn('No quarter-hourly market data for today!');
+                    }
                 }
             }
-            if (entsoePrices) {
-                todayResultq = { prices: entsoePrices.prices0 ?? [], source: 'entsoe' };
-                tomorrowResultq = { prices: entsoePrices.prices1 ?? [], source: 'entsoe' };
-            } else {
-                todayResultq = this._processMarketPrices('today', prices0Awattar, prices0Exaa, null, prices0Epex, true);
-                tomorrowResultq = this._processMarketPrices('tomorrow', prices1Awattar, prices1Exaa, prices1Exaa1015, prices1Epex, true);
-            }
+
+            todayResultq =
+                prices0Entsoe != null ? prices0Entsoe : this._processMarketPrices('today', prices0Awattar, prices0Exaa, null, prices0Epex, true);
+            tomorrowResultq =
+                prices1Entsoe != null
+                    ? prices1Entsoe
+                    : this._processMarketPrices('tomorrow', prices1Awattar, prices1Exaa, prices1Exaa1015, prices1Epex, true);
         } else {
             //delte all states for quarter-hourly
             const statesToDelete = await this.getStatesAsync(`marketprice_quarter_hourly.*`);
@@ -618,28 +637,44 @@ class ApgInfo extends utils.Adapter {
      * Fetches and processes market data from Entsoe for today and tomorrow.
      * Includes a retry mechanism for network-related errors.
      *
+     * @param {boolean} tomorrow if true, calculation is for tomorrow
      * @param {string} country The country code for the API request.
-     * @returns {Promise<{prices0: any[], prices1: any[]}>} An object containing the processed prices for today and tomorrow.
+     * @param {boolean} forecast if true 1015 forecast is checked
+     * @returns {Promise<{prices: any[], source: string}>} prices An object containing the processed prices and the source.
      */
-    async _getAndProcessEntsoeData(country) {
-        let prices0Entsoe, prices1Entsoe;
-
-        [prices0Entsoe, prices1Entsoe] = await Promise.all([getDataEntsoe(this, false, country), getDataEntsoe(this, true, country)]);
-
-        this.log.debug(`Entsoe Today: ${JSON.stringify(prices0Entsoe)}`);
-        this.log.debug(`Entsoe Tomorrow: ${JSON.stringify(prices1Entsoe)}`);
-
-        const pricesToday = this._processEntsoeData(prices0Entsoe, 'today') || [];
-        if (pricesToday.length > 0) {
-            jsonExplorer.stateSetCreate('marketprice.today.source', 'Source', 'entsoe');
+    async _getAndProcessEntsoeData(tomorrow, country, forecast) {
+        let pricesEntsoe, prices;
+        let source = '';
+        if (!tomorrow) {
+            pricesEntsoe = await getDataEntsoe(this, false, country);
+            this.log.debug(`Entsoe Today: ${JSON.stringify(pricesEntsoe)}`);
+            prices = this._processEntsoeData(pricesEntsoe, 'today', false) || [];
+            source = 'entsoe';
+            if (prices.length > 50) {
+                jsonExplorer.stateSetCreate('marketprice_quarter_hourly.today.source', 'Source', source);
+            } else if (prices.length > 0) {
+                jsonExplorer.stateSetCreate('marketprice.today.source', 'Source', source);
+            } else {
+                source = '';
+            }
+        } else {
+            pricesEntsoe = await getDataEntsoe(this, true, country);
+            this.log.debug(`Entsoe Tomorrow: ${JSON.stringify(pricesEntsoe)}`);
+            prices = this._processEntsoeData(pricesEntsoe, 'tomorrow', false) || [];
+            source = 'entsoe';
+            if (prices.length == 0 && forecast) {
+                prices = this._processEntsoeData(pricesEntsoe, 'tomorrow', true) || [];
+                source = 'entsoe1015';
+            }
+            if (prices.length > 50) {
+                jsonExplorer.stateSetCreate('marketprice_quarter_hourly.tomorrow.source', 'Source', source);
+            } else if (prices.length > 0) {
+                jsonExplorer.stateSetCreate('marketprice.tomorrow.source', 'Source', source);
+            } else {
+                source = '';
+            }
         }
-
-        const pricesTomorrow = this._processEntsoeData(prices1Entsoe, 'tomorrow') || [];
-        if (pricesTomorrow.length > 0) {
-            jsonExplorer.stateSetCreate('marketprice.tomorrow.source', 'Source', 'entsoe');
-        }
-
-        return { prices0: pricesToday, prices1: pricesTomorrow };
+        return { prices, source };
     }
 
     /**
@@ -651,10 +686,10 @@ class ApgInfo extends utils.Adapter {
      * @param {any} exaaData - Data from EXAA Market Coupling API.
      * @param {any} exaa1015Data - Optional data from EXAA 10:15 auction API (for tomorrow).
      * @param {any} epexData - Data from Epex Market
-     * @param {boolean} quater - quater hourly data yes/no
+     * @param {boolean} quarter - quater hourly data yes/no
      * @returns {{prices: any[], source: string}} The processed prices and the source name.
      */
-    _processMarketPrices(day, awattarData, exaaData, exaa1015Data, epexData, quater) {
+    _processMarketPrices(day, awattarData, exaaData, exaa1015Data, epexData, quarter) {
         let prices = [];
         let source = '';
 
@@ -673,7 +708,7 @@ class ApgInfo extends utils.Adapter {
         }
 
         if (source) {
-            if (quater) {
+            if (quarter) {
                 jsonExplorer.stateSetCreate(`marketprice_quarter_hourly.${day}.source`, 'Source', source);
             } else {
                 jsonExplorer.stateSetCreate(`marketprice.${day}.source`, 'Source', source);
@@ -778,13 +813,53 @@ class ApgInfo extends utils.Adapter {
     }
 
     /**
+     * Finds all TimeSeries objects where the
+     * 'classificationSequence_AttributeInstanceComponent.position' is "1".
+     *
+     * @param {object} data - The fully parsed JSON data object containing the TimeSeries array.
+     * @param {number} filter - 1 for MC and 2 for 10:15
+     * @returns {Array<object>} An array of matching TimeSeries objects.
+     */
+    filterTimeSeriesByPosition(data, filter) {
+        // 1. Get the TimeSeries array safely.
+        const allTimeSeries = data?.TimeSeries;
+
+        //if there is no array no need to filter
+        if (!Array.isArray(allTimeSeries)) {
+            let simpleResult = [];
+            simpleResult[0] = allTimeSeries;
+            return simpleResult;
+        }
+
+        // 2. Filter the array based on the position criteria.
+        const matchingSeries = allTimeSeries.filter(ts => {
+            try {
+                // Access the nested property using bracket notation because of the dots in the key.
+                const position = ts['classificationSequence_AttributeInstanceComponent.position']?._text;
+
+                // Check if the extracted text value is exactly '1'.
+                return position === String(filter);
+            } catch (error) {
+                // Log an error if a specific TimeSeries entry is malformed and skip it.
+                // @ts-expect-error error ok
+                console.warn(`Skipping TimeSeries entry due to error: ${error.message}`);
+                return false;
+            }
+        });
+
+        return matchingSeries;
+    }
+
+    /**
      * Processes the raw data from the Entsoe API.
      *
      * @param {any} entsoeData The raw data object from the Entsoe API.
      * @param {string} dayString A string like 'today' or 'tomorrow' for logging purposes.
+     * @param {boolean}  earlyAuction if true, 10:15 auction will be used
      * @returns {Array<any> | null} An array with the processed price data or null if processing fails.
      */
-    _processEntsoeData(entsoeData, dayString) {
+    _processEntsoeData(entsoeData, dayString, earlyAuction = false) {
+        const filter = earlyAuction ? 2 : 1;
         if (!entsoeData) {
             this.log.debug(`No Entsoe data provided for ${dayString}.`);
             return null;
@@ -798,28 +873,19 @@ class ApgInfo extends utils.Adapter {
             return null;
         }
 
-        let point = [];
-        if (entsoeData.TimeSeries[0]?.Period[0]?.Point) {
-            point = entsoeData.TimeSeries[0].Period[0].Point;
-        } else if (entsoeData.TimeSeries[0]?.Period?.Point) {
-            point = entsoeData.TimeSeries[0].Period.Point;
-        } else if (entsoeData.TimeSeries?.Period[0]?.Point) {
-            point = entsoeData.TimeSeries.Period[0].Point;
-        } else if (entsoeData.TimeSeries?.Period?.Point) {
-            point = entsoeData.TimeSeries.Period.Point;
-        } else {
-            const errorMessage = `Received data for ${dayString} did not fit to supported patterns! Received data: ${JSON.stringify(entsoeData)}`;
-            console.error(errorMessage);
-            throw new Error(errorMessage);
+        let timeSeries = this.filterTimeSeriesByPosition(entsoeData, filter)[0];
+        let point = timeSeries?.Period[0]?.Point ?? null;
+        if (point == null) {
+            point = timeSeries?.Period?.Point;
         }
-
+        point = point == null ? null : this.fillMissingPositions(point);
         const prices = [];
-        const length = point.length;
+        const length = point ? point.length : 0;
         for (let i = 0; i < length; i++) {
             const ii = String(i);
             prices[ii] = {};
             const price = parseFloat(point[i].price_amount._text);
-            const sHour = pad(point[i].position._text, 2);
+            const sPosition = pad(point[i].position._text, 2);
 
             //quater-hourly
             if (length > 50) {
@@ -830,15 +896,72 @@ class ApgInfo extends utils.Adapter {
                 const nextHour = pad(Math.floor(nextSlot / 4), 2);
                 const nextMinute = pad((nextSlot % 4) * 15, 2);
 
-                prices[ii].Product = `Q${sHour}`;
-                prices[ii].ProductText = `Q${sHour} (${hour}:${minute}-${nextHour}:${nextMinute})`;
+                prices[ii].Product = `Q${sPosition}`;
+                prices[ii].ProductText = `Q${sPosition} (${hour}:${minute}-${nextHour}:${nextMinute})`;
                 prices[ii].id = `${hour}:${minute}-${nextHour}:${nextMinute}`;
             } else {
-                prices[ii].Product = `H${sHour}`;
+                prices[ii].Product = `H${sPosition}`;
             }
             prices[ii].Price = price;
         }
         return prices;
+    }
+
+    /**
+     * Fills in missing entries in an array of position/price objects.
+     * Missing entries copy the price_amount from the previous existing entry.
+     *
+     * @param {Array<object>} dataArray - The input array with potentially missing positions.
+     * @returns {Array<object>} - The new array with all positions filled sequentially.
+     */
+    fillMissingPositions(dataArray) {
+        // 1. Convert price_amount and position to numbers for easier processing and sorting.
+        // This step also prepares the data structure for the final result.
+        const processedData = dataArray.map(item => ({
+            position: parseInt(item.position._text),
+            priceAmount: parseFloat(item.price_amount._text),
+        }));
+
+        // 2. Sort the array by position to ensure correct processing
+        processedData.sort((a, b) => a.position - b.position);
+
+        const filledArray = [];
+        let lastPriceAmount = null;
+
+        // Determine the start and end of the sequence
+        const startPosition = processedData.length > 0 ? processedData[0].position : 1;
+        const endPosition = processedData.length > 0 ? processedData[processedData.length - 1].position : 0;
+
+        // Create a map for quick look-up of existing positions
+        const dataMap = new Map(processedData.map(item => [item.position, item.priceAmount]));
+
+        // 3. Iterate from the first found position to the last found position
+        for (let currentPosition = startPosition; currentPosition <= endPosition; currentPosition++) {
+            if (dataMap.has(currentPosition)) {
+                // Found existing position
+                const currentPrice = dataMap.get(currentPosition);
+
+                filledArray.push({
+                    position: { _text: String(currentPosition) },
+                    price_amount: { _text: String(currentPrice) },
+                });
+
+                // Update the last known price for subsequent missing entries
+                lastPriceAmount = currentPrice;
+            } else if (lastPriceAmount !== null) {
+                // Position is missing and we have a previous price, so we fill it in
+                // The price is copied from 'lastPriceAmount'
+                filledArray.push({
+                    position: { _text: String(currentPosition) },
+                    price_amount: { _text: String(lastPriceAmount) },
+                });
+            } else {
+                // Case: Missing position at the very beginning of the data (unlikely but safe to handle)
+                // You might want to handle this differently, but for now, we skip it.
+                console.warn(`Missing position ${currentPosition} found before any price could be established.`);
+            }
+        }
+        return filledArray;
     }
 
     /**
@@ -1024,7 +1147,7 @@ class ApgInfo extends utils.Adapter {
             ],
         };
 
-        if (isTomorrow && source === 'exaa1015') {
+        if (isTomorrow && source?.includes('1015')) {
             chart.graphs[0].color = 'lightgray';
         }
 
