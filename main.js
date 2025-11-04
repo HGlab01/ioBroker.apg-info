@@ -159,10 +159,7 @@ class ApgInfo extends utils.Adapter {
             const day1 = addDays(day0, 1);
             jsonExplorer.stateSetCreate('marketprice.today.date', 'date', day0.getTime());
             jsonExplorer.stateSetCreate('marketprice.tomorrow.date', 'date', day1.getTime());
-            let prices0 = [],
-                prices0q = [],
-                prices1 = [],
-                prices1q = [];
+            let prices0, prices0q, prices1, prices1q;
             if (country == 'ch') {
                 [prices0, prices1] = await Promise.all([
                     (await this._getAndProcessEntsoeData(false, country, false))?.prices,
@@ -439,7 +436,7 @@ class ApgInfo extends utils.Adapter {
     /**
      * Processes and categorizes market prices for a given day.
      *
-     * @param {any[]} prices - The array of price objects.
+     * @param {any[] | null} prices - The array of price objects.
      * @param {string} dayString - A string identifier for the day (e.g., 'today', 'tomorrow').
      * @param {boolean} quaterly - Indicates if the prices are in quarterly format.
      * @returns {{jDay: object, jDayBelowThreshold: object, jDayAboveThreshold: object, daysBelow: number, daysAbove: number} | null} return
@@ -552,7 +549,7 @@ class ApgInfo extends utils.Adapter {
                         prices1Epex = prices1Epex.data;
                     } else {
                         prices1Epex = null;
-                        this.log.warn('No quarter-hourly market data for today!');
+                        this.log.info('No quarter-hourly market data for tomorrow!');
                     }
                 }
             }
@@ -640,7 +637,7 @@ class ApgInfo extends utils.Adapter {
      * @param {boolean} tomorrow if true, calculation is for tomorrow
      * @param {string} country The country code for the API request.
      * @param {boolean} forecast if true 1015 forecast is checked
-     * @returns {Promise<{prices: any[], source: string}>} prices An object containing the processed prices and the source.
+     * @returns {Promise<{prices: any[] | null, source: string}>} prices An object containing the processed prices and the source.
      */
     async _getAndProcessEntsoeData(tomorrow, country, forecast) {
         let pricesEntsoe, prices;
@@ -659,7 +656,6 @@ class ApgInfo extends utils.Adapter {
             }
         } else {
             pricesEntsoe = await getDataEntsoe(this, true, country);
-            this.log.debug(`Entsoe Tomorrow: ${JSON.stringify(pricesEntsoe)}`);
             prices = this._processEntsoeData(pricesEntsoe, 'tomorrow', false) || [];
             source = 'entsoe';
             if (prices.length == 0 && forecast) {
@@ -674,6 +670,7 @@ class ApgInfo extends utils.Adapter {
                 source = '';
             }
         }
+        prices = prices.length == 0 ? null : prices;
         return { prices, source };
     }
 
@@ -879,7 +876,7 @@ class ApgInfo extends utils.Adapter {
             point = timeSeries?.Period?.Point;
         }
         point = point == null ? null : this.fillMissingPositions(point);
-        const prices = [];
+        let prices = [];
         const length = point ? point.length : 0;
         for (let i = 0; i < length; i++) {
             const ii = String(i);
