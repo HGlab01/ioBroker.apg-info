@@ -10,7 +10,7 @@ const { getDataExaa1015, getDataExaa, getDataAwattar, getDataPeakHours, getDataE
 const { addDays, cleanDate, calcDate, pad, compareSecondColumn } = require('./lib/helpers.js');
 
 // Constants
-const MAX_DELAY = 1; //25000
+const MAX_DELAY = 25000; //25000
 const API_TIMEOUT = 20000; //20000
 
 class ApgInfo extends utils.Adapter {
@@ -165,6 +165,8 @@ class ApgInfo extends utils.Adapter {
                     (await this._getAndProcessEntsoeData(false, country, false))?.prices,
                     (await this._getAndProcessEntsoeData(true, country, false))?.prices,
                 ]);
+                prices0 = prices0 == null ? [] : prices0;
+                prices1 = prices1 == null ? [] : prices1;
             } else {
                 ({ prices0, prices1, source1, prices0q, prices1q } = await this._getAndProcessMarketData(country, forecast));
             }
