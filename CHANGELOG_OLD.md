@@ -1,4 +1,7 @@
 # Older changes
+## 0.1.19 (2025-06-23)
+* (HGlab01) use encrypted token in config
+
 ## 0.1.18 (2025-06-16)
 * (HGlab01) Log finetuning
 * (HGlab01) Bump axios to 1.10.0

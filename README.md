@@ -39,8 +39,9 @@ For more details check https://transparency.entsoe.eu/content/static_content/Sta
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### __WORK IN PROGRESS__
+### 0.1.24-alpha.0 (2025-11-04)
 * (HGlab01) Provider Entsoe is used as backup for quarter-hourly market prices. Request a token to be on the safe side
+* (HGlab01) Bump axios to 1.13.1
 
 ### 0.1.23 (2025-10-29)
 * (HGlab01) extend to two market data providers for quarter-hourly market prices
@@ -58,9 +59,6 @@ For more details check https://transparency.entsoe.eu/content/static_content/Sta
 ### 0.1.20 (2025-10-06)
 * (HGlab01) prepeare iobroker-jsonexplorer readiness for v0.2.0
 * (HGlab01) Bump axios to 1.12.2
-
-### 0.1.19 (2025-06-23)
-* (HGlab01) use encrypted token in config
 
 ## License
 MIT License
