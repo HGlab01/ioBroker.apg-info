@@ -159,14 +159,15 @@ class ApgInfo extends utils.Adapter {
             const day1 = addDays(day0, 1);
             jsonExplorer.stateSetCreate('marketprice.today.date', 'date', day0.getTime());
             jsonExplorer.stateSetCreate('marketprice.tomorrow.date', 'date', day1.getTime());
-            let prices0, prices0q, prices1, prices1q;
+            let prices0 = [],
+                prices0q = [],
+                prices1 = [],
+                prices1q = [];
             if (country == 'ch') {
                 [prices0, prices1] = await Promise.all([
-                    (await this._getAndProcessEntsoeData(false, country, false))?.prices,
-                    (await this._getAndProcessEntsoeData(true, country, false))?.prices,
+                    (await this._getAndProcessEntsoeData(false, country, false))?.prices ?? [],
+                    (await this._getAndProcessEntsoeData(true, country, false))?.prices ?? [],
                 ]);
-                prices0 = prices0 == null ? [] : prices0;
-                prices1 = prices1 == null ? [] : prices1;
             } else {
                 ({ prices0, prices1, source1, prices0q, prices1q } = await this._getAndProcessMarketData(country, forecast));
             }
