@@ -39,7 +39,7 @@ For more details check https://transparency.entsoe.eu/content/static_content/Sta
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### 0.1.24-alpha.1 (2025-11-04)
+### 0.1.24 (2025-11-05)
 * (HGlab01) Provider Entsoe is used as backup for quarter-hourly market prices. Request a token to be on the safe side
 * (HGlab01) Bump axios to 1.13.1
 * (HGlab01) Bump iobroker-jsonexplorer to 0.2.2
