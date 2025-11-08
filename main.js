@@ -151,7 +151,8 @@ class ApgInfo extends utils.Adapter {
             return null;
         }
         this.log.debug('Execute market price retrieval');
-        let source1 = null;
+        let source1 = null,
+            source1q = null;
         const configTraversJsonFalse = { replaceName: true, replaceID: true, level: 3, validateAttribute: false };
 
         try {
@@ -169,7 +170,7 @@ class ApgInfo extends utils.Adapter {
                     (await this._getAndProcessEntsoeData(true, country, false))?.prices ?? [],
                 ]);
             } else {
-                ({ prices0, prices1, source1, prices0q, prices1q } = await this._getAndProcessMarketData(country, forecast));
+                ({ prices0, prices1, source1, prices0q, prices1q, source1q } = await this._getAndProcessMarketData(country, forecast));
             }
 
             await jsonExplorer.traverseJson(prices0, 'marketprice.details.today', configTraversJsonFalse);
@@ -420,7 +421,7 @@ class ApgInfo extends utils.Adapter {
             await jsonExplorer.stateSetCreate('marketprice_quarter_hourly.tomorrow.average', 'average', price1Avgq, false);
 
             await this.createCharts(arrAll0Copy, arrAll1Copy, source1, false);
-            await this.createCharts(arrAll0qCopy, arrAll1qCopy, null, true);
+            await this.createCharts(arrAll0qCopy, arrAll1qCopy, source1q, true);
 
             await jsonExplorer.checkExpire('marketprice.*');
             await jsonExplorer.checkExpire('marketprice_quarter_hourly.*');
@@ -496,7 +497,7 @@ class ApgInfo extends utils.Adapter {
      *
      * @param {string} country The country code for the API request.
      * @param {boolean} forecast also checks 10.15 auction for next day
-     * @returns {Promise<{prices0: any[], prices1: any[], source1: string |null, prices0q: any,  prices1q: any}>} An object containing the processed prices for today and tomorrow and the source for tomorrow.
+     * @returns {Promise<{prices0: any[], prices1: any[], source1: string |null, prices0q: any,  prices1q: any, source1q: string |null}>} An object containing the processed prices for today and tomorrow and the source for tomorrow.
      */
     async _getAndProcessMarketData(country, forecast) {
         const todayDate = cleanDate(new Date());
@@ -630,6 +631,7 @@ class ApgInfo extends utils.Adapter {
             source1: tomorrowResult?.source ?? null,
             prices0q: todayResultq?.prices ?? [],
             prices1q: tomorrowResultq?.prices ?? [],
+            source1q: tomorrowResultq?.source ?? null,
         };
     }
 
