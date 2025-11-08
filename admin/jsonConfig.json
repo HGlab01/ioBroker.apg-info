@@ -9,6 +9,17 @@
             "type": "panel",
             "label": "General",
             "items": {
+                "marketPrices": {
+                    "newLine": true,
+                    "type": "checkbox",
+                    "label": "Check market prices",
+                    "default": false,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 4,
+                    "xl": 4
+                },
                 "threshold": {
                     "type": "number",
                     "label": {
@@ -24,6 +35,7 @@
                         "uk": "Потрібна ціна ринку (€ct/kWh)",
                         "zh-cn": "市场价格(ct/kWh)"
                     },
+                    "disabled": "!data.marketPrices",
                     "min": 0,
                     "step": 0.1,
                     "newLine": true,
@@ -89,6 +101,7 @@
                         "en": "Country of the market",
                         "de": "Land der Strombörse"
                     },
+                    "disabled": "!data.marketPrices",
                     "xs": 12,
                     "sm": 12,
                     "md": 6,
@@ -100,6 +113,7 @@
                     "type": "checkbox",
                     "label": "Get quarter-hourly market data (not for CH)",
                     "default": false,
+                    "disabled": "!data.marketPrices",
                     "xs": 12,
                     "sm": 12,
                     "md": 6,
@@ -111,6 +125,7 @@
                     "type": "checkbox",
                     "label": "Get hourly market data",
                     "default": false,
+                    "disabled": "!data.marketPrices",
                     "xs": 12,
                     "sm": 12,
                     "md": 6,
@@ -122,27 +137,27 @@
                     "type": "checkbox",
                     "label": "Forecast based on 10.15 auction (works in AT and DE)",
                     "default": false,
+                    "disabled": "!data.marketPrices",
                     "xs": 12,
                     "sm": 12,
                     "md": 6,
                     "lg": 4,
                     "xl": 4
+                },
+                "_separator": {
+                    "type": "staticText",
+                    "text": "<br>",
+                    "newLine": true,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "peakHours": {
                     "newLine": true,
                     "type": "checkbox",
                     "label": "Check peak hours (works for Austria)",
-                    "default": false,
-                    "xs": 12,
-                    "sm": 12,
-                    "md": 6,
-                    "lg": 4,
-                    "xl": 4
-                },
-                "marketPrices": {
-                    "newLine": true,
-                    "type": "checkbox",
-                    "label": "Check market prices",
                     "default": false,
                     "xs": 12,
                     "sm": 12,

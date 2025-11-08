@@ -643,12 +643,14 @@ class ApgInfo extends utils.Adapter {
      * @returns {Promise<{prices: any[] | null, source: string}>} prices An object containing the processed prices and the source.
      */
     async _getAndProcessEntsoeData(tomorrow, country, forecast) {
+        const day = tomorrow ? 'tomorrow' : 'today';
         let pricesEntsoe, prices;
         let source = '';
         if (!tomorrow) {
             pricesEntsoe = await getDataEntsoe(this, false, country);
-            this.log.debug(`Entsoe Today: ${JSON.stringify(pricesEntsoe)}`);
+            this.log.debug(`pricesEntsoe for ${day}: ${JSON.stringify(pricesEntsoe)}`);
             prices = this._processEntsoeData(pricesEntsoe, 'today', false) || [];
+            this.log.debug(`Prices w/o forecast for ${day}: ${JSON.stringify(prices)}`);
             source = 'entsoe';
             if (prices.length > 50) {
                 jsonExplorer.stateSetCreate('marketprice_quarter_hourly.today.source', 'Source', source);
@@ -659,11 +661,17 @@ class ApgInfo extends utils.Adapter {
             }
         } else {
             pricesEntsoe = await getDataEntsoe(this, true, country);
+            this.log.debug(`pricesEntsoe for ${day}: ${JSON.stringify(pricesEntsoe)}`);
             prices = this._processEntsoeData(pricesEntsoe, 'tomorrow', false) || [];
+            this.log.debug(`Prices w/o forecast for ${day}: ${JSON.stringify(prices)}`);
             source = 'entsoe';
             if (prices.length == 0 && forecast) {
                 prices = this._processEntsoeData(pricesEntsoe, 'tomorrow', true) || [];
+                this.log.debug(`Prices with forecast for ${day}: ${JSON.stringify(prices)}`);
                 source = 'entsoe1015';
+                if (prices.length > 0) {
+                    this.log.info('Data from Entsoe for 10:15 auction available');
+                }
             }
             if (prices.length > 50) {
                 jsonExplorer.stateSetCreate('marketprice_quarter_hourly.tomorrow.source', 'Source', source);
@@ -822,13 +830,14 @@ class ApgInfo extends utils.Adapter {
      */
     filterTimeSeriesByPosition(data, filter) {
         // 1. Get the TimeSeries array safely.
-        const allTimeSeries = data?.TimeSeries;
+        let allTimeSeries = data?.TimeSeries ?? null;
+        if (allTimeSeries == null) {
+            return [];
+        }
 
-        //if there is no array no need to filter
+        //if there is no array convert into array
         if (!Array.isArray(allTimeSeries)) {
-            let simpleResult = [];
-            simpleResult[0] = allTimeSeries;
-            return simpleResult;
+            allTimeSeries = [allTimeSeries];
         }
 
         // 2. Filter the array based on the position criteria.
