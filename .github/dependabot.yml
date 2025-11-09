@@ -9,16 +9,7 @@ updates:
     open-pull-requests-limit: 5
     assignees:
       - HGlab01
-    labels:
-      - "dependencies"
-      - "npm"
-    # versioning-strategy: increase (entfernt, um Standardverhalten zu nutzen)
-    groups:
-      patch-updates:
-        update-types:
-          - "patch"
-      dev-dependencies:
-        dependency-type: "development"
+    versioning-strategy: increase
 
   - package-ecosystem: github-actions
     directory: "/"
@@ -29,7 +20,3 @@ updates:
     open-pull-requests-limit: 5
     assignees:
       - HGlab01
-    labels:
-      - "dependencies"
-      - "github actions"
-    # GitHub Actions brauchen keine versioning-strategy
