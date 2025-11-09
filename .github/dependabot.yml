@@ -4,19 +4,32 @@ updates:
     directory: "/"
     schedule:
       interval: weekly
-      time: "04:00"
+      time: "02:00"
       timezone: Europe/Berlin
     open-pull-requests-limit: 5
     assignees:
       - HGlab01
-    versioning-strategy: increase
+    labels:
+      - "dependencies"
+      - "npm"
+    # versioning-strategy: increase (entfernt, um Standardverhalten zu nutzen)
+    groups:
+      patch-updates:
+        update-types:
+          - "patch"
+      dev-dependencies:
+        dependency-type: "development"
 
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
       interval: weekly
-      time: "04:00"
+      time: "02:00"
       timezone: Europe/Berlin
     open-pull-requests-limit: 5
     assignees:
       - HGlab01
+    labels:
+      - "dependencies"
+      - "github actions"
+    # GitHub Actions brauchen keine versioning-strategy
