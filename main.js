@@ -532,7 +532,7 @@ class ApgInfo extends utils.Adapter {
                         prices0Epex = prices0Epex.data;
                     } else {
                         prices0Epex = null;
-                        this.log.warn('No quarter-hourly market data for today!');
+                        this.log.error('No quarter-hourly market data for today!');
                     }
                 }
             }
@@ -585,7 +585,7 @@ class ApgInfo extends utils.Adapter {
                     this.log.info('Todays hourly market data from Awattar available');
                     this.log.debug(`Todays hourly market data result from Awattar is: ${JSON.stringify(prices0Awattar)}`);
                 } else {
-                    this.log.warn('No hourly market data for today!');
+                    this.log.error('No hourly market data for today!');
                 }
             } else {
                 this.log.debug(`Todays hourly market data result from Exaa is: ${JSON.stringify(prices0Exaa)}`);
