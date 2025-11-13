@@ -165,10 +165,12 @@ class ApgInfo extends utils.Adapter {
                 prices1 = [],
                 prices1q = [];
             if (country == 'ch') {
-                [prices0, prices1] = await Promise.all([
-                    (await this._getAndProcessEntsoeData(false, country, false))?.prices ?? [],
-                    (await this._getAndProcessEntsoeData(true, country, false))?.prices ?? [],
+                const [pprices0, pprices1] = await Promise.all([
+                    this._getAndProcessEntsoeData(false, country, false),
+                    this._getAndProcessEntsoeData(true, country, false),
                 ]);
+                prices0 = pprices0?.prices ?? [];
+                prices1 = pprices1?.prices ?? [];
             } else {
                 ({ prices0, prices1, source1, prices0q, prices1q, source1q } = await this._getAndProcessMarketData(country, forecast));
             }
@@ -839,6 +841,11 @@ class ApgInfo extends utils.Adapter {
 
         //if there is no array convert into array
         if (!Array.isArray(allTimeSeries)) {
+            const domain = String(allTimeSeries?.['in_Domain.mRID']?._text ?? '');
+            this.log.debug(`Domain is ${domain}`);
+            if (domain.includes('CH-SWISS')) {
+                return [allTimeSeries];
+            }
             allTimeSeries = [allTimeSeries];
         }
 
