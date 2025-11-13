@@ -811,6 +811,7 @@ class ApgInfo extends utils.Adapter {
                     item.id = matchZeit[1].replace(/ /g, '');
                 }
             }
+            exaaData = exaaData.filter(item => item.id != null);
         }
         if (exaaData?.[0] != null) {
             for (const item of exaaData) {
@@ -820,7 +821,7 @@ class ApgInfo extends utils.Adapter {
                 delete item.AuctionDay;
             }
         }
-        exaaData = exaaData.filter(item => item.id != null);
+        this.log.debug(`convertExaaData result is: ${JSON.stringify(exaaData)}`);
         return exaaData;
     }
 
