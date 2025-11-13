@@ -11,7 +11,7 @@ const { addDays, cleanDate, calcDate, pad, compareSecondColumn } = require('./li
 
 // Constants
 const MAX_DELAY = 25000; //25000
-const API_TIMEOUT = 20000; //20000
+const API_TIMEOUT = 10000; //20000
 
 class ApgInfo extends utils.Adapter {
     /**
