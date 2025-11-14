@@ -144,6 +144,18 @@
                     "lg": 4,
                     "xl": 4
                 },
+                "details": {
+                    "newLine": true,
+                    "type": "checkbox",
+                    "label": "Include all details (marketprice(_quarter_hourly).details)",
+                    "default": false,
+                    "disabled": "!data.marketPrices",
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 4,
+                    "xl": 4
+                },
                 "_separator": {
                     "type": "staticText",
                     "text": "<br>",

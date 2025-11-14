@@ -186,6 +186,7 @@
     "quarterHourly": true,
     "hourly": true,
     "forecast": false,
+    "details": false,
     "peakHours": true,
     "marketPrices": true,
     "calculate": false,
