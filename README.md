@@ -39,6 +39,12 @@ For more details check https://transparency.entsoe.eu/content/static_content/Sta
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
+### __WORK IN PROGRESS__
+* (HGlab01) optimize handling for source Entsoe
+* (HGlab01) optimize handling when data provider runs in timeout
+* (HGlab01) market price details can be swichted on/off
+* (HGlab01) enhanced logs when it comes to retries
+
 ### 0.1.24 (2025-11-05)
 * (HGlab01) Provider Entsoe is used as backup for quarter-hourly market prices. Request a token to be on the safe side
 * (HGlab01) Bump axios to 1.13.1

@@ -11,7 +11,7 @@ const { addDays, cleanDate, calcDate, pad, compareSecondColumn } = require('./li
 
 // Constants
 const MAX_DELAY = 25000; //25000
-const API_TIMEOUT = 20000; //20000
+const API_TIMEOUT = 10000; //20000
 
 class ApgInfo extends utils.Adapter {
     /**
@@ -30,7 +30,7 @@ class ApgInfo extends utils.Adapter {
         //this.on('message', this.onMessage.bind(this));
         this.on('unload', this.onUnload.bind(this));
         jsonExplorer.init(this, stateAttr);
-        this.calculate = false;
+        this.config_calculate = false;
         this.feeAbsolute = 0;
         this.feeRelative = 0;
         this.vat = 0;
@@ -55,14 +55,15 @@ class ApgInfo extends utils.Adapter {
             this.log.info('Market price threshold not found and set to 10');
         }
 
-        const forecast = this.config.forecast ?? false;
-        this.calculate = this.config.calculate ?? false;
-        this.peakHours = this.config.peakHours ?? false;
-        this.marketPrices = this.config.marketPrices ?? false;
-        this.quarterHourly = this.config.quarterHourly ?? false;
-        this.hourly = this.config.hourly ?? false;
+        this.config_forecast = this.config.forecast ?? false;
+        this.config_calculate = this.config.calculate ?? false;
+        this.config_peakHours = this.config.peakHours ?? false;
+        this.config_marketPrices = this.config.marketPrices ?? false;
+        this.config_quarterHourly = this.config.quarterHourly ?? false;
+        this.config_hourly = this.config.hourly ?? false;
+        this.config_details = this.config.details ?? false;
 
-        if (this.calculate == true) {
+        if (this.config_calculate == true) {
             this.feeAbsolute = this.config.feeAbsolute ?? 0;
             this.feeRelative = (this.config.feeRelative ?? 0) / 100;
             this.vat = (this.config.vat ?? 0) / 100;
@@ -112,7 +113,10 @@ class ApgInfo extends utils.Adapter {
         await jsonExplorer.sleep(callApiDelay);
         await jsonExplorer.setLastStartTime();
 
-        const [resultPeakHours, resultMarketPrice] = await Promise.all([this.executeRequestPeakHours(), this.executeMarketPrice(country, forecast)]);
+        const [resultPeakHours, resultMarketPrice] = await Promise.all([
+            this.executeRequestPeakHours(),
+            this.executeMarketPrice(country, this.config_forecast),
+        ]);
 
         if (resultPeakHours == 'error' || resultMarketPrice == 'error') {
             this.terminate ? this.terminate(utils.EXIT_CODES.UNCAUGHT_EXCEPTION) : process.exit(0);
@@ -143,11 +147,9 @@ class ApgInfo extends utils.Adapter {
      * @param {boolean} forecast also checks 10.15 auction for next day
      */
     async executeMarketPrice(country, forecast) {
-        if (this.marketPrices == false) {
-            const statesToDelete = await this.getStatesAsync(`marketprice*`);
-            for (const idS in statesToDelete) {
-                await this.delObjectAsync(idS);
-            }
+        if (this.config_marketPrices == false) {
+            await this.delObjectAsync('marketprice', { recursive: true });
+            await this.delObjectAsync('marketprice_quarter_hourly', { recursive: true });
             return null;
         }
         this.log.debug('Execute market price retrieval');
@@ -158,25 +160,41 @@ class ApgInfo extends utils.Adapter {
         try {
             const day0 = cleanDate(new Date());
             const day1 = addDays(day0, 1);
-            jsonExplorer.stateSetCreate('marketprice.today.date', 'date', day0.getTime());
-            jsonExplorer.stateSetCreate('marketprice.tomorrow.date', 'date', day1.getTime());
             let prices0 = [],
                 prices0q = [],
                 prices1 = [],
                 prices1q = [];
             if (country == 'ch') {
-                [prices0, prices1] = await Promise.all([
-                    (await this._getAndProcessEntsoeData(false, country, false))?.prices ?? [],
-                    (await this._getAndProcessEntsoeData(true, country, false))?.prices ?? [],
+                const [pprices0, pprices1] = await Promise.all([
+                    this._getAndProcessEntsoeData(false, country, false),
+                    this._getAndProcessEntsoeData(true, country, false),
                 ]);
+                prices0 = pprices0?.prices ?? [];
+                prices1 = pprices1?.prices ?? [];
             } else {
                 ({ prices0, prices1, source1, prices0q, prices1q, source1q } = await this._getAndProcessMarketData(country, forecast));
             }
 
-            await jsonExplorer.traverseJson(prices0, 'marketprice.details.today', configTraversJsonFalse);
-            await jsonExplorer.traverseJson(prices1, 'marketprice.details.tomorrow', configTraversJsonFalse);
-            await jsonExplorer.traverseJson(prices0q, 'marketprice_quarter_hourly.details.today', configTraversJsonFalse);
-            await jsonExplorer.traverseJson(prices1q, 'marketprice_quarter_hourly.details.tomorrow', configTraversJsonFalse);
+            if (this.config_hourly) {
+                jsonExplorer.stateSetCreate('marketprice.today.date', 'date', day0.getTime());
+                jsonExplorer.stateSetCreate('marketprice.tomorrow.date', 'date', day1.getTime());
+                if (this.config_details) {
+                    await jsonExplorer.traverseJson(prices0, 'marketprice.details.today', configTraversJsonFalse);
+                    await jsonExplorer.traverseJson(prices1, 'marketprice.details.tomorrow', configTraversJsonFalse);
+                } else {
+                    await this.delObjectAsync('marketprice.details', { recursive: true });
+                }
+            }
+            if (this.config_quarterHourly) {
+                jsonExplorer.stateSetCreate('marketprice_quarter_hourly.today.date', 'date', day0.getTime());
+                jsonExplorer.stateSetCreate('marketprice_quarter_hourly.tomorrow.date', 'date', day1.getTime());
+                if (this.config_details) {
+                    await jsonExplorer.traverseJson(prices0q, 'marketprice_quarter_hourly.details.today', configTraversJsonFalse);
+                    await jsonExplorer.traverseJson(prices1q, 'marketprice_quarter_hourly.details.tomorrow', configTraversJsonFalse);
+                } else {
+                    await this.delObjectAsync('marketprice_quarter_hourly.details', { recursive: true });
+                }
+            }
 
             const todayProcessed = this._processAndCategorizePrices(prices0, 'today', false);
             const tomorrowProcessed = this._processAndCategorizePrices(prices1, 'tomorrow', false);
@@ -248,19 +266,23 @@ class ApgInfo extends utils.Adapter {
             jDay1BelowThresholdq.numberOfSlots = days1Belowq;
             jDay1AboveThresholdq.numberOfSlots = days1Aboveq;
 
-            await jsonExplorer.traverseJson(jDay0, 'marketprice.today', configTraversJsonFalse);
-            await jsonExplorer.traverseJson(jDay0BelowThreshold, 'marketprice.belowThreshold.today', configTraversJsonFalse);
-            await jsonExplorer.traverseJson(jDay0AboveThreshold, 'marketprice.aboveThreshold.today', configTraversJsonFalse);
-            await jsonExplorer.traverseJson(jDay1, 'marketprice.tomorrow', configTraversJsonFalse);
-            await jsonExplorer.traverseJson(jDay1BelowThreshold, 'marketprice.belowThreshold.tomorrow', configTraversJsonFalse);
-            await jsonExplorer.traverseJson(jDay1AboveThreshold, 'marketprice.aboveThreshold.tomorrow', configTraversJsonFalse);
+            if (this.config_hourly) {
+                await jsonExplorer.traverseJson(jDay0, 'marketprice.today', configTraversJsonFalse);
+                await jsonExplorer.traverseJson(jDay0BelowThreshold, 'marketprice.belowThreshold.today', configTraversJsonFalse);
+                await jsonExplorer.traverseJson(jDay0AboveThreshold, 'marketprice.aboveThreshold.today', configTraversJsonFalse);
+                await jsonExplorer.traverseJson(jDay1, 'marketprice.tomorrow', configTraversJsonFalse);
+                await jsonExplorer.traverseJson(jDay1BelowThreshold, 'marketprice.belowThreshold.tomorrow', configTraversJsonFalse);
+                await jsonExplorer.traverseJson(jDay1AboveThreshold, 'marketprice.aboveThreshold.tomorrow', configTraversJsonFalse);
+            }
 
-            await jsonExplorer.traverseJson(jDay0q, 'marketprice_quarter_hourly.today', configTraversJsonFalse);
-            await jsonExplorer.traverseJson(jDay1q, 'marketprice_quarter_hourly.tomorrow', configTraversJsonFalse);
-            await jsonExplorer.traverseJson(jDay0BelowThresholdq, 'marketprice_quarter_hourly.belowThreshold.today', configTraversJsonFalse);
-            await jsonExplorer.traverseJson(jDay0AboveThresholdq, 'marketprice_quarter_hourly.aboveThreshold.today', configTraversJsonFalse);
-            await jsonExplorer.traverseJson(jDay1BelowThresholdq, 'marketprice_quarter_hourly.belowThreshold.tomorrow', configTraversJsonFalse);
-            await jsonExplorer.traverseJson(jDay1AboveThresholdq, 'marketprice_quarter_hourly.aboveThreshold.tomorrow', configTraversJsonFalse);
+            if (this.config_quarterHourly) {
+                await jsonExplorer.traverseJson(jDay0q, 'marketprice_quarter_hourly.today', configTraversJsonFalse);
+                await jsonExplorer.traverseJson(jDay1q, 'marketprice_quarter_hourly.tomorrow', configTraversJsonFalse);
+                await jsonExplorer.traverseJson(jDay0BelowThresholdq, 'marketprice_quarter_hourly.belowThreshold.today', configTraversJsonFalse);
+                await jsonExplorer.traverseJson(jDay0AboveThresholdq, 'marketprice_quarter_hourly.aboveThreshold.today', configTraversJsonFalse);
+                await jsonExplorer.traverseJson(jDay1BelowThresholdq, 'marketprice_quarter_hourly.belowThreshold.tomorrow', configTraversJsonFalse);
+                await jsonExplorer.traverseJson(jDay1AboveThresholdq, 'marketprice_quarter_hourly.aboveThreshold.tomorrow', configTraversJsonFalse);
+            }
 
             //copy objets to use this for charts later
             const arrAll0Copy = structuredClone(arrAll0);
@@ -357,78 +379,102 @@ class ApgInfo extends utils.Adapter {
             } else {
                 price1Avgq = Math.round((priceSum1q / (24 * 4)) * 1000) / 1000;
             }
+            if (this.config_hourly) {
+                await jsonExplorer.traverseJson(sortedHours0, 'marketprice.belowThreshold.today_sorted', configTraversJsonFalse);
+                await jsonExplorer.traverseJson(sortedHours1, 'marketprice.belowThreshold.tomorrow_sorted', configTraversJsonFalse);
+                await jsonExplorer.traverseJson(sortedHoursAll0, 'marketprice.today_sorted', configTraversJsonFalse);
+                await jsonExplorer.traverseJson(sortedHoursAll1, 'marketprice.tomorrow_sorted', configTraversJsonFalse);
+                await jsonExplorer.stateSetCreate(
+                    'marketprice.belowThreshold.today_sorted.short',
+                    'today sorted short',
+                    JSON.stringify(sortedHours0Short),
+                    false,
+                );
+                await jsonExplorer.stateSetCreate(
+                    'marketprice.belowThreshold.tomorrow_sorted.short',
+                    'tomorrow sorted short',
+                    JSON.stringify(sortedHours1Short),
+                    false,
+                );
+                await jsonExplorer.stateSetCreate(
+                    'marketprice.today_sorted.short',
+                    'today sorted short',
+                    JSON.stringify(sortedHours0ShortAll),
+                    false,
+                );
+                await jsonExplorer.stateSetCreate(
+                    'marketprice.tomorrow_sorted.short',
+                    'tomorrow sorted short',
+                    JSON.stringify(sortedHours1ShortAll),
+                    false,
+                );
+                await jsonExplorer.stateSetCreate('marketprice.today.average', 'average', price0Avg, false);
+                await jsonExplorer.stateSetCreate('marketprice.tomorrow.average', 'average', price1Avg, false);
+            }
 
-            await jsonExplorer.traverseJson(sortedHours0, 'marketprice.belowThreshold.today_sorted', configTraversJsonFalse);
-            await jsonExplorer.traverseJson(sortedHours1, 'marketprice.belowThreshold.tomorrow_sorted', configTraversJsonFalse);
-            await jsonExplorer.traverseJson(sortedHoursAll0, 'marketprice.today_sorted', configTraversJsonFalse);
-            await jsonExplorer.traverseJson(sortedHoursAll1, 'marketprice.tomorrow_sorted', configTraversJsonFalse);
-            await jsonExplorer.stateSetCreate(
-                'marketprice.belowThreshold.today_sorted.short',
-                'today sorted short',
-                JSON.stringify(sortedHours0Short),
-                false,
-            );
-            await jsonExplorer.stateSetCreate(
-                'marketprice.belowThreshold.tomorrow_sorted.short',
-                'tomorrow sorted short',
-                JSON.stringify(sortedHours1Short),
-                false,
-            );
-            await jsonExplorer.stateSetCreate('marketprice.today_sorted.short', 'today sorted short', JSON.stringify(sortedHours0ShortAll), false);
-            await jsonExplorer.stateSetCreate(
-                'marketprice.tomorrow_sorted.short',
-                'tomorrow sorted short',
-                JSON.stringify(sortedHours1ShortAll),
-                false,
-            );
-            await jsonExplorer.stateSetCreate('marketprice.today.average', 'average', price0Avg, false);
-            await jsonExplorer.stateSetCreate('marketprice.tomorrow.average', 'average', price1Avg, false);
+            if (this.config_quarterHourly) {
+                await jsonExplorer.traverseJson(
+                    sortedHours0q,
+                    'marketprice_quarter_hourly.belowThreshold.today_sorted',
+                    configTraversJsonFalse,
+                    false,
+                );
+                await jsonExplorer.traverseJson(
+                    sortedHours1q,
+                    'marketprice_quarter_hourly.belowThreshold.tomorrow_sorted',
+                    configTraversJsonFalse,
+                    false,
+                );
+                await jsonExplorer.traverseJson(sortedHoursAll0q, 'marketprice_quarter_hourly.today_sorted', configTraversJsonFalse, false);
+                await jsonExplorer.traverseJson(sortedHoursAll1q, 'marketprice_quarter_hourly.tomorrow_sorted', configTraversJsonFalse, false);
+                await jsonExplorer.stateSetCreate(
+                    'marketprice_quarter_hourly.today_sorted.short',
+                    'today sorted short',
+                    JSON.stringify(sortedHours0ShortAllq),
+                    false,
+                );
+                await jsonExplorer.stateSetCreate(
+                    'marketprice_quarter_hourly.tomorrow_sorted.short',
+                    'tomoorrow sorted short',
+                    JSON.stringify(sortedHours1ShortAllq),
+                    false,
+                );
+                await jsonExplorer.stateSetCreate(
+                    'marketprice_quarter_hourly.belowThreshold.today_sorted.short',
+                    'today sorted short',
+                    JSON.stringify(sortedHours0Shortq),
+                    false,
+                );
+                await jsonExplorer.stateSetCreate(
+                    'marketprice_quarter_hourly.belowThreshold.tomorrow_sorted.short',
+                    'tomorrow sorted short',
+                    JSON.stringify(sortedHours1Shortq),
+                    false,
+                );
+                await jsonExplorer.stateSetCreate('marketprice_quarter_hourly.today.average', 'average', price0Avgq, false);
+                await jsonExplorer.stateSetCreate('marketprice_quarter_hourly.tomorrow.average', 'average', price1Avgq, false);
+            }
 
-            await jsonExplorer.traverseJson(sortedHours0q, 'marketprice_quarter_hourly.belowThreshold.today_sorted', configTraversJsonFalse, false);
-            await jsonExplorer.traverseJson(
-                sortedHours1q,
-                'marketprice_quarter_hourly.belowThreshold.tomorrow_sorted',
-                configTraversJsonFalse,
-                false,
-            );
-            await jsonExplorer.traverseJson(sortedHoursAll0q, 'marketprice_quarter_hourly.today_sorted', configTraversJsonFalse, false);
-            await jsonExplorer.traverseJson(sortedHoursAll1q, 'marketprice_quarter_hourly.tomorrow_sorted', configTraversJsonFalse, false);
-            await jsonExplorer.stateSetCreate(
-                'marketprice_quarter_hourly.today_sorted.short',
-                'today sorted short',
-                JSON.stringify(sortedHours0ShortAllq),
-                false,
-            );
-            await jsonExplorer.stateSetCreate(
-                'marketprice_quarter_hourly.tomorrow_sorted.short',
-                'tomoorrow sorted short',
-                JSON.stringify(sortedHours1ShortAllq),
-                false,
-            );
-            await jsonExplorer.stateSetCreate(
-                'marketprice_quarter_hourly.belowThreshold.today_sorted.short',
-                'today sorted short',
-                JSON.stringify(sortedHours0Shortq),
-                false,
-            );
-            await jsonExplorer.stateSetCreate(
-                'marketprice_quarter_hourly.belowThreshold.tomorrow_sorted.short',
-                'tomorrow sorted short',
-                JSON.stringify(sortedHours1Shortq),
-                false,
-            );
-            await jsonExplorer.stateSetCreate('marketprice_quarter_hourly.today.average', 'average', price0Avgq, false);
-            await jsonExplorer.stateSetCreate('marketprice_quarter_hourly.tomorrow.average', 'average', price1Avgq, false);
+            if (this.config_hourly) {
+                await this.createCharts(arrAll0Copy, arrAll1Copy, source1, false);
+                await jsonExplorer.checkExpire('marketprice.*');
+                await jsonExplorer.deleteObjectsWithNull('marketprice.*Threshold.*');
+                await jsonExplorer.deleteObjectsWithNull('marketprice.details.*');
+            }
 
-            await this.createCharts(arrAll0Copy, arrAll1Copy, source1, false);
-            await this.createCharts(arrAll0qCopy, arrAll1qCopy, source1q, true);
+            if (this.config_quarterHourly) {
+                await this.createCharts(arrAll0qCopy, arrAll1qCopy, source1q, true);
+                await jsonExplorer.checkExpire('marketprice_quarter_hourly.*');
+                await jsonExplorer.deleteObjectsWithNull('marketprice_quarter_hourly.*Threshold.*');
+                await jsonExplorer.deleteObjectsWithNull('marketprice_quarter_hourly.details.*');
+            }
 
-            await jsonExplorer.checkExpire('marketprice.*');
-            await jsonExplorer.checkExpire('marketprice_quarter_hourly.*');
-            await jsonExplorer.deleteObjectsWithNull('marketprice.*Threshold.*');
-            await jsonExplorer.deleteObjectsWithNull('marketprice_quarter_hourly.*Threshold.*');
-            await jsonExplorer.deleteObjectsWithNull('marketprice.details.*');
-            await jsonExplorer.deleteObjectsWithNull('marketprice_quarter_hourly.details.*');
+            if (!this.config_quarterHourly) {
+                await this.delObjectAsync('marketprice_quarter_hourly', { recursive: true });
+            }
+            if (!this.config_hourly) {
+                await this.delObjectAsync('marketprice', { recursive: true });
+            }
         } catch (error) {
             let eMsg = `Error in executeMarketPrice(): ${error}`;
             this.log.error(eMsg);
@@ -511,7 +557,7 @@ class ApgInfo extends utils.Adapter {
         const [eXaaToday, eXaaTomorrow] = await Promise.all([getDataExaa(this, false, country), getDataExaa(this, true, country)]);
 
         //check for provider for today for quarter-hourly
-        if (this.quarterHourly) {
+        if (this.config_quarterHourly) {
             this.log.info(`Let's check for quarter-hourly market data`);
             prices0Exaa = eXaaToday?.q ?? null;
             if (prices0Exaa == null) {
@@ -530,7 +576,7 @@ class ApgInfo extends utils.Adapter {
                         prices0Epex = prices0Epex.data;
                     } else {
                         prices0Epex = null;
-                        this.log.warn('No quarter-hourly market data for today!');
+                        this.log.error('No quarter-hourly market data for today!');
                     }
                 }
             }
@@ -564,15 +610,9 @@ class ApgInfo extends utils.Adapter {
                 prices1Entsoe != null
                     ? prices1Entsoe
                     : this._processMarketPrices('tomorrow', prices1Awattar, prices1Exaa, prices1Exaa1015, prices1Epex, true);
-        } else {
-            //delte all states for quarter-hourly
-            const statesToDelete = await this.getStatesAsync(`marketprice_quarter_hourly.*`);
-            for (const idS in statesToDelete) {
-                await this.delObjectAsync(idS);
-            }
         }
 
-        if (this.hourly) {
+        if (this.config_hourly) {
             this.log.info(`Let's check for hourly market data`);
             //check for provider for today for hourly
             prices0Exaa = eXaaToday?.h ?? null;
@@ -583,7 +623,7 @@ class ApgInfo extends utils.Adapter {
                     this.log.info('Todays hourly market data from Awattar available');
                     this.log.debug(`Todays hourly market data result from Awattar is: ${JSON.stringify(prices0Awattar)}`);
                 } else {
-                    this.log.warn('No hourly market data for today!');
+                    this.log.error('No hourly market data for today!');
                 }
             } else {
                 this.log.debug(`Todays hourly market data result from Exaa is: ${JSON.stringify(prices0Exaa)}`);
@@ -617,12 +657,6 @@ class ApgInfo extends utils.Adapter {
             }
             todayResult = this._processMarketPrices('today', prices0Awattar, prices0Exaa, null, prices0Epex, false);
             tomorrowResult = this._processMarketPrices('tomorrow', prices1Awattar, prices1Exaa, prices1Exaa1015, prices1Epex, false);
-        } else {
-            //delete all stats for hourly
-            const statesToDelete = await this.getStatesAsync(`marketprice.*`);
-            for (const idS in statesToDelete) {
-                await this.delObjectAsync(idS);
-            }
         }
 
         return {
@@ -809,6 +843,7 @@ class ApgInfo extends utils.Adapter {
                     item.id = matchZeit[1].replace(/ /g, '');
                 }
             }
+            exaaData = exaaData.filter(item => item.id != null);
         }
         if (exaaData?.[0] != null) {
             for (const item of exaaData) {
@@ -818,7 +853,7 @@ class ApgInfo extends utils.Adapter {
                 delete item.AuctionDay;
             }
         }
-        exaaData = exaaData.filter(item => item.id != null);
+        this.log.debug(`convertExaaData result is: ${JSON.stringify(exaaData)}`);
         return exaaData;
     }
 
@@ -839,6 +874,11 @@ class ApgInfo extends utils.Adapter {
 
         //if there is no array convert into array
         if (!Array.isArray(allTimeSeries)) {
+            const domain = String(allTimeSeries?.['in_Domain.mRID']?._text ?? '');
+            this.log.debug(`Domain is ${domain}`);
+            if (domain.includes('CH-SWISS')) {
+                return [allTimeSeries];
+            }
             allTimeSeries = [allTimeSeries];
         }
 
@@ -979,11 +1019,8 @@ class ApgInfo extends utils.Adapter {
      * Handles json-object and creates states for peak hours
      */
     async executeRequestPeakHours() {
-        if (this.peakHours == false) {
-            const statesToDelete = await this.getStatesAsync(`peakTime.*`);
-            for (const idS in statesToDelete) {
-                await this.delObjectAsync(idS);
-            }
+        if (this.config_peakHours == false) {
+            await this.delObjectAsync('peakTime', { recursive: true });
             return null;
         }
         try {
@@ -1064,17 +1101,6 @@ class ApgInfo extends utils.Adapter {
 
             await jsonExplorer.checkExpire('peakTime.*');
             jsonExplorer.deleteObjectsWithNull('peakTime.*');
-
-            /*
-            // check for outdated states to be deleted
-            let statesToDelete = await this.getStatesAsync('peakTime.*');
-            for (const idS in statesToDelete) {
-                let state = await this.getStateAsync(idS);
-                if (state && state.val == null) {
-                    this.log.debug(`State "${idS}" will be deleted`);
-                    await this.delObjectAsync(idS);
-                }
-            }*/
         } catch (error) {
             let eMsg = `Error in ExecuteRequestPeakHours(): ${error}`;
             this.log.error(eMsg);
@@ -1192,7 +1218,7 @@ class ApgInfo extends utils.Adapter {
         const allMax = Math.max(todayMax, tomorrowMax);
         const roundedMax = Math.ceil((allMax * 1.1) / 5) * 5;
 
-        if (quarter_hourly == true && this.quarterHourly == true) {
+        if (quarter_hourly == true && this.config_quarterHourly == true) {
             await this.createSingleChart(arrayToday, false, null, allMin, roundedMax, 'marketprice_quarter_hourly.today.jsonChart', quarter_hourly);
             await this.createSingleChart(
                 arrayTomorrow,
@@ -1204,7 +1230,7 @@ class ApgInfo extends utils.Adapter {
                 quarter_hourly,
             );
         }
-        if (quarter_hourly == false && this.hourly == true) {
+        if (quarter_hourly == false && this.config_hourly == true) {
             await this.createSingleChart(arrayToday, false, null, allMin, roundedMax, 'marketprice.today.jsonChart', quarter_hourly);
             await this.createSingleChart(arrayTomorrow, true, sourceTomorrow, allMin, roundedMax, 'marketprice.tomorrow.jsonChart', quarter_hourly);
         }
@@ -1237,7 +1263,7 @@ class ApgInfo extends utils.Adapter {
     calcPrice(tradePrice) {
         tradePrice = Math.round(tradePrice * 1000) / 1000;
         let price = 0;
-        if (this.calculate == true) {
+        if (this.config_calculate == true) {
             let provider = Math.abs(tradePrice * this.feeRelative) + this.feeAbsolute;
             let charges = (tradePrice + provider) * this.charges;
             let vat = (tradePrice + provider + charges + this.gridCosts) * this.vat;
