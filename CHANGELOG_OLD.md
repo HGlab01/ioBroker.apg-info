@@ -1,4 +1,8 @@
 # Older changes
+## 0.1.20 (2025-10-06)
+* (HGlab01) prepeare iobroker-jsonexplorer readiness for v0.2.0
+* (HGlab01) Bump axios to 1.12.2
+
 ## 0.1.19 (2025-06-23)
 * (HGlab01) use encrypted token in config
 
