@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "apg-info",
-    "version": "0.1.26-alpha.0",
+    "version": "0.1.26",
     "news": {
+      "0.1.26": {
+        "en": "optimize handling for source Entsoe\noptimize handling when data provider runs in timeout\nmarket price details can be switched on/off\nenhanced logs when it comes to retries",
+        "de": "optimierte Handhabung für Source Entsoe\noptimieren sie das handling, wenn der datenanbieter den timeout betreibt\nmarktpreisdetails können ein- und ausgeschaltet werden\nerweiterte protokolle bei retries",
+        "ru": "оптимизация работы с источником Entsoe\nоптимизация обработки, когда поставщик данных выполняет тайм-аут\nрыночные цены могут быть включены/выключены\nулучшенные бревна, когда дело доходит до повторных записей",
+        "pt": "otimizar o manuseio da fonte Entsoe\notimizar o manuseio quando o provedor de dados é executado em tempo limite\nos dados relativos ao preço de mercado podem ser ligados/desligados\nlogs melhorados quando se trata de repetições",
+        "nl": "optimale handling voor bron Entsoe\noptimalisatie van de verwerking wanneer dataprovider in timeout draait\nmarktprijsgegevens kunnen worden ingeschakeld/uitgeschakeld\nverbeterde logs als het gaat om retrieves",
+        "fr": "optimiser la manipulation pour la source Entsoe\noptimiser le traitement lorsque le fournisseur de données fonctionne dans le délai imparti\nles détails du prix du marché peuvent être activés/désactivés\nlogs améliorés en ce qui concerne les relevés",
+        "it": "ottimizzare la gestione per fonte Entsoe\nottimizzare la gestione quando il fornitore di dati viene eseguito in timeout\ndettagli sui prezzi di mercato possono essere attivati/disattivati\nlog migliorati quando si tratta di ritries",
+        "es": "optimizar el manejo para fuente Entsoe\noptimizar el manejo cuando el proveedor de datos se ejecuta en tiempoout\nlos detalles del precio del mercado se pueden cambiar en / apagado\nregistros mejorados cuando se trata de retries",
+        "pl": "optymalizacja obsługi dla źródła Entsoe\noptymalizacja obsługi, gdy dostawca danych działa w timeout\nszczegóły cen rynkowych można włączyć / wyłączyć\nulepszone dzienniki, jeśli chodzi o powtórki",
+        "uk": "оптимізація обробки для джерела Entsoe\nоптимізація обробки даних при запуску даних\nдеталі ринкової ціни можна переключати/відключити\nрозширені журнали, коли мова йде про рети",
+        "zh-cn": "优化源条目的处理\n数据提供者超时运行时优化处理\n市场价格细节可以打开/关闭\n复试时增强日志"
+      },
       "0.1.26-alpha.0": {
         "en": "optimize handling for source Entsoe\noptimize handling when data provider runs in timeout\nmarket price details can be switched on/off\nenhanced logs when it comes to retries",
         "de": "optimierte Handhabung für Source Entsoe\noptimieren sie das handling, wenn der datenanbieter den timeout betreibt\nmarktpreisdetails können ein- und ausgeschaltet werden\nerweiterte protokolle bei retries",
@@ -69,19 +82,6 @@
         "zh-cn": "提供商Entsoe被用作四分之一小时市场价格的备份. 请求一个标志 安全侧\n横轴改为1.13.1"
       },
       "0.1.23": {
-        "en": "extend to two market data providers for quarter-hourly market prices\nadd turn on/off quarter-hourly and hourly market prices\nrefactorings",
-        "de": "sich auf zwei marktdatenanbieter für viertelstündige marktpreise erstrecken\nvierteljährliche und stündliche marktpreise\nrefaktoren",
-        "ru": "распространяется на двух поставщиков рыночных данных для квартальных рыночных цен\nдобавить включение/выключение квартально-часовых и почасовых рыночных цен\nрефакторинг",
-        "pt": "alargar a dois fornecedores de dados de mercado para preços de mercado trimestrais por hora\nadicionar ligar/desligar os preços de mercado trimestrais e horários\nrefractários",
-        "nl": "uitbreiding tot twee aanbieders van marktgegevens voor kwartaalmarktprijzen\ntoe te voegen aan/uit kwartaal- en uurmarktprijzen\nrefactoring",
-        "fr": "étendre à deux fournisseurs de données du marché les prix du marché trimestriels\najouter les prix trimestriels et horaires du marché\ndes refacturations",
-        "it": "estendere a due fornitori di dati di mercato per i prezzi di mercato trimestrali\naggiungere i prezzi di mercato trimestrali e orali di turn-off\nrefactorings",
-        "es": "ampliar a dos proveedores de datos de mercado para los precios trimestrales del mercado\nañadir los precios trimestrales y por hora del mercado\nrefactorings",
-        "pl": "rozszerzenie na dwóch dostawców danych rynkowych w odniesieniu do kwartalnych cen rynkowych\ndodawanie włączania / wyłączania kwartalnych i godzinowych cen rynkowych\nrefakturowanie",
-        "uk": "продовження двох постачальників даних ринку на щоквартальні ринкові ціни\nдодавати обороти/виключити щоквартально-часові ринкові ціни\nрефакторинги",
-        "zh-cn": "向两个市场数据提供者提供季度/小时市场价格\n增加每季度和每小时的市场价格\n重构内容"
-      },
-      "0.1.23-alpha.0": {
         "en": "extend to two market data providers for quarter-hourly market prices\nadd turn on/off quarter-hourly and hourly market prices\nrefactorings",
         "de": "sich auf zwei marktdatenanbieter für viertelstündige marktpreise erstrecken\nvierteljährliche und stündliche marktpreise\nrefaktoren",
         "ru": "распространяется на двух поставщиков рыночных данных для квартальных рыночных цен\nдобавить включение/выключение квартально-часовых и почасовых рыночных цен\nрефакторинг",
