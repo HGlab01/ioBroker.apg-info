@@ -39,7 +39,7 @@ For more details check https://transparency.entsoe.eu/content/static_content/Sta
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### 0.1.25 (2025-11-15)
+### 0.1.26-alpha.0 (2025-11-15)
 * (HGlab01) optimize handling for source Entsoe
 * (HGlab01) optimize handling when data provider runs in timeout
 * (HGlab01) market price details can be switched on/off
