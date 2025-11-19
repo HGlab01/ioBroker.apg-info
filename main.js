@@ -6,7 +6,7 @@ const jsonExplorer = require('iobroker-jsonexplorer');
 const stateAttr = require(`./lib/stateAttr.js`); // Load attribute library
 const isOnline = require('@esm2cjs/is-online').default;
 const { version } = require('./package.json');
-const { getDataExaa1015, getDataExaa, getDataAwattar, getDataPeakHours, getDataEntsoe, getDataEpex } = require('./lib/getData.js');
+const { getDataExaa1015, getDataExaa, getDataAwattar, getDataPeakHours, getDataEntsoe /*, getDataEpex*/ } = require('./lib/getData.js');
 const { addDays, cleanDate, calcDate, pad, compareSecondColumn } = require('./lib/helpers.js');
 
 // Constants
@@ -546,8 +546,8 @@ class ApgInfo extends utils.Adapter {
      * @returns {Promise<{prices0: any[], prices1: any[], source1: string |null, prices0q: any,  prices1q: any, source1q: string |null}>} An object containing the processed prices for today and tomorrow and the source for tomorrow.
      */
     async _getAndProcessMarketData(country, forecast) {
-        const todayDate = cleanDate(new Date());
-        const tomorrowDate = addDays(todayDate, 1);
+        //nst todayDate = cleanDate(new Date());
+        //const tomorrowDate = addDays(todayDate, 1);
         let prices0Entsoe = null,
             prices1Entsoe = null;
         let prices0Awattar, prices1Awattar, prices0Exaa, prices1Exaa, prices1Exaa1015, prices0Epex, prices1Epex;
@@ -565,9 +565,9 @@ class ApgInfo extends utils.Adapter {
                 if (useEntsoe) {
                     prices0Entsoe = await this._getAndProcessEntsoeData(false, country, false);
                 } else {
-                    this.log.info(`No token defined for Entsoe, skipped! Let's continue with Epex`);
+                    this.log.info(`No token defined for Entsoe, skipped!`);
                 }
-                if (useEntsoe && prices0Entsoe?.prices == null) {
+                /*if (useEntsoe && prices0Entsoe?.prices == null) {
                     this.log.info(`No quarter-hourly market data from Entsoe for today, let's try Epex`);
                     prices0Epex = await getDataEpex(this, false, country);
                     if (prices0Epex?.data?.[0] && new Date(prices0Epex.meta.deliveryDate).getTime() === todayDate.getTime()) {
@@ -578,7 +578,7 @@ class ApgInfo extends utils.Adapter {
                         prices0Epex = null;
                         this.log.error('No quarter-hourly market data for today!');
                     }
-                }
+                }*/
             }
 
             //Tomorrow
@@ -588,9 +588,9 @@ class ApgInfo extends utils.Adapter {
                 if (useEntsoe) {
                     prices1Entsoe = await this._getAndProcessEntsoeData(true, country, forecast);
                 } else {
-                    this.log.info(`No token defined for Entsoe, skipped! Let's continue with Epex`);
+                    this.log.info(`No token defined for Entsoe, skipped!`);
                 }
-                if (useEntsoe && prices1Entsoe?.prices == null) {
+                /*if (useEntsoe && prices1Entsoe?.prices == null) {
                     this.log.info(`No quarter-hourly market data from Entsoe for tomorrow, let's try Epex`);
                     prices1Epex = await getDataEpex(this, true, country);
                     if (prices1Epex?.data?.[0] && new Date(prices1Epex.meta.deliveryDate).getTime() === tomorrowDate.getTime()) {
@@ -601,7 +601,26 @@ class ApgInfo extends utils.Adapter {
                         prices1Epex = null;
                         this.log.info('No quarter-hourly market data for tomorrow!');
                     }
-                }
+                }*/
+            }
+
+            if (prices0Exaa == null && prices0Entsoe?.prices == null) {
+                this.log.error('No quarter-hourly market data for today!');
+            }
+            if (prices0Entsoe?.prices != null) {
+                this.log.info('Found Entsoe quarter-hourly market data for today!');
+            }
+            if (prices0Exaa != null) {
+                this.log.info('Found Epex quarter-hourly market data for today!');
+            }
+            if (prices1Exaa == null && prices1Entsoe?.prices == null) {
+                this.log.info('No quarter-hourly market data for tomorrow!');
+            }
+            if (prices1Entsoe?.prices != null) {
+                this.log.info('Found Entsoe quarter-hourly market data for tomorrow!');
+            }
+            if (prices1Exaa != null) {
+                this.log.info('Found Epex quarter-hourly market data for tomorrow!');
             }
 
             todayResultq =
