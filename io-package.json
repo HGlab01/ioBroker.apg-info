@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "apg-info",
-    "version": "0.1.26",
+    "version": "0.1.27",
     "news": {
+      "0.1.27": {
+        "en": "disable data provider Epex (not a stable option)",
+        "de": "den Datenanbieter Epex deaktivieren (nicht eine stabile Option)",
+        "ru": "отключение поставщика данных Epex (нестабильный вариант)",
+        "pt": "desabilitar o provedor de dados Epex (não é uma opção estável)",
+        "nl": "dataprovider Epex uitschakelen (geen stabiele optie)",
+        "fr": "désactiver le fournisseur de données Epex (pas une option stable)",
+        "it": "disabilitare il fornitore di dati Epex (non un'opzione stabile)",
+        "es": "proveedor de datos deshabilitado Epex (no una opción estable)",
+        "pl": "wyłączenie dostawcy danych Epex (niestabilna opcja)",
+        "uk": "відключити провайдер даних Epex (не стабільний варіант)",
+        "zh-cn": "禁用数据提供者 Epex( 非稳定选项)"
+      },
       "0.1.26": {
         "en": "optimize handling for source Entsoe\noptimize handling when data provider runs in timeout\nmarket price details can be switched on/off\nenhanced logs when it comes to retries",
         "de": "optimierte Handhabung für Source Entsoe\noptimieren sie das handling, wenn der datenanbieter den timeout betreibt\nmarktpreisdetails können ein- und ausgeschaltet werden\nerweiterte protokolle bei retries",

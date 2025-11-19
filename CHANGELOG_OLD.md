@@ -1,4 +1,8 @@
 # Older changes
+## 0.1.21 (2025-10-13)
+* (HGlab01) Support quater-hourly tarifs
+* (HGlab01) Bump iobroker-jsonexplorer to 0.2.1
+
 ## 0.1.20 (2025-10-06)
 * (HGlab01) prepeare iobroker-jsonexplorer readiness for v0.2.0
 * (HGlab01) Bump axios to 1.12.2
