@@ -6,12 +6,12 @@ const jsonExplorer = require('iobroker-jsonexplorer');
 const stateAttr = require(`./lib/stateAttr.js`); // Load attribute library
 const isOnline = require('@esm2cjs/is-online').default;
 const { version } = require('./package.json');
-const { getDataExaa1015, getDataExaa, getDataAwattar, getDataPeakHours, getDataEntsoe /*, getDataEpex*/ } = require('./lib/getData.js');
+const { getDataExaa1015, getDataExaa, getDataAwattar, getDataPeakHours, getDataEntsoe, getDataEnergyCharts } = require('./lib/getData.js');
 const { addDays, cleanDate, calcDate, pad, compareSecondColumn } = require('./lib/helpers.js');
 
 // Constants
 const MAX_DELAY = 25000; //25000
-const API_TIMEOUT = 10000; //20000
+const API_TIMEOUT = 10000; //10000
 
 class ApgInfo extends utils.Adapter {
     /**
@@ -550,7 +550,7 @@ class ApgInfo extends utils.Adapter {
         //const tomorrowDate = addDays(todayDate, 1);
         let prices0Entsoe = null,
             prices1Entsoe = null;
-        let prices0Awattar, prices1Awattar, prices0Exaa, prices1Exaa, prices1Exaa1015, prices0Epex, prices1Epex;
+        let prices0Awattar, prices1Awattar, prices0Exaa, prices1Exaa, prices1Exaa1015, prices0EnergyCharts, prices1EnergyCharts;
         let todayResult, tomorrowResult, todayResultq, tomorrowResultq;
         const useEntsoe = this.token == null || this.token.length < 10 ? false : true;
 
@@ -567,18 +567,10 @@ class ApgInfo extends utils.Adapter {
                 } else {
                     this.log.info(`No token defined for Entsoe, skipped!`);
                 }
-                /*if (useEntsoe && prices0Entsoe?.prices == null) {
-                    this.log.info(`No quarter-hourly market data from Entsoe for today, let's try Epex`);
-                    prices0Epex = await getDataEpex(this, false, country);
-                    if (prices0Epex?.data?.[0] && new Date(prices0Epex.meta.deliveryDate).getTime() === todayDate.getTime()) {
-                        this.log.info('Todays quarter-hourly market data from Epex available');
-                        this.log.debug(`Todays quarter-hourly market data result from Epex is: ${JSON.stringify(prices0Epex)}`);
-                        prices0Epex = prices0Epex.data;
-                    } else {
-                        prices0Epex = null;
-                        this.log.error('No quarter-hourly market data for today!');
-                    }
-                }*/
+                if (useEntsoe && prices0Entsoe?.prices == null) {
+                    this.log.info(`No quarter-hourly market data from Entsoe for today, let's try EnergyChart`);
+                    prices0EnergyCharts = await getDataEnergyCharts(this, false, country);
+                }
             }
 
             //Tomorrow
@@ -590,45 +582,45 @@ class ApgInfo extends utils.Adapter {
                 } else {
                     this.log.info(`No token defined for Entsoe, skipped!`);
                 }
-                /*if (useEntsoe && prices1Entsoe?.prices == null) {
-                    this.log.info(`No quarter-hourly market data from Entsoe for tomorrow, let's try Epex`);
-                    prices1Epex = await getDataEpex(this, true, country);
-                    if (prices1Epex?.data?.[0] && new Date(prices1Epex.meta.deliveryDate).getTime() === tomorrowDate.getTime()) {
-                        this.log.info('Tomorrows quarter-hourly market data from Epex available');
-                        this.log.debug(`Tomorrows quarter-hourly market data result from Epex is: ${JSON.stringify(prices0Epex)}`);
-                        prices1Epex = prices1Epex.data;
-                    } else {
-                        prices1Epex = null;
-                        this.log.info('No quarter-hourly market data for tomorrow!');
-                    }
-                }*/
+                if (useEntsoe && prices1Entsoe?.prices == null) {
+                    this.log.info(`No quarter-hourly market data from Entsoe for tomorrow, let's try EnergyChart`);
+                    prices1EnergyCharts = await getDataEnergyCharts(this, true, country);
+                }
             }
 
-            if (prices0Exaa == null && prices0Entsoe?.prices == null) {
+            if (prices0Exaa == null && prices0Entsoe?.prices == null && prices0EnergyCharts?.price == null) {
                 this.log.error('No quarter-hourly market data for today!');
             }
             if (prices0Entsoe?.prices != null) {
                 this.log.info('Found Entsoe quarter-hourly market data for today!');
             }
             if (prices0Exaa != null) {
-                this.log.info('Found Epex quarter-hourly market data for today!');
+                this.log.info('Found Exaa quarter-hourly market data for today!');
             }
-            if (prices1Exaa == null && prices1Entsoe?.prices == null) {
+            if (prices0EnergyCharts?.price != null) {
+                this.log.info('Found EnergyCharts quarter-hourly market data for today!');
+            }
+            if (prices1Exaa == null && prices1Entsoe?.prices == null && prices1EnergyCharts?.price == null) {
                 this.log.info('No quarter-hourly market data for tomorrow!');
             }
             if (prices1Entsoe?.prices != null) {
                 this.log.info('Found Entsoe quarter-hourly market data for tomorrow!');
             }
             if (prices1Exaa != null) {
-                this.log.info('Found Epex quarter-hourly market data for tomorrow!');
+                this.log.info('Found Exaa quarter-hourly market data for tomorrow!');
+            }
+            if (prices1EnergyCharts?.price != null) {
+                this.log.info('Found EnergyCharts quarter-hourly market data for tomorrow!');
             }
 
             todayResultq =
-                prices0Entsoe != null ? prices0Entsoe : this._processMarketPrices('today', prices0Awattar, prices0Exaa, null, prices0Epex, true);
+                prices0Entsoe != null
+                    ? prices0Entsoe
+                    : this._processMarketPrices('today', prices0Awattar, prices0Exaa, null, prices0EnergyCharts, true);
             tomorrowResultq =
                 prices1Entsoe != null
                     ? prices1Entsoe
-                    : this._processMarketPrices('tomorrow', prices1Awattar, prices1Exaa, prices1Exaa1015, prices1Epex, true);
+                    : this._processMarketPrices('tomorrow', prices1Awattar, prices1Exaa, prices1Exaa1015, prices1EnergyCharts, true);
         }
 
         if (this.config_hourly) {
@@ -674,8 +666,8 @@ class ApgInfo extends utils.Adapter {
             } else {
                 this.log.debug(`Tomorrows hourly market data result from Exaa is: ${JSON.stringify(prices1Exaa)}`);
             }
-            todayResult = this._processMarketPrices('today', prices0Awattar, prices0Exaa, null, prices0Epex, false);
-            tomorrowResult = this._processMarketPrices('tomorrow', prices1Awattar, prices1Exaa, prices1Exaa1015, prices1Epex, false);
+            todayResult = this._processMarketPrices('today', prices0Awattar, prices0Exaa, null, prices0EnergyCharts, false);
+            tomorrowResult = this._processMarketPrices('tomorrow', prices1Awattar, prices1Exaa, prices1Exaa1015, prices1EnergyCharts, false);
         }
 
         return {
@@ -748,11 +740,11 @@ class ApgInfo extends utils.Adapter {
      * @param {any} awattarData - Data from Awattar API.
      * @param {any} exaaData - Data from EXAA Market Coupling API.
      * @param {any} exaa1015Data - Optional data from EXAA 10:15 auction API (for tomorrow).
-     * @param {any} epexData - Data from Epex Market
+     * @param {any} energyChartsData - Data from Epex Market
      * @param {boolean} quarter - quater hourly data yes/no
      * @returns {{prices: any[], source: string}} The processed prices and the source name.
      */
-    _processMarketPrices(day, awattarData, exaaData, exaa1015Data, epexData, quarter) {
+    _processMarketPrices(day, awattarData, exaaData, exaa1015Data, energyChartsData, quarter) {
         let prices = [];
         let source = '';
 
@@ -765,9 +757,9 @@ class ApgInfo extends utils.Adapter {
         } else if (awattarData?.data?.[0]) {
             prices = this._convertAwattarData(awattarData);
             source = 'awattar';
-        } else if (epexData) {
-            prices = this._convertEpexData(epexData);
-            source = 'epex';
+        } else if (energyChartsData) {
+            prices = this._convertEnergyChartsData(energyChartsData);
+            source = 'energyCharts';
         }
 
         if (source) {
@@ -820,28 +812,49 @@ class ApgInfo extends utils.Adapter {
     }
 
     /**
-     * Converts data from the EXAA 10:15 auction API to the internal price format.
+     * Converts data from energyCharts API to the internal price format.
      *
-     * @param {any} epexData - The raw data from EXAA 10:15 auction.
+     * @param {any} energyChartsData - The raw data from energyCharts
      * @returns {any[]} The converted price data.
      */
-    _convertEpexData(epexData) {
-        let data = epexData ?? null;
-        const prices = [];
-        for (const idS in data) {
-            prices[idS] = {};
-            const index = data[idS]['index'];
-            const ersteStelle = Math.ceil(index / 4);
-            const zweiteStelle = index % 4 === 0 ? 4 : index % 4;
-            const prod = `Q${pad(ersteStelle, 2)}_${zweiteStelle}`;
-            prices[idS].Price = data[idS]['Price(€/MWh)'];
-            prices[idS].Product = prod;
-            prices[idS].ProductText = `${prod} (${data[idS].start}-${data[idS].end})`;
-            //prices[idS].SellVolume = data[idS]['Sell Volume(MWh)'];
-            //prices[idS].TotalVol = data[idS]['Volume(MWh)'];
-            prices[idS].id = `${data[idS].start}-${data[idS].end}`;
+    _convertEnergyChartsData(energyChartsData) {
+        const timestamps = energyChartsData?.['unix_seconds'] ?? null;
+        const values = energyChartsData?.price ?? null;
+
+        // Return null immediately if lengths do not match or one is NULL
+        if (timestamps == null || values == null || timestamps.length !== values.length) {
+            return [];
         }
-        this.log.debug(`pricesEpex converted to: ${JSON.stringify(prices)}`);
+
+        // If lengths match, safely combine the arrays
+        const combined = timestamps.map((xValue, index) => {
+            return [xValue, values[index]];
+        });
+
+        const prices = [];
+        for (const idS in combined) {
+            prices[idS] = {};
+            const date = new Date(combined[idS][0] * 1000); //Unix-Seconds to JS-Timestamp
+            const hours = date.getHours().toString().padStart(2, '0');
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            const dateEnd = new Date(date.setMinutes(date.getMinutes() + 15));
+            let hoursEnd = dateEnd.getHours().toString().padStart(2, '0');
+            if (hours == '23' && hoursEnd == '00') {
+                hoursEnd = '24';
+            }
+            const minutesEnd = dateEnd.getMinutes().toString().padStart(2, '0');
+            const timeId = `${hours}:${minutes}-${hoursEnd}:${minutesEnd}`;
+
+            const index = Number(idS) + 1;
+            const firstPart = Math.ceil(index / 4);
+            const secondPart = index % 4 === 0 ? 4 : index % 4;
+            const prod = `Q${pad(firstPart, 2)}_${secondPart}`;
+            prices[idS].Price = combined[idS][1];
+            prices[idS].Product = prod;
+            prices[idS].ProductText = `${prod.replace('Q', 'qEnCh')} (${timeId})`;
+            prices[idS].id = timeId;
+        }
+        this.log.debug(`Prices energyCharts converted to: ${JSON.stringify(prices)}`);
         return prices;
     }
 
