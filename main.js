@@ -556,16 +556,19 @@ class ApgInfo extends utils.Adapter {
 
         const [eXaaToday, eXaaTomorrow] = await Promise.all([getDataExaa(this, false, country), getDataExaa(this, true, country)]);
 
-        //check for provider for today for quarter-hourly
+        //check provider for quarter-hourly
         if (this.config_quarterHourly) {
             this.log.info(`Let's check for quarter-hourly market data`);
+
+            //Today
             prices0Exaa = eXaaToday?.q ?? null;
             if (prices0Exaa == null) {
                 this.log.info(`No quarter-hourly market data from Exaa for today, let's try Entsoe`);
                 if (useEntsoe) {
                     prices0Entsoe = await this._getAndProcessEntsoeData(false, country, false);
                 } else {
-                    this.log.info(`No token defined for Entsoe, skipped!`);
+                    this.log.info(`No token defined for Entsoe, skipped! Let's try EnergyChart`);
+                    prices0EnergyCharts = await getDataEnergyCharts(this, false, country);
                 }
                 if (useEntsoe && prices0Entsoe?.prices == null) {
                     this.log.info(`No quarter-hourly market data from Entsoe for today, let's try EnergyChart`);
@@ -580,7 +583,8 @@ class ApgInfo extends utils.Adapter {
                 if (useEntsoe) {
                     prices1Entsoe = await this._getAndProcessEntsoeData(true, country, forecast);
                 } else {
-                    this.log.info(`No token defined for Entsoe, skipped!`);
+                    this.log.info(`No token defined for Entsoe, skipped! Let's try EnergyChart`);
+                    prices1EnergyCharts = await getDataEnergyCharts(this, true, country);
                 }
                 if (useEntsoe && prices1Entsoe?.prices == null) {
                     this.log.info(`No quarter-hourly market data from Entsoe for tomorrow, let's try EnergyChart`);
@@ -588,6 +592,7 @@ class ApgInfo extends utils.Adapter {
                 }
             }
 
+            //Check results
             if (prices0Exaa == null && prices0Entsoe?.prices == null && prices0EnergyCharts?.price == null) {
                 this.log.error('No quarter-hourly market data for today!');
             }
