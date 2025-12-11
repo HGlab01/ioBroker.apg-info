@@ -1,4 +1,8 @@
 # Older changes
+## 0.1.22 (2025-10-21)
+* (HGlab01) Implement retry mechanism for API calls
+* (HGlab01) add turn on/off for peak hours and market prices
+
 ## 0.1.21 (2025-10-13)
 * (HGlab01) Support quater-hourly tarifs
 * (HGlab01) Bump iobroker-jsonexplorer to 0.2.1
