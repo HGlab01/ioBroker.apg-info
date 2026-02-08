@@ -195,7 +195,8 @@
     "vat": 20,
     "charges": 6,
     "gridCosts": 6.636,
-    "tokenEncrypted": ""
+    "tokenEncrypted": "",
+    "costs": []
   },
   "protectedNative": [
     "tokenEncrypted"
