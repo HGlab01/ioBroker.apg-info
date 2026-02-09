@@ -10,7 +10,7 @@ const { getDataExaa1015, getDataExaa, getDataAwattar, getDataPeakHours, getDataE
 const { addDays, cleanDate, calcDate, pad, compareSecondColumn } = require('./lib/helpers.js');
 
 // Constants
-const MAX_DELAY = 1; //25000
+const MAX_DELAY = 25000; //25000
 const API_TIMEOUT = 10000; //10000
 
 class ApgInfo extends utils.Adapter {
@@ -1325,7 +1325,7 @@ class ApgInfo extends utils.Adapter {
             //this.log.info(`tradePrice is ${tradePrice} and finalPrice is ${Math.round(price * 1000) / 1000} and gridcosts is ${Number(gridCosts)}`);
         }
         price = Math.round(price * 1000) / 1000;
-        this.log.debug(`tradePrice is ${tradePrice} and finalPrice is ${Math.round(price * 1000) / 1000}`);
+        this.log.debug(`tradePrice is ${tradePrice} and finalPrice is ${price}`);
         return price;
     }
 

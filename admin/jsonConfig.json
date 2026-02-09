@@ -192,15 +192,24 @@
                     },
                     "options": [
                         {
-                            "label": "no calculation",
+                            "label": {
+                                "en": "no calculation",
+                                "de": "keine Berechnung"
+                            },
                             "value": false
                         },
                         {
-                            "label": "simple calculation",
+                            "label": {
+                                "en": "simple calculation",
+                                "de": "Einfache Berechnung"
+                            },
                             "value": true
                         },
                         {
-                            "label": "time based calculation",
+                            "label": {
+                                "en": "time based calculation",
+                                "de": "Zeitbasierte Berechnung"
+                            },
                             "value": "advanced"
                         }
                     ],
