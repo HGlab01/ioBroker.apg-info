@@ -34,7 +34,8 @@ Register at the page https://transparency.entsoe.eu/ and send afterwards and ema
 For more details check https://transparency.entsoe.eu/content/static_content/Static%20content/web%20api/Guide.html#_authentication_and_authorisation
 
 ## Time based grid cost calculation (NEW)
-In markets (like Austria) characterized by time-variable grid costs (e.g., reduced rates during midday hours in summer), parameters are now configurable via a table. A reference table illustrates the required data entry format. The feature is in the adapter configuration in the tab "calculation".
+In markets (like Austria) characterized by time-variable grid costs (e.g., reduced rates during midday hours in summer), parameters are now configurable via a table. A reference table illustrates the required data entry format. The feature is in the adapter configuration in the tab "calculation".  
+**Important:** Table view works with Admin 7.7.23 or later. In older versions the date field is not shown propperly (https://github.com/ioBroker/ioBroker.admin/issues/3344). 
 
 ## Changelog
 <!--
@@ -93,6 +94,7 @@ Three data providers are used for this adapter
 * Exaa (https://www.exaa.at/)
 * Entso-e (https://www.entsoe.eu/data/transparency-platform/)
 * Energy Charts (https://api.energy-charts.info/) licensed under the CC BY 4.0 license
+
 
 
 
