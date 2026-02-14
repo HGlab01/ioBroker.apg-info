@@ -41,8 +41,9 @@ In markets (like Austria) characterized by time-variable grid costs (e.g., reduc
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### 0.1.29-alpha.0 (2026-02-09)
+### 0.1.29 (2026-02-14)
 * (HGlab01) add time based grid costs calculation (see above)
+* (HGlab01) Bump axios to 1.13.5
 
 ### 0.1.28 (2025-12-11)
 * (HGlab01) add Energy-Charts as third data provider

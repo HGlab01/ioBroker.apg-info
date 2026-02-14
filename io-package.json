@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "apg-info",
-    "version": "0.1.29-alpha.0",
+    "version": "0.1.29",
     "news": {
+      "0.1.29": {
+        "en": "add time based grid costs calculation (see above)\nBump axios to 1.13.5",
+        "de": "kostenberechnung auf zeitbasis (siehe oben)\nBump axios zu 1.13.5",
+        "ru": "добавить расчет стоимости сетки на основе времени (см. выше)\nАксиос удара до 1,13,5",
+        "pt": "cálculo dos custos da rede com base no tempo (ver acima)\nBump axios a 1.13.5",
+        "nl": "de berekening van op tijd gebaseerde netkosten toevoegen (zie hierboven)\nBump axios naar 1.13.5",
+        "fr": "ajouter le calcul des coûts de grille en fonction du temps (voir ci-dessus)\nAxios de pompe à 1.13.5",
+        "it": "aggiungere il calcolo dei costi di griglia basati sul tempo (vedere sopra)\nAssio di bump a 1.13.5",
+        "es": "añadir cálculo de costos de rejilla basados en el tiempo (ver arriba)\nAxios de bomba a 1.13.5",
+        "pl": "dodać kalkulację kosztów sieci w oparciu o czas (zob. powyżej)\nAxios bump do 1.13.5",
+        "uk": "додати розрахунок витрат на час на основі сітки (див. вище)\nБампер аксіос до 1.13.5",
+        "zh-cn": "添加基于时间的网格成本计算(见上文)\n横轴改为1.13.5"
+      },
       "0.1.29-alpha.0": {
         "en": "add time based grid costs calculation (see above)",
         "de": "kostenberechnung auf zeitbasis (siehe oben)",
@@ -69,19 +82,6 @@
         "zh-cn": "优化源条目的处理\n数据提供者超时运行时优化处理\n市场价格细节可以打开/关闭\n复试时增强日志"
       },
       "0.1.24": {
-        "en": "Provider Entsoe is used as backup for quarter-hourly market prices. Request a token to be on the safe side\nBump axios to 1.13.1\nBump iobroker-jsonexplorer to 0.2.2",
-        "de": "Provider Entsoe wird als Backup für viertelstündige Marktpreise verwendet. Fordern Sie ein Token auf der sicheren Seite\nBump axios zu 1.13.1\nBump iobroker-jsonexplorer auf 0,2.2",
-        "ru": "Провайдер Entsoe используется в качестве резервного копирования для квартальных рыночных цен. Запросить жетон, чтобы быть на безопасной стороне\nАксиос накачки до 1.13.1\nBump iobroker-jsonexplorer 0.2.2",
-        "pt": "Provider Entsoe é usado como backup para preços de mercado trimestrais horas. Pedir um token para estar no lado seguro\nBump axios a 1.13.1\nBump iobroker-jsonexplorer a 0.2.2",
-        "nl": "Provider Entsoe wordt gebruikt als back-up voor kwartaalmarktprijzen. Vraag een token om veilig te zijn\nBump axios tot 1.13.1\nBump iobroker-jsonexplorer naar 0.2.2",
-        "fr": "Le fournisseur Entsoe est utilisé comme sauvegarde pour les prix du marché trimestriels. Demander un jeton pour être du côté sûr\nAxios bouffés à 1.13.1\nBump iobroker-jsonexplorer à 0.2.2",
-        "it": "Provider Entsoe viene utilizzato come backup per i prezzi di mercato trimestrali. Richiedi un gettone per essere sul lato sicuro\nAssio di bump a 1.13.1\nBump iobroker-jsonexplorer a 0.2.2",
-        "es": "Proveedor Entsoe se utiliza como respaldo para los precios del mercado trimestralmente. Solicitar una señal para estar en el lado seguro\nAxios de bomba a 1.13.1\nBomba iobroker-jsonexplorer a 0.2.2",
-        "pl": "Dostawca Entsoe służy jako kopia zapasowa dla kwartalnych cen rynkowych. Poproś o żeton, aby być po bezpiecznej stronie\nAksykony bumpy do 1.13.1\nBump iobroker- jsonexplorer do 0.2.2",
-        "uk": "Постачальник Entsoe використовується в якості резервного копіювання на чверть-годинні ринкові ціни. Запитайте токени на сейф\nБампер аксіос до 1.13.1\nBump iobroker-jsonexplorer до 0.2.2",
-        "zh-cn": "提供商Entsoe被用作四分之一小时市场价格的备份. 请求一个标志 安全侧\n横轴改为1.13.1\n气泡经纪人-Jsonexplorer改为0.2.2"
-      },
-      "0.1.24-alpha.1": {
         "en": "Provider Entsoe is used as backup for quarter-hourly market prices. Request a token to be on the safe side\nBump axios to 1.13.1\nBump iobroker-jsonexplorer to 0.2.2",
         "de": "Provider Entsoe wird als Backup für viertelstündige Marktpreise verwendet. Fordern Sie ein Token auf der sicheren Seite\nBump axios zu 1.13.1\nBump iobroker-jsonexplorer auf 0,2.2",
         "ru": "Провайдер Entsoe используется в качестве резервного копирования для квартальных рыночных цен. Запросить жетон, чтобы быть на безопасной стороне\nАксиос накачки до 1.13.1\nBump iobroker-jsonexplorer 0.2.2",
