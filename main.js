@@ -38,6 +38,7 @@ class ApgInfo extends utils.Adapter {
         this.gridCosts = 0;
         this.token = '';
         this.threshold = 10;
+        this.config_costs = [];
     }
 
     /**
@@ -62,6 +63,7 @@ class ApgInfo extends utils.Adapter {
         this.config_quarterHourly = this.config.quarterHourly ?? false;
         this.config_hourly = this.config.hourly ?? false;
         this.config_details = this.config.details ?? false;
+        this.config_costs = this.config.costs ?? [];
 
         if (this.config_calculate == true) {
             this.feeAbsolute = this.config.feeAbsolute ?? 0;
@@ -195,7 +197,6 @@ class ApgInfo extends utils.Adapter {
                     await this.delObjectAsync('marketprice_quarter_hourly.details', { recursive: true });
                 }
             }
-
             const todayProcessed = this._processAndCategorizePrices(prices0, 'today', false);
             const tomorrowProcessed = this._processAndCategorizePrices(prices1, 'tomorrow', false);
             const todayProcessedq = this._processAndCategorizePrices(prices0q, 'today', true);
@@ -505,16 +506,17 @@ class ApgInfo extends utils.Adapter {
             }
 
             const product = prices[idS].Product;
-            const marketprice = this.calcPrice(prices[idS].Price / 10);
-            this.log.debug(`Marketprice for product ${product} is ${marketprice}`);
-
             let range;
+            const productTime = dayString == 'today' ? new Date() : addDays(new Date(), 1);
             if (quaterly) {
                 const productText = prices[idS].ProductText;
                 const regexZeit = /(\d{2}:\d{2}\s*-\s*\d{2}:\d{2})/;
                 const matchZeit = productText.match(regexZeit);
                 if (matchZeit && matchZeit.length > 1) {
                     range = matchZeit[1].replace(/ /g, '');
+                    const hours = range.substring(0, 2);
+                    const minutes = range.substring(3, 5);
+                    productTime.setHours(Number(hours), Number(minutes), 0, 0);
                 }
             } else {
                 const sEndHour = product.substring(1, 3);
@@ -522,7 +524,10 @@ class ApgInfo extends utils.Adapter {
                 const iBeginHour = iEndHour - 1;
                 const sBeginHour = pad(iBeginHour, 2);
                 range = `${sBeginHour}_to_${sEndHour}`;
+                productTime.setHours(Number(iBeginHour), 0, 0, 0);
             }
+            const marketprice = this.calcPrice(prices[idS].Price / 10, productTime);
+            this.log.debug(`Marketprice for product ${product} is ${marketprice}`);
             jDay[range] = marketprice;
             if (marketprice < this.threshold) {
                 jDayBelowThreshold[range] = marketprice;
@@ -1295,22 +1300,85 @@ class ApgInfo extends utils.Adapter {
     }
     /**
      * @param {number} tradePrice price for trading
+     * @param {Date} productTime time of the product
      * @returns {number} calculated price based on tradePrice, fees, charges and VAT
      */
-    calcPrice(tradePrice) {
+    calcPrice(tradePrice, productTime) {
         tradePrice = Math.round(tradePrice * 1000) / 1000;
         let price = 0;
         if (this.config_calculate == true) {
-            let provider = Math.abs(tradePrice * this.feeRelative) + this.feeAbsolute;
-            let charges = (tradePrice + provider) * this.charges;
-            let vat = (tradePrice + provider + charges + this.gridCosts) * this.vat;
+            const provider = Math.abs(tradePrice * this.feeRelative) + this.feeAbsolute;
+            const charges = (tradePrice + provider) * this.charges;
+            const vat = (tradePrice + provider + charges + this.gridCosts) * this.vat;
             price = tradePrice + provider + charges + this.gridCosts + vat;
-        } else {
+        } else if (this.config_calculate == false) {
             price = tradePrice;
+        } else if (this.config_calculate == 'advanced') {
+            this.log.debug(`ProductTime is ${productTime.toLocaleString('de-DE')}`);
+            const costs = this.getCostForDate(this.config_costs, productTime);
+            //get attributes from costs object or set to 0 if not available
+            const { fee_absolute = 0, fee_relative = 0, charges = 0, gridCosts = 0, vat = 0 } = costs;
+            const providerTotal = Number(Math.abs(tradePrice * (fee_relative / 100)) + fee_absolute);
+            const chargesTotal = (tradePrice + providerTotal) * (charges / 100);
+            const vatTotal = (tradePrice + providerTotal + chargesTotal + gridCosts) * (vat / 100);
+            price = tradePrice + providerTotal + chargesTotal + Number(gridCosts) + vatTotal;
+            //this.log.info(`tradePrice is ${tradePrice} and finalPrice is ${Math.round(price * 1000) / 1000} and gridcosts is ${Number(gridCosts)}`);
         }
         price = Math.round(price * 1000) / 1000;
-        this.log.debug(`tradePrice is ${tradePrice} and  finalPrice is ${price}`);
+        this.log.debug(`tradePrice is ${tradePrice} and finalPrice is ${price}`);
         return price;
+    }
+
+    /**
+     * Finds the applicable cost object for a given date from a list of costs.
+     * Logic: Checks date range first, then refines by time if applicable.
+     *
+     * @param {Array} costs - The array containing cost objects.
+     * @param {Date} targetDate - The date to look up.
+     * @returns {object|null} - The matching cost object or null if not found.
+     */
+    getCostForDate(costs, targetDate) {
+        if (!costs || !(targetDate instanceof Date)) {
+            return null;
+        }
+
+        // targetDate is your Date object
+        // 'en-GB' forces 24h format (HH:mm:ss)
+        const currentTimeStr = targetDate.toLocaleTimeString('en-GB', {
+            hour12: false,
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+        });
+
+        return (
+            costs.find(cost => {
+                const from = new Date(cost.date_from);
+                const to = new Date(cost.date_to);
+                to.setHours(23, 59, 59, 999); // Set to the end of the day
+                //this.log.info(targetDate + ' ' + from + ' ' + to);
+
+                // Date range check
+                if (targetDate < from || targetDate > to) {
+                    return false;
+                }
+
+                const timeFrom = cost.time_from == null ? '00:00:00' : cost.time_from;
+                const timeTo = cost.time_to == null ? '23:59:59' : cost.time_to;
+
+                // Standard logic: Start is inclusive, End is exclusive
+                // This ensures that 10:00:00 falls into the NEW slot, not the old one.
+                const isAfterStart = currentTimeStr >= timeFrom;
+                const isBeforeEnd = currentTimeStr < timeTo;
+
+                // Special case: if it's the very last second of the day (23:59:59)
+                if (timeTo === '23:59:59' || timeTo === '23:59:00') {
+                    return isAfterStart && currentTimeStr <= timeTo;
+                }
+
+                return isAfterStart && isBeforeEnd;
+            }) || null
+        );
     }
 }
 

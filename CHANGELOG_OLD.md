@@ -1,4 +1,9 @@
 # Older changes
+## 0.1.23 (2025-10-29)
+* (HGlab01) extend to two market data providers for quarter-hourly market prices
+* (HGlab01) add turn on/off quarter-hourly and hourly market prices
+* (HGlab01) refactorings
+
 ## 0.1.22 (2025-10-21)
 * (HGlab01) Implement retry mechanism for API calls
 * (HGlab01) add turn on/off for peak hours and market prices
