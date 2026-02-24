@@ -185,16 +185,44 @@
             "items": {
                 "calculate": {
                     "newLine": true,
-                    "type": "checkbox",
+                    "type": "select",
                     "label": {
                         "en": "Activate price calculation",
                         "de": "Preiskalkulation aktivieren"
                     },
+                    "options": [
+                        {
+                            "label": {
+                                "en": "no calculation",
+                                "de": "keine Berechnung"
+                            },
+                            "value": false
+                        },
+                        {
+                            "label": {
+                                "en": "simple calculation",
+                                "de": "Einfache Berechnung"
+                            },
+                            "value": true
+                        },
+                        {
+                            "label": {
+                                "en": "time based calculation",
+                                "de": "Zeitbasierte Berechnung"
+                            },
+                            "value": "advanced"
+                        }
+                    ],
                     "xs": 12,
                     "sm": 12,
                     "md": 6,
                     "lg": 4,
                     "xl": 4
+                },
+                "_text2": {
+                    "type": "staticText",
+                    "newLine": true,
+                    "text": "<br>"
                 },
                 "feeAbsolute": {
                     "newLine": true,
@@ -203,7 +231,7 @@
                         "en": "Provider fee absolute (€ct/kWh)",
                         "de": "Provider Gebühr Absolut (€ct/kWh)"
                     },
-                    "hidden": "!data.calculate",
+                    "hidden": "data.calculate != true",
                     "xs": 12,
                     "sm": 12,
                     "md": 3,
@@ -216,7 +244,7 @@
                         "en": "Provider fee (%)",
                         "de": "Provider Gebühr (%)"
                     },
-                    "hidden": "!data.calculate",
+                    "hidden": "data.calculate != true",
                     "xs": 12,
                     "sm": 12,
                     "md": 3,
@@ -229,7 +257,7 @@
                         "en": "other taxes (%)",
                         "de": "weitere Abgaben (%)"
                     },
-                    "hidden": "!data.calculate",
+                    "hidden": "data.calculate != true",
                     "xs": 12,
                     "sm": 12,
                     "md": 3,
@@ -242,7 +270,7 @@
                         "en": "grid costs (€ct/kWh)",
                         "de": "Netzentgelte (€ct/kWh)"
                     },
-                    "hidden": "!data.calculate",
+                    "hidden": "data.calculate != true",
                     "xs": 12,
                     "sm": 12,
                     "md": 3,
@@ -255,7 +283,7 @@
                         "en": "VAT (%)",
                         "de": "USt (%)"
                     },
-                    "hidden": "!data.calculate",
+                    "hidden": "data.calculate != true",
                     "xs": 12,
                     "sm": 12,
                     "md": 3,
@@ -266,21 +294,165 @@
                     "type": "staticText",
                     "text": "",
                     "newLine": true,
-                    "hidden": "!data.calculate",
+                    "hidden": "data.calculate != true",
                     "xs": 12,
                     "sm": 12,
                     "md": 12,
                     "lg": 12,
                     "xl": 12
                 },
+                "costs": {
+                    "type": "table",
+                    "hidden": "data.calculate != 'advanced'",
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12,
+                    "items": [
+                        {
+                            "type": "datePicker",
+                            "attr": "date_from",
+                            "label": {
+                                "en": "Date from",
+                                "de": "Datum von"
+                            },
+                            "tooltip": {
+                                "en": "Date from",
+                                "de": "Datum von"
+                            }
+                        },
+                        {
+                            "type": "datePicker",
+                            "attr": "date_to",
+                            "label": {
+                                "en": "Date to",
+                                "de": "Datum bis"
+                            },
+                            "tooltip": {
+                                "en": "Date to",
+                                "de": "Datum bis"
+                            }
+                        },
+                        {
+                            "type": "timePicker",
+                            "attr": "time_from",
+                            "format": "HH:mm",
+                            "returnFormat": "HH:mm:ss",
+                            "views": [
+                                "hours",
+                                "minutes"
+                            ],
+                            "timeSteps": {
+                                "hours": 1,
+                                "minutes": 15
+                            },
+                            "label": {
+                                "en": "Time from",
+                                "de": "Zeit von"
+                            },
+                            "tooltip": {
+                                "en": "Time from",
+                                "de": "Zeit von"
+                            }
+                        },
+                        {
+                            "type": "timePicker",
+                            "attr": "time_to",
+                            "format": "HH:mm",
+                            "returnFormat": "HH:mm:ss",
+                            "views": [
+                                "hours",
+                                "minutes"
+                            ],
+                            "timeSteps": {
+                                "hours": 1,
+                                "minutes": 15
+                            },
+                            "label": {
+                                "en": "Time to",
+                                "de": "Zeit bis"
+                            },
+                            "tooltip": {
+                                "en": "Time to",
+                                "de": "Zeit bis"
+                            }
+                        },
+                        {
+                            "type": "number",
+                            "attr": "fee_absolute",
+                            "unit": "€ct/kWh",
+                            "label": {
+                                "en": "Provider fee",
+                                "de": "Provider Gebühr"
+                            },
+                            "tooltip": {
+                                "en": "Provider fee absolute (€ct/kWh)",
+                                "de": "Provider Gebühr Absolut (€ct/kWh)"
+                            }
+                        },
+                        {
+                            "type": "number",
+                            "attr": "fee_relative",
+                            "unit": "%",
+                            "label": {
+                                "en": "Provider fee",
+                                "de": "Provider Gebühr"
+                            },
+                            "tooltip": {
+                                "en": "Provider fee (%)",
+                                "de": "Provider Gebühr (%)"
+                            }
+                        },
+                        {
+                            "type": "number",
+                            "attr": "charges",
+                            "unit": "%",
+                            "label": {
+                                "en": "other taxes",
+                                "de": "weitere Abgaben"
+                            },
+                            "tooltip": {
+                                "en": "other taxes (%)",
+                                "de": "weitere Abgaben (%)"
+                            }
+                        },
+                        {
+                            "type": "number",
+                            "attr": "gridCosts",
+                            "unit": "€ct/kWh",
+                            "label": {
+                                "en": "grid costs",
+                                "de": "Netzentgelte"
+                            },
+                            "tooltip": {
+                                "en": "grid costs (€ct/kWh)",
+                                "de": "Netzentgelte (€ct/kWh)"
+                            }
+                        },
+                        {
+                            "type": "number",
+                            "attr": "vat",
+                            "unit": "%",
+                            "label": {
+                                "en": "VAT",
+                                "de": "USt"
+                            },
+                            "tooltip": {
+                                "en": "VAT (%)",
+                                "de": "USt (%)"
+                            }
+                        }
+                    ]
+                },
                 "_text1": {
                     "type": "staticText",
                     "text": {
-                        "de": "Calculation: <br> provider = tradePrice * Abs(tradePrice * providerFee) + feeAbsolute; <br> charges = (tradePrice + provider) * otherTaxes; <br> vat = (tradePrice + provider + charges + gridCosts) * vat; <br> price = tradePrice + provider + charges + gridCosts + vat;",
-                        "en": "Calculation: <br> provider = tradePrice * tradePrice * providerFee + feeAbsolute; <br> charges = (tradePrice + provider) * otherTaxes; <br> vat = (tradePrice + provider + charges + gridCosts) * vat; <br> price = tradePrice + provider + charges + gridCosts + vat;"
+                        "de": "provider = tradePrice * Abs(tradePrice * providerFee) + feeAbsolute; <br> charges = (tradePrice + provider) * otherTaxes; <br> vat = (tradePrice + provider + charges + gridCosts) * vat; <br> price = tradePrice + provider + charges + gridCosts + vat;",
+                        "en": "provider = tradePrice * tradePrice * providerFee + feeAbsolute; <br> charges = (tradePrice + provider) * otherTaxes; <br> vat = (tradePrice + provider + charges + gridCosts) * vat; <br> price = tradePrice + provider + charges + gridCosts + vat;"
                     },
                     "newLine": true,
-                    "hidden": "!data.calculate",
+                    "hidden": "data.calculate == false",
                     "xs": 12,
                     "sm": 12,
                     "md": 12,

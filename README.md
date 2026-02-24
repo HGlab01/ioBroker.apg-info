@@ -33,13 +33,20 @@ For the swiss market a token from entsoe.eu is needed. Please add your token to 
 Register at the page https://transparency.entsoe.eu/ and send afterwards and email to transparency@entsoe.eu asking for RESTFUL API access for the email address you registered. <br>
 For more details check https://transparency.entsoe.eu/content/static_content/Static%20content/web%20api/Guide.html#_authentication_and_authorisation
 
+## Time based grid cost calculation (NEW)
+In markets (like Austria) characterized by time-variable grid costs (e.g., reduced rates during midday hours in summer), parameters are now configurable via a table. A reference table illustrates the required data entry format. The feature is in the adapter configuration in the tab "calculation".  
+**Important:** Table view works with Admin 7.7.23 or later. In older versions the date field is not shown propperly (https://github.com/ioBroker/ioBroker.admin/issues/3344). 
 
 ## Changelog
 <!--
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### __WORK IN PROGRESS__
+### 0.1.29 (2026-02-14)
+* (HGlab01) add time based grid costs calculation (see above)
+* (HGlab01) Bump axios to 1.13.5
+
+### 0.1.28 (2025-12-11)
 * (HGlab01) add Energy-Charts as third data provider
 
 ### 0.1.27 (2025-11-19)
@@ -56,19 +63,10 @@ For more details check https://transparency.entsoe.eu/content/static_content/Sta
 * (HGlab01) Bump axios to 1.13.1
 * (HGlab01) Bump iobroker-jsonexplorer to 0.2.2
 
-### 0.1.23 (2025-10-29)
-* (HGlab01) extend to two market data providers for quarter-hourly market prices
-* (HGlab01) add turn on/off quarter-hourly and hourly market prices
-* (HGlab01) refactorings
-
-### 0.1.22 (2025-10-21)
-* (HGlab01) Implement retry mechanism for API calls
-* (HGlab01) add turn on/off for peak hours and market prices
-
 ## License
 MIT License
 
-Copyright (c) 2025 HGlab01 <myiobrokeradapters@gmail.com>
+Copyright (c) 2023-2026 HGlab01 <myiobrokeradapters@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -98,5 +96,6 @@ Three data providers are used for this adapter
 * Energy Charts (https://api.energy-charts.info/) licensed under the CC BY 4.0 license
 
 
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FHGlab01%2FioBroker.apg-info.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FHGlab01%2FioBroker.apg-info?ref=badge_large)
 
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FHGlab01%2FioBroker.apg-info.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FHGlab01%2FioBroker.apg-info?ref=badge_large)
