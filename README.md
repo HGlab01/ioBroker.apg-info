@@ -42,6 +42,9 @@ In markets (like Austria) characterized by time-variable grid costs (e.g., reduc
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
+### 0.1.30 (2026-02-24)
+* (@HGlab01) finetune timeout management
+
 ### 0.1.29 (2026-02-14)
 * (HGlab01) add time based grid costs calculation (see above)
 * (HGlab01) Bump axios to 1.13.5
@@ -57,11 +60,6 @@ In markets (like Austria) characterized by time-variable grid costs (e.g., reduc
 * (HGlab01) optimize handling when data provider runs in timeout
 * (HGlab01) market price details can be switched on/off
 * (HGlab01) enhanced logs when it comes to retries
-
-### 0.1.24 (2025-11-05)
-* (HGlab01) Provider Entsoe is used as backup for quarter-hourly market prices. Request a token to be on the safe side
-* (HGlab01) Bump axios to 1.13.1
-* (HGlab01) Bump iobroker-jsonexplorer to 0.2.2
 
 ## License
 MIT License

@@ -1,4 +1,9 @@
 # Older changes
+## 0.1.24 (2025-11-05)
+* (HGlab01) Provider Entsoe is used as backup for quarter-hourly market prices. Request a token to be on the safe side
+* (HGlab01) Bump axios to 1.13.1
+* (HGlab01) Bump iobroker-jsonexplorer to 0.2.2
+
 ## 0.1.23 (2025-10-29)
 * (HGlab01) extend to two market data providers for quarter-hourly market prices
 * (HGlab01) add turn on/off quarter-hourly and hourly market prices
