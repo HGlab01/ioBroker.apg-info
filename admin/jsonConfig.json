@@ -496,8 +496,8 @@
                 "_text1": {
                     "type": "staticText",
                     "text": {
-                        "de": "Token is only needed for Swiss market. How to request a token is described in the readme.",
-                        "en": "Token is only needed for Swiss market. How to request a token is described in the readme."
+                        "de": "Token is a must for Swiss market and a backup for AT + DE. How to request a token is described in the readme.",
+                        "en": "Token is a must for Swiss market and a backup for AT + DE. How to request a token is described in the readme."
                     },
                     "newLine": true,
                     "xs": 12,
