@@ -42,6 +42,9 @@ In markets (like Austria) characterized by time-variable grid costs (e.g., reduc
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
+### **WORK IN PROGRESS**
+- (copilot) Adapter requires node.js >= 22 now
+
 ### 0.1.30 (2026-02-24)
 * (@HGlab01) finetune timeout management
 
