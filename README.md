@@ -42,7 +42,7 @@ In markets (like Austria) characterized by time-variable grid costs (e.g., reduc
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### 0.1.31 (2026-05-02)
+### 0.1.32 (2026-05-02)
 * (HGlab01) Adapter requires node.js >= 22 now
 * (HGlab01) fix 'DE' is not the code for an available bidding zone
 * (HGlab01) Bump axios to 1.15.2
