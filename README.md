@@ -20,8 +20,8 @@ With the standard-configuration the adapter runs at 00:00, 13:00 and 15.00 o'clo
 **This adapter uses Sentry libraries to automatically report exceptions and code errors to the developers.** For more details and for information how to disable the error reporting see [Sentry-Plugin Documentation](https://github.com/ioBroker/plugin-sentry#plugin-sentry)!
 
 ## Requires
-* Node.js 20 or higher
-* ioBroker host (js-controller) 5.0 or higher
+* Node.js 22 or higher
+* ioBroker host (js-controller) 6.0.11 or higher
 
 ## Quarter-hourly market prices
 These market prices are collected by Exaa and as backup by Entsoe. Therefore is recommended to *request an Entsoe token* if quarter-hourly prices are configured.
@@ -42,11 +42,13 @@ In markets (like Austria) characterized by time-variable grid costs (e.g., reduc
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### **WORK IN PROGRESS**
-- (copilot) Adapter requires node.js >= 22 now
+### 0.1.31 (2026-05-02)
+* (HGlab01) Adapter requires node.js >= 22 now
+* (HGlab01) fix 'DE' is not the code for an available bidding zone
+* (HGlab01) Bump axios to 1.15.2
 
 ### 0.1.30 (2026-02-24)
-* (@HGlab01) finetune timeout management
+* (HGlab01) finetune timeout management
 
 ### 0.1.29 (2026-02-14)
 * (HGlab01) add time based grid costs calculation (see above)
@@ -57,12 +59,6 @@ In markets (like Austria) characterized by time-variable grid costs (e.g., reduc
 
 ### 0.1.27 (2025-11-19)
 * (HGlab01) disable data provider Epex (not a stable option)
-
-### 0.1.26 (2025-11-15)
-* (HGlab01) optimize handling for source Entsoe
-* (HGlab01) optimize handling when data provider runs in timeout
-* (HGlab01) market price details can be switched on/off
-* (HGlab01) enhanced logs when it comes to retries
 
 ## License
 MIT License
