@@ -24,16 +24,16 @@ With the standard-configuration the adapter runs at 00:00, 13:00 and 15.00 o'clo
 * ioBroker host (js-controller) 6.0.11 or higher
 
 ## Quarter-hourly market prices
-These market prices are collected by Exaa and as backup by Entsoe. Therefore is recommended to *request an Entsoe token* if quarter-hourly prices are configured.
+These market prices are collected by Exaa and as backup by Entsoe and Energy Charts. Therefore it is recommended to *request an Entsoe token* if quarter-hourly prices are configured.
 
 ## Swiss market
-For the swiss market a token from entsoe.eu is needed. Please add your token to the adapter configuration in the tab "ENTSOE TOKEN".
+For the swiss market a token from entsoe.eu is needed.
 
 ## How to get an Entsoe token
 Register at the page https://transparency.entsoe.eu/ and send afterwards and email to transparency@entsoe.eu asking for RESTFUL API access for the email address you registered. <br>
 For more details check https://transparency.entsoe.eu/content/static_content/Static%20content/web%20api/Guide.html#_authentication_and_authorisation
 
-## Time based grid cost calculation (NEW)
+## Time based grid cost calculation
 In markets (like Austria) characterized by time-variable grid costs (e.g., reduced rates during midday hours in summer), parameters are now configurable via a table. A reference table illustrates the required data entry format. The feature is in the adapter configuration in the tab "calculation".  
 **Important:** Table view works with Admin 7.7.23 or later. In older versions the date field is not shown propperly (https://github.com/ioBroker/ioBroker.admin/issues/3344). 
 
