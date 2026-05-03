@@ -87,12 +87,11 @@ SOFTWARE.
 More about the security of supply & all data, facts and figures regarding the world of electricity and the energy transition can be found at www.apg-powermonitor.at.
 
 #### Disclaimer data providers
-Three data providers are used for this adapter
+Four data providers are used for this adapter
 * Exaa (https://www.exaa.at/)
 * Entso-e (https://www.entsoe.eu/data/transparency-platform/)
 * Energy Charts (https://api.energy-charts.info/) licensed under the CC BY 4.0 license
-
-
+* aWATTar (https://www.awattar.at/services/api and https://www.awattar.de/services/api)
 
 
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FHGlab01%2FioBroker.apg-info.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FHGlab01%2FioBroker.apg-info?ref=badge_large)
