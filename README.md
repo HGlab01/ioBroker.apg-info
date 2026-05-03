@@ -60,6 +60,8 @@ In markets (like Austria) characterized by time-variable grid costs (e.g., reduc
 ### 0.1.27 (2025-11-19)
 * (HGlab01) disable data provider Epex (not a stable option)
 
+[Older changelogs can be found there](CHANGELOG_OLD.md)
+
 ## License
 MIT License
 
