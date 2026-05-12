@@ -1162,6 +1162,7 @@ class ApgInfo extends utils.Adapter {
      * @param {number} allMax maximum value for y-axis
      * @param {string} statePath path to the chart state
      * @param {boolean} quarter_hourly true if data is quarter-hourly
+     * @returns {Promise<any[]>} chart data
      */
     async createSingleChart(dataArray, isTomorrow, source, allMin, allMax, statePath, quarter_hourly) {
         this.log.debug(`Creating chart in state ${statePath}`);
@@ -1232,6 +1233,9 @@ class ApgInfo extends utils.Adapter {
         }
 
         await jsonExplorer.stateSetCreate(statePath, 'jsonChart', JSON.stringify(chart));
+        await jsonExplorer.stateSetCreate(statePath.replace(/jsonChart$/, 'jsonChartData'), 'jsonChartData', JSON.stringify(chart.graphs[0].data));
+
+        return chart.graphs[0].data;
     }
 
     /**
@@ -1262,8 +1266,16 @@ class ApgInfo extends utils.Adapter {
         const roundedMax = Math.ceil((allMax * 1.1) / 5) * 5;
 
         if (quarter_hourly == true && this.config_quarterHourly == true) {
-            await this.createSingleChart(arrayToday, false, null, allMin, roundedMax, 'marketprice_quarter_hourly.today.jsonChart', quarter_hourly);
-            await this.createSingleChart(
+            const chartDataToday = await this.createSingleChart(
+                arrayToday,
+                false,
+                null,
+                allMin,
+                roundedMax,
+                'marketprice_quarter_hourly.today.jsonChart',
+                quarter_hourly,
+            );
+            const chartDataTomorrow = await this.createSingleChart(
                 arrayTomorrow,
                 true,
                 sourceTomorrow,
@@ -1272,10 +1284,36 @@ class ApgInfo extends utils.Adapter {
                 'marketprice_quarter_hourly.tomorrow.jsonChart',
                 quarter_hourly,
             );
+            await jsonExplorer.stateSetCreate(
+                'marketprice_quarter_hourly.jsonChartData',
+                'jsonChartData',
+                JSON.stringify([...chartDataToday, ...chartDataTomorrow]),
+            );
         }
         if (quarter_hourly == false && this.config_hourly == true) {
-            await this.createSingleChart(arrayToday, false, null, allMin, roundedMax, 'marketprice.today.jsonChart', quarter_hourly);
-            await this.createSingleChart(arrayTomorrow, true, sourceTomorrow, allMin, roundedMax, 'marketprice.tomorrow.jsonChart', quarter_hourly);
+            const chartDataToday = await this.createSingleChart(
+                arrayToday,
+                false,
+                null,
+                allMin,
+                roundedMax,
+                'marketprice.today.jsonChart',
+                quarter_hourly,
+            );
+            const chartDataTomorrow = await this.createSingleChart(
+                arrayTomorrow,
+                true,
+                sourceTomorrow,
+                allMin,
+                roundedMax,
+                'marketprice.tomorrow.jsonChart',
+                quarter_hourly,
+            );
+            await jsonExplorer.stateSetCreate(
+                'marketprice.jsonChartData',
+                'jsonChartData',
+                JSON.stringify([...chartDataToday, ...chartDataTomorrow]),
+            );
         }
     }
 
