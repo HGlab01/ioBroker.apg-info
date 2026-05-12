@@ -51,7 +51,7 @@ As an alternative you can use the [echarts adapter](https://github.com/ioBroker/
 - `[..].marketprice_quarter_hourly.jsonChartData` provides the same combined chart data for quarter-hourly prices.
 
 With this you can create nice charts like this one (created with echarts adapter and the combined chart quarter hourly data):
-![2026_05_14_00_00_JSON Chart Data.svg](doc/2026_05_14_00_00_JSON%20Chart%20Data.svg)
+![2026_05_14_00_00_JSON Chart Data.svg](doc/echarts.svg)
 ## Changelog
 <!--
     Placeholder for the next version (at the beginning of the line):
