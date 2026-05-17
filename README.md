@@ -50,7 +50,7 @@ As an alternative you can use the [echarts adapter](https://github.com/ioBroker/
 - `[..].marketprice.jsonChartData` combines today's and tomorrow's chart data in one array.  
 - `[..].marketprice_quarter_hourly.jsonChartData` provides the same combined chart data for quarter-hourly prices.
 
-With this you can create nice charts like this one (created with echarts adapter and the combined chart quarter hourly data):
+With this you can create nice charts like this one (created with echarts adapter and the combined chart quarter hourly data):  
 <img src="doc/echarts.svg" alt="JSON Chart Data" width="50%" />
 
 ## Changelog
