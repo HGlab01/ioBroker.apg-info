@@ -57,6 +57,10 @@ With this you can create nice charts like this one (created with echarts adapter
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
+### 0.1.33-alpha.0 (2026-05-17)
+* (HGlab01) Bump axios to 1.16.0
+* (SimonFischer04) support echarts (vis-2)
+
 ### 0.1.32 (2026-05-02)
 * (HGlab01) Adapter requires node.js >= 22 now
 * (HGlab01) fix 'DE' is not the code for an available bidding zone
@@ -71,11 +75,6 @@ With this you can create nice charts like this one (created with echarts adapter
 
 ### 0.1.28 (2025-12-11)
 * (HGlab01) add Energy-Charts as third data provider
-
-### 0.1.27 (2025-11-19)
-* (HGlab01) disable data provider Epex (not a stable option)
-
-[Older changelogs can be found there](CHANGELOG_OLD.md)
 
 ## License
 MIT License

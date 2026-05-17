@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "apg-info",
-    "version": "0.1.32",
+    "version": "0.1.33-alpha.0",
     "news": {
+      "0.1.33-alpha.0": {
+        "en": "Bump axios to 1.16.0\nsupport echarts (vis-2)",
+        "de": "Bump axios zu 1.16.0\nsupport echarts (vis-2)",
+        "ru": "Bump axios 1.16.0\nвспомогательные диаграммы (vis-2)",
+        "pt": "Bump axios a 1.16.0\necharts de suporte (vis-2)",
+        "nl": "Bump axios naar 1.16.0\necharts ondersteunen (vis-2)",
+        "fr": "Axios de pompe à 1.16.0\nsoutenir les écharts (vis-2)",
+        "it": "Assio di bump a 1.16.0\nsupporto echarts (vis-2)",
+        "es": "Axios de bomba a 1.16.0\nsupport echarts (vis-2)",
+        "pl": "Axios bump do 1.16.0\necharts wsparcia (vis-)",
+        "uk": "Бампер аксіос до 1.16.0\nпідтримка echarts (віз-2)",
+        "zh-cn": "横轴改为1.16.0\n技术支持(vis-2)"
+      },
       "0.1.32": {
         "en": "Adapter requires node.js >= 22 now\nfix 'DE' is not the code for an available bidding zone\nBump axios to 1.15.2",
         "de": "Adapter benötigt node.js >= 22 jetzt\nfix 'DE' ist nicht der Code für eine verfügbare Biddingzone\nBump axios zu 1.15.2",
@@ -80,19 +93,6 @@
         "pl": "dodaj karty energetyczne jako trzeci dostawca danych",
         "uk": "додати Energy-Charts як третій постачальник даних",
         "zh-cn": "添加能源图作为第三个数据提供者"
-      },
-      "0.1.27": {
-        "en": "disable data provider Epex (not a stable option)",
-        "de": "den Datenanbieter Epex deaktivieren (nicht eine stabile Option)",
-        "ru": "отключение поставщика данных Epex (нестабильный вариант)",
-        "pt": "desabilitar o provedor de dados Epex (não é uma opção estável)",
-        "nl": "dataprovider Epex uitschakelen (geen stabiele optie)",
-        "fr": "désactiver le fournisseur de données Epex (pas une option stable)",
-        "it": "disabilitare il fornitore di dati Epex (non un'opzione stabile)",
-        "es": "proveedor de datos deshabilitado Epex (no una opción estable)",
-        "pl": "wyłączenie dostawcy danych Epex (niestabilna opcja)",
-        "uk": "відключити провайдер даних Epex (не стабільний варіант)",
-        "zh-cn": "禁用数据提供者 Epex( 非稳定选项)"
       }
     },
     "titleLang": {
