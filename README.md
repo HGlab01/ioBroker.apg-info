@@ -58,9 +58,10 @@ With this you can create nice charts like this one (created with echarts adapter
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### 0.1.33-alpha.0 (2026-05-17)
-* (HGlab01) Bump axios to 1.16.0
+### 0.1.33 (2026-05-26)
+* (HGlab01) Bump axios to 1.16.1
 * (SimonFischer04) support echarts (vis-2)
+* (HGlab01) fix E5050 process.exit() used
 
 ### 0.1.32 (2026-05-02)
 * (HGlab01) Adapter requires node.js >= 22 now

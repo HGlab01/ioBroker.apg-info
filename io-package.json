@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "apg-info",
-    "version": "0.1.33-alpha.0",
+    "version": "0.1.33",
     "news": {
+      "0.1.33": {
+        "en": "Bump axios to 1.16.1\nsupport echarts (vis-2)\nfix E5050 process.exit() used",
+        "de": "Bump axios zu 1.16.1\nsupport echarts (vis-2)\ne505050 process.exit() gebraucht",
+        "ru": "Аксиос удара до 1.16.1\nвспомогательные диаграммы (vis-2)\ne5050 process.exit() используется",
+        "pt": "Bump axios a 1.16.1\necharts de suporte (vis-2)\ncorrigir E5050 process.exit() usado",
+        "nl": "Bump axios naar 1.16.1\necharts ondersteunen (vis-2)\nfix E5050 process.exit() gebruikt",
+        "fr": "Axios à bulles à 1.16.1\nsoutenir les écharts (vis-2)\nfixer E5050 process.exit() utilisé",
+        "it": "Assio di bump a 1.16.1\nsupporto echarts (vis-2)\nfix E5050 process.exit() usato",
+        "es": "Axios de bomba a 1.16.1\nsupport echarts (vis-2)\narreglar proceso E5050.exit() utilizado",
+        "pl": "Aksykony Bump do 1.16.1\necharts wsparcia (vis-)\nfix E5050 process.exit () used",
+        "uk": "Бампер аксіос до 1.16.1\nпідтримка echarts (віз-2)\nfix E5050 процес.exit() використовується",
+        "zh-cn": "横轴改为1.16.1\n技术支持(vis-2)\n固定 E5050 进程. exit () 使用"
+      },
       "0.1.33-alpha.0": {
         "en": "Bump axios to 1.16.0\nsupport echarts (vis-2)",
         "de": "Bump axios zu 1.16.0\nsupport echarts (vis-2)",
@@ -80,19 +93,6 @@
         "pl": "dodać kalkulację kosztów sieci w oparciu o czas (zob. powyżej)",
         "uk": "додати розрахунок витрат на час на основі сітки (див. вище)",
         "zh-cn": "添加基于时间的网格成本计算(见上文)"
-      },
-      "0.1.28": {
-        "en": "add Energy-Charts as third data provider",
-        "de": "energie-Charts als dritter Datenanbieter hinzufügen",
-        "ru": "energy-Charts станет третьим поставщиком данных",
-        "pt": "adicionar Energy-Charts como terceiro fornecedor de dados",
-        "nl": "energy-Charts toevoegen als derde data provider",
-        "fr": "ajouter Energy-Charts comme troisième fournisseur de données",
-        "it": "aggiungere Energy-Charts come terzo fornitore di dati",
-        "es": "añadir Energy-Charts como tercer proveedor de datos",
-        "pl": "dodaj karty energetyczne jako trzeci dostawca danych",
-        "uk": "додати Energy-Charts як третій постачальник даних",
-        "zh-cn": "添加能源图作为第三个数据提供者"
       }
     },
     "titleLang": {
