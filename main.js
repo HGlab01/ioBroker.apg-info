@@ -24,7 +24,6 @@ class ApgInfo extends utils.Adapter {
             name: 'apg-info',
         });
         this.on('ready', this.onReady.bind(this));
-        // @ts-expect-error axiosInstance type
         this.axiosInstance = axios.create({ timeout: API_TIMEOUT });
         this.jsonExplorer = jsonExplorer;
         //this.on('stateChange', this.onStateChange.bind(this));
@@ -78,7 +77,7 @@ class ApgInfo extends utils.Adapter {
             country = this.config.country;
         } else {
             this.log.error('Country for market not found. Please confifure in Config');
-            this.terminate ? this.terminate(utils.EXIT_CODES.UNCAUGHT_EXCEPTION) : process.exit(0);
+            this.terminate('Missing country configuration', 11);
         }
 
         if (this.config.tokenEncrypted) {
@@ -92,7 +91,7 @@ class ApgInfo extends utils.Adapter {
                     this.log.info(`Let's onetime encrypt the token...`);
                     objInstance.native.tokenEncrypted = this.encrypt(tokenUnEncrypted);
                     delete objInstance.native.token;
-                    await this.setForeignObjectAsync(instanceId, objInstance);
+                    await this.setForeignObject(instanceId, objInstance);
                     this.token = tokenUnEncrypted;
                     this.log.info(`Token encrypted and saved in instance ${instanceId}`);
                 }
@@ -100,12 +99,12 @@ class ApgInfo extends utils.Adapter {
         }
         if (!this.token && country != 'at' && country != 'de') {
             this.log.error('No token defined. Please check readme how to request!');
-            this.terminate ? this.terminate(utils.EXIT_CODES.UNCAUGHT_EXCEPTION) : process.exit(0);
+            this.terminate('Missing API token', 11);
         }
 
         if ((await isOnline()) == false) {
             this.log.error('No internet connection detected');
-            this.terminate ? this.terminate(utils.EXIT_CODES.UNCAUGHT_EXCEPTION) : process.exit(0);
+            this.terminate('No internet connection', 0);
             return;
         }
 
@@ -122,9 +121,9 @@ class ApgInfo extends utils.Adapter {
         ]);
 
         if (resultPeakHours == 'error' || resultMarketPrice == 'error') {
-            this.terminate ? this.terminate(utils.EXIT_CODES.UNCAUGHT_EXCEPTION) : process.exit(0);
+            this.terminate('Peak hours resultet in error', utils.EXIT_CODES.UNCAUGHT_EXCEPTION);
         } else {
-            this.terminate ? this.terminate(0) : process.exit(0);
+            this.terminate(0);
         }
     }
 
