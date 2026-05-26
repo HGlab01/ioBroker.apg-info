@@ -78,6 +78,9 @@ With this you can create nice charts like this one (created with echarts adapter
 ### 0.1.28 (2025-12-11)
 * (HGlab01) add Energy-Charts as third data provider
 
+### Older Changelog
+can be find [here](https://github.com/HGlab01/ioBroker.apg-info/blob/main/CHANGELOG_OLD.md)
+
 ## License
 MIT License
 
