@@ -567,8 +567,6 @@ class ApgInfo extends utils.Adapter {
         let todayResult, tomorrowResult, todayResultq, tomorrowResultq;
         const useEntsoe = this.token == null || this.token.length < 10 ? false : true;
 
-        //const [eXaaToday, eXaaTomorrow] = await Promise.all([getDataExaa(this, false, country), getDataExaa(this, true, country)]);
-
         //check provider for quarter-hourly
         if (this.config_quarterHourly) {
             this.log.info(`Let's check for quarter-hourly market data`);
@@ -644,39 +642,6 @@ class ApgInfo extends utils.Adapter {
                     statusTomorrow = 'done';
                 }
             }
-
-            /*
-            //Today
-            prices0Exaa = eXaaToday?.q ?? null;
-            if (prices0Exaa == null) {
-                this.log.info(`No quarter-hourly market data from Exaa for today, let's try Entsoe`);
-                if (useEntsoe) {
-                    prices0Entsoe = await this._getAndProcessEntsoeData(false, country, false);
-                } else {
-                    this.log.info(`No token defined for Entsoe, skipped! Let's try EnergyChart`);
-                    prices0EnergyCharts = await getDataEnergyCharts(this, false, country);
-                }
-                if (useEntsoe && prices0Entsoe?.prices == null) {
-                    this.log.info(`No quarter-hourly market data from Entsoe for today, let's try EnergyChart`);
-                    prices0EnergyCharts = await getDataEnergyCharts(this, false, country);
-                }
-            }
-
-            //Tomorrow
-            prices1Exaa = eXaaTomorrow?.q ?? null;
-            if (prices1Exaa == null) {
-                this.log.info(`No quarter-hourly market data from Exaa for tomorrow, let's try Entsoe`);
-                if (useEntsoe) {
-                    prices1Entsoe = await this._getAndProcessEntsoeData(true, country, forecast);
-                } else {
-                    this.log.info(`No token defined for Entsoe, skipped! Let's try EnergyChart`);
-                    prices1EnergyCharts = await getDataEnergyCharts(this, true, country);
-                }
-                if (useEntsoe && prices1Entsoe?.prices == null) {
-                    this.log.info(`No quarter-hourly market data from Entsoe for tomorrow, let's try EnergyChart`);
-                    prices1EnergyCharts = await getDataEnergyCharts(this, true, country);
-                }
-            }*/
 
             //Check results
             if (statusToday == 'noData') {
