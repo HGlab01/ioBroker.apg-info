@@ -713,8 +713,8 @@ class ApgInfo extends utils.Adapter {
         }
 
         if (this.config_hourly) {
-            const [eXaaToday, eXaaTomorrow] = await Promise.all([getDataExaa(this, false, country), getDataExaa(this, true, country)]);
             this.log.info(`Let's check for hourly market data`);
+            const [eXaaToday, eXaaTomorrow] = await Promise.all([getDataExaa(this, false, country), getDataExaa(this, true, country)]);
             //check for provider for today for hourly
             prices0Exaa = eXaaToday?.h ?? null;
             if (prices0Exaa == null) {
