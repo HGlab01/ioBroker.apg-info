@@ -578,6 +578,7 @@ class ApgInfo extends utils.Adapter {
             ]);
 
             //TODAY
+            this.log.info(`Let's check for quarter-hourly market data today`);
             let statusToday = 'energChart';
             if (prices0EnergyCharts?.price == null || typeof prices0EnergyCharts.price !== 'object') {
                 this.log.info(`No quarter-hourly market data from EnergyChart for today, let's try Entsoe`);
@@ -611,8 +612,9 @@ class ApgInfo extends utils.Adapter {
             }
 
             //TOMORROW
+            this.log.info(`Let's check for quarter-hourly market data tomorrow`);
             let statusTomorrow = 'energChart';
-            if (prices1EnergyCharts?.price1 == null || typeof prices1EnergyCharts.price !== 'object') {
+            if (prices1EnergyCharts?.price == null || typeof prices1EnergyCharts.price !== 'object') {
                 this.log.info(`No quarter-hourly market data from EnergyChart for tomorrow, let's try Entsoe`);
                 statusTomorrow = 'entsoe';
             } else {
