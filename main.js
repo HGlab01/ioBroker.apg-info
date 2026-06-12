@@ -10,7 +10,7 @@ const { getDataExaa1015, getDataExaa, getDataAwattar, getDataPeakHours, getDataE
 const { addDays, cleanDate, calcDate, pad, compareSecondColumn } = require('./lib/helpers.js');
 
 // Constants
-const MAX_DELAY = 1; //25000
+const MAX_DELAY = 25000; //25000
 const API_TIMEOUT = 20000; //10000
 const API_TIMEOUT_ENTSOE = 35000; //35000
 
