@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "apg-info",
-    "version": "0.1.33",
+    "version": "0.1.34",
     "news": {
+      "0.1.34": {
+        "en": "change provider sequence (Exaa as last)\nfix EnergyCharts empty data recognition\nBump axios to 1.17.0",
+        "de": "wechselprovidersequenz (Exaa wie zuletzt)\nfix EnergyCharts leere Datenerkennung\nBump Axios zu 1.17.0",
+        "ru": "изменение последовательности поставщиков (Exaa как последний)\nenergyCharts: пустое распознавание данных\nАксиос удара до 1,17,0",
+        "pt": "mudar a sequência do provedor (Exaa como último)\ncorrigir EnergyCharts vazio reconhecimento de dados\nBump axios a 1.17.0",
+        "nl": "veranderen provider sequentie (Exaa als laatste)\nfix EnergyCharts lege dataherkenning\nBump axios naar 1,17,0",
+        "fr": "modifier la séquence du fournisseur (Exaa en dernier)\nfixer EnergyCharts reconnaissance des données vides\nAxios de pompe à 1.17.0",
+        "it": "cambiare la sequenza del fornitore (Exaa come ultima)\ncorrezione EnergyCharts riconoscimento dei dati vuoti\nAssio di bump a 1.17.0",
+        "es": "secuencia del proveedor de cambio (Exaa como última)\nreparación de datos vacíos de EnergyCharts\nAxios de bomba a 1.17.0",
+        "pl": "zmiana sekwencji dostawcy (Exaa jako ostatni)\nfix EnergyCharts Puste rozpoznawanie danych\nAxios bump do 1.17.0",
+        "uk": "зміна послідовності провайдера (Exaa as last)\nвиправити EnergyCharts порожній розпізнавання даних\nБампер аксіос до 1.17.0",
+        "zh-cn": "更改提供者序列( 最后为Exaa)\n修复 Energy Charts 空数据识别\n轴向1.17.0"
+      },
       "0.1.33": {
         "en": "Bump axios to 1.16.1\nsupport echarts (vis-2)\nfix E5050 process.exit() used",
         "de": "Bump axios zu 1.16.1\nsupport echarts (vis-2)\ne505050 process.exit() gebraucht",
@@ -80,19 +93,6 @@
         "pl": "dodać kalkulację kosztów sieci w oparciu o czas (zob. powyżej)\nAxios bump do 1.13.5",
         "uk": "додати розрахунок витрат на час на основі сітки (див. вище)\nБампер аксіос до 1.13.5",
         "zh-cn": "添加基于时间的网格成本计算(见上文)\n横轴改为1.13.5"
-      },
-      "0.1.29-alpha.0": {
-        "en": "add time based grid costs calculation (see above)",
-        "de": "kostenberechnung auf zeitbasis (siehe oben)",
-        "ru": "добавить расчет стоимости сетки на основе времени (см. выше)",
-        "pt": "cálculo dos custos da rede com base no tempo (ver acima)",
-        "nl": "de berekening van op tijd gebaseerde netkosten toevoegen (zie hierboven)",
-        "fr": "ajouter le calcul des coûts de grille en fonction du temps (voir ci-dessus)",
-        "it": "aggiungere il calcolo dei costi di griglia basati sul tempo (vedere sopra)",
-        "es": "añadir cálculo de costos de rejilla basados en el tiempo (ver arriba)",
-        "pl": "dodać kalkulację kosztów sieci w oparciu o czas (zob. powyżej)",
-        "uk": "додати розрахунок витрат на час на основі сітки (див. вище)",
-        "zh-cn": "添加基于时间的网格成本计算(见上文)"
       }
     },
     "titleLang": {

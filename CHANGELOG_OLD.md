@@ -1,4 +1,7 @@
 # Older changes
+## 0.1.28 (2025-12-11)
+* (HGlab01) add Energy-Charts as third data provider
+
 ## 0.1.27 (2025-11-19)
 * (HGlab01) disable data provider Epex (not a stable option)
 
