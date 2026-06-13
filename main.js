@@ -110,9 +110,12 @@ class ApgInfo extends utils.Adapter {
 
         this.log.debug('Internet connection detected. Everything fine!');
 
-        const callApiDelay = Math.floor(Math.random() * MAX_DELAY);
-        this.log.info(`Delay execution by ${callApiDelay}ms to better spread API calls`);
-        await jsonExplorer.sleep(callApiDelay);
+        const now = new Date();
+        if (now.getMinutes() == 0 && now.getSeconds() < 15) {
+            const callApiDelay = Math.floor(Math.random() * MAX_DELAY);
+            this.log.info(`Delay execution by ${callApiDelay}ms to better spread API calls`);
+            await jsonExplorer.sleep(callApiDelay);
+        }
         await jsonExplorer.setLastStartTime();
 
         const [resultPeakHours, resultMarketPrice] = await Promise.all([
@@ -555,50 +558,94 @@ class ApgInfo extends utils.Adapter {
         //const tomorrowDate = addDays(todayDate, 1);
         let prices0Entsoe = null,
             prices1Entsoe = null;
-        let prices0Awattar, prices1Awattar, prices0Exaa, prices1Exaa, prices1Exaa1015, prices0EnergyCharts, prices1EnergyCharts;
+        let prices0Awattar,
+            prices1Awattar,
+            prices0Exaa,
+            prices1Exaa,
+            prices1Exaa1015,
+            prices0EnergyCharts,
+            prices1EnergyCharts,
+            eXaaToday,
+            eXaaTomorrow;
         let todayResult, tomorrowResult, todayResultq, tomorrowResultq;
         const useEntsoe = this.token == null || this.token.length < 10 ? false : true;
 
-        const [eXaaToday, eXaaTomorrow] = await Promise.all([getDataExaa(this, false, country), getDataExaa(this, true, country)]);
-
-        //check provider for quarter-hourly
+        //check provider for quarter-hourly market data
         if (this.config_quarterHourly) {
             this.log.info(`Let's check for quarter-hourly market data`);
+            [prices0EnergyCharts, prices1EnergyCharts] = await Promise.all([
+                getDataEnergyCharts(this, false, country),
+                getDataEnergyCharts(this, true, country),
+            ]);
 
-            //Today
-            prices0Exaa = eXaaToday?.q ?? null;
-            if (prices0Exaa == null) {
-                this.log.info(`No quarter-hourly market data from Exaa for today, let's try Entsoe`);
+            //TODAY
+            let statusToday = 'energChart';
+            if (prices0EnergyCharts?.price == null || typeof prices0EnergyCharts.price !== 'object') {
+                this.log.info(`No quarter-hourly market data from EnergyChart for today, let's try Entsoe`);
+                statusToday = 'entsoe';
+            } else {
+                statusToday = 'done';
+            }
+            if (statusToday == 'entsoe') {
                 if (useEntsoe) {
                     prices0Entsoe = await this._getAndProcessEntsoeData(false, country, false);
+                    if (prices0Entsoe?.prices == null) {
+                        this.log.info(`No quarter-hourly market data from Entsoe for today, let's try Exaa`);
+                        statusToday = 'exaa';
+                    } else {
+                        statusToday = 'done';
+                    }
                 } else {
-                    this.log.info(`No token defined for Entsoe, skipped! Let's try EnergyChart`);
-                    prices0EnergyCharts = await getDataEnergyCharts(this, false, country);
+                    this.log.info(`No token defined for Entsoe, skipped! Let's try Exaa`);
+                    statusToday = 'exaa';
                 }
-                if (useEntsoe && prices0Entsoe?.prices == null) {
-                    this.log.info(`No quarter-hourly market data from Entsoe for today, let's try EnergyChart`);
-                    prices0EnergyCharts = await getDataEnergyCharts(this, false, country);
+            }
+            if (statusToday == 'exaa') {
+                eXaaToday = await getDataExaa(this, false, country);
+                prices0Exaa = eXaaToday?.q ?? null;
+                if (prices0Exaa == null) {
+                    this.log.info(`No quarter-hourly market data from Exaa for today!`);
+                    statusToday = 'noData';
+                } else {
+                    statusToday = 'done';
                 }
             }
 
-            //Tomorrow
-            prices1Exaa = eXaaTomorrow?.q ?? null;
-            if (prices1Exaa == null) {
-                this.log.info(`No quarter-hourly market data from Exaa for tomorrow, let's try Entsoe`);
+            //TOMORROW
+            let statusTomorrow = 'energChart';
+            if (prices1EnergyCharts?.price == null || typeof prices1EnergyCharts.price !== 'object') {
+                this.log.info(`No quarter-hourly market data from EnergyChart for tomorrow, let's try Entsoe`);
+                statusTomorrow = 'entsoe';
+            } else {
+                statusTomorrow = 'done';
+            }
+            if (statusTomorrow == 'entsoe') {
                 if (useEntsoe) {
                     prices1Entsoe = await this._getAndProcessEntsoeData(true, country, forecast);
+                    if (prices1Entsoe?.prices == null) {
+                        this.log.info(`No quarter-hourly market data from Entsoe for tomorrow, let's try Exaa`);
+                        statusTomorrow = 'exaa';
+                    } else {
+                        statusTomorrow = 'done';
+                    }
                 } else {
-                    this.log.info(`No token defined for Entsoe, skipped! Let's try EnergyChart`);
-                    prices1EnergyCharts = await getDataEnergyCharts(this, true, country);
+                    this.log.info(`No token defined for Entsoe, skipped! Let's try Exaa`);
+                    statusTomorrow = 'exaa';
                 }
-                if (useEntsoe && prices1Entsoe?.prices == null) {
-                    this.log.info(`No quarter-hourly market data from Entsoe for tomorrow, let's try EnergyChart`);
-                    prices1EnergyCharts = await getDataEnergyCharts(this, true, country);
+            }
+            if (statusTomorrow == 'exaa') {
+                eXaaTomorrow = await getDataExaa(this, true, country);
+                prices1Exaa = eXaaTomorrow?.q ?? null;
+                if (prices1Exaa == null) {
+                    this.log.info(`No quarter-hourly market data from Exaa for tomorrow!`);
+                    statusTomorrow = 'noData';
+                } else {
+                    statusTomorrow = 'done';
                 }
             }
 
             //Check results
-            if (prices0Exaa == null && prices0Entsoe?.prices == null && prices0EnergyCharts?.price == null) {
+            if (statusToday == 'noData') {
                 this.log.error('No quarter-hourly market data for today!');
             }
             if (prices0Entsoe?.prices != null) {
@@ -607,10 +654,10 @@ class ApgInfo extends utils.Adapter {
             if (prices0Exaa != null) {
                 this.log.info('Found Exaa quarter-hourly market data for today!');
             }
-            if (prices0EnergyCharts?.price != null) {
+            if (prices0EnergyCharts?.price && typeof prices0EnergyCharts.price === 'object') {
                 this.log.info('Found EnergyCharts quarter-hourly market data for today!');
             }
-            if (prices1Exaa == null && prices1Entsoe?.prices == null && prices1EnergyCharts?.price == null) {
+            if (statusTomorrow == 'noData') {
                 this.log.info('No quarter-hourly market data for tomorrow!');
             }
             if (prices1Entsoe?.prices != null) {
@@ -619,7 +666,7 @@ class ApgInfo extends utils.Adapter {
             if (prices1Exaa != null) {
                 this.log.info('Found Exaa quarter-hourly market data for tomorrow!');
             }
-            if (prices1EnergyCharts?.price != null) {
+            if (prices1EnergyCharts?.price && typeof prices1EnergyCharts.price === 'object') {
                 this.log.info('Found EnergyCharts quarter-hourly market data for tomorrow!');
             }
 
@@ -633,48 +680,71 @@ class ApgInfo extends utils.Adapter {
                     : this._processMarketPrices('tomorrow', prices1Awattar, prices1Exaa, prices1Exaa1015, prices1EnergyCharts, true);
         }
 
+        //check provider for quarter-hourly market data
         if (this.config_hourly) {
             this.log.info(`Let's check for hourly market data`);
-            //check for provider for today for hourly
-            prices0Exaa = eXaaToday?.h ?? null;
-            if (prices0Exaa == null) {
-                this.log.info(`No hourly market data from Exaa for today, let's try Awattar`);
-                prices0Awattar = await getDataAwattar(this, false, country);
-                if (prices0Awattar?.data?.[0]) {
-                    this.log.info('Todays hourly market data from Awattar available');
-                    this.log.debug(`Todays hourly market data result from Awattar is: ${JSON.stringify(prices0Awattar)}`);
-                } else {
-                    this.log.error('No hourly market data for today!');
-                }
+            const [prices0Awattar, prices1Awattar] = await Promise.all([getDataAwattar(this, false, country), getDataAwattar(this, true, country)]);
+
+            //TODAY
+            let statusToday = 'awattar';
+            if (prices0Awattar?.data?.[0]) {
+                this.log.info('Todays hourly market data from Awattar available');
+                this.log.debug(`Todays hourly market data result from Awattar is: ${JSON.stringify(prices0Awattar)}`);
+                statusToday = 'done';
             } else {
-                this.log.debug(`Todays hourly market data result from Exaa is: ${JSON.stringify(prices0Exaa)}`);
+                this.log.info(`No hourly market data from Awattar for today, let's try Exaa`);
+                statusToday = 'exaa';
+            }
+            if (statusToday == 'exaa') {
+                const eXaaToday = await getDataExaa(this, false, country);
+                prices0Exaa = eXaaToday?.h ?? null;
+                if (prices0Exaa == null) {
+                    this.log.error(`No data from Exaa and therefore no hourly market data for today!`);
+                    statusToday = 'noData';
+                } else {
+                    this.log.debug(`Todays hourly market data result from Exaa is: ${JSON.stringify(prices0Exaa)}`);
+                    this.log.info('Todays hourly market data from Exaa available');
+                    statusToday = 'done';
+                }
             }
 
-            //check for provider for tomorrow
-            prices1Exaa = eXaaTomorrow?.h ?? null;
-            if (prices1Exaa == null) {
-                this.log.info(`No hourly market data from Exaa for tomorrow, let's try Awattar`);
-                prices1Awattar = await getDataAwattar(this, true, country);
-                if (prices1Awattar?.data?.[0]) {
-                    this.log.info('Tomorrows hourly market data from Awattar available');
-                    this.log.debug(`Tomorrow hourly market data result from Awattar is: ${JSON.stringify(prices1Awattar)}`);
+            //TOMORROW
+            let statusTomorrow = 'awattar';
+            if (prices1Awattar?.data?.[0]) {
+                this.log.info('Tomorrows hourly market data from Awattar available');
+                this.log.debug(`Tomorrows hourly market data result from Awattar is: ${JSON.stringify(prices1Awattar)}`);
+                statusTomorrow = 'done';
+            } else {
+                this.log.info(`No hourly market data from Awattar for tomorrow, let's try Exaa`);
+                statusTomorrow = 'exaa';
+            }
+            if (statusTomorrow == 'exaa') {
+                const eXaaTomorrow = await getDataExaa(this, true, country);
+                prices1Exaa = eXaaTomorrow?.h ?? null;
+                if (prices1Exaa == null) {
+                    this.log.info(`No hourly market data from Exaa for tomorrow, last chance 10.15 auction!`);
+                    statusTomorrow = 'exaa1015';
                 } else {
-                    if (forecast) {
-                        this.log.info('No hourly market data from Awattar for tomorrow , last chance Exaa 10.15 auction!');
-                        const eXaa1015 = await getDataExaa1015(this, country);
-                        prices1Exaa1015 = eXaa1015;
-                        if (prices1Exaa1015) {
-                            this.log.info('Market hourly data from Exaa 10.15 auction available');
-                        } else {
-                            this.log.info('Bad luck for Exaa 10.15 auction');
-                        }
-                        this.log.debug(`Tomorrows hourly market data result from Exaa 10.15 auction is: ${JSON.stringify(prices1Exaa1015)}`);
+                    this.log.debug(`Tomorrows hourly market data result from Exaa is: ${JSON.stringify(prices1Exaa)}`);
+                    this.log.info('Tomorrows hourly market data from Exaa available');
+                    statusTomorrow = 'done';
+                }
+            }
+            if (statusTomorrow == 'exaa1015') {
+                if (!forecast) {
+                    this.log.info('No forecast requested and therefore no hourly market data for tomorrow.');
+                    statusTomorrow = 'noData';
+                } else {
+                    const eXaa1015 = await getDataExaa1015(this, country);
+                    prices1Exaa1015 = eXaa1015;
+                    if (prices1Exaa1015) {
+                        this.log.info('Market hourly data from Exaa 10.15 auction available');
+                        statusTomorrow = 'done';
                     } else {
-                        this.log.info('No hourly market data from Awattar for tomorrow');
+                        this.log.info('Bad luck for Exaa 10.15 auction and therefore no market data for tomorrow!');
+                        statusTomorrow = 'noData';
                     }
                 }
-            } else {
-                this.log.debug(`Tomorrows hourly market data result from Exaa is: ${JSON.stringify(prices1Exaa)}`);
             }
             todayResult = this._processMarketPrices('today', prices0Awattar, prices0Exaa, null, prices0EnergyCharts, false);
             tomorrowResult = this._processMarketPrices('tomorrow', prices1Awattar, prices1Exaa, prices1Exaa1015, prices1EnergyCharts, false);
@@ -1073,6 +1143,7 @@ class ApgInfo extends utils.Adapter {
                 this.log.error('No data available for peak-result!');
                 return;
             }
+            this.log.info('Data for peak hours available');
 
             let day0 = cleanDate(new Date());
             let day1 = addDays(day0, 1);
