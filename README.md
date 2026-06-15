@@ -58,6 +58,9 @@ With this you can create nice charts like this one (created with echarts adapter
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
+### __WORK IN PROGRESS__
+* (HGlab01) improve provider sequence for forecast capability
+
 ### 0.1.34 (2026-06-13)
 * (HGlab01) change provider sequence (Exaa as last)
 * (HGlab01) fix EnergyCharts empty data recognition
