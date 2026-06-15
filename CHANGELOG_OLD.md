@@ -1,4 +1,8 @@
 # Older changes
+## 0.1.29 (2026-02-14)
+* (HGlab01) add time based grid costs calculation (see above)
+* (HGlab01) Bump axios to 1.13.5
+
 ## 0.1.28 (2025-12-11)
 * (HGlab01) add Energy-Charts as third data provider
 

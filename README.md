@@ -58,7 +58,7 @@ With this you can create nice charts like this one (created with echarts adapter
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-### __WORK IN PROGRESS__
+### 0.1.35 (2026-06-15)
 * (HGlab01) improve provider sequence for forecast capability
 
 ### 0.1.34 (2026-06-13)
@@ -78,10 +78,6 @@ With this you can create nice charts like this one (created with echarts adapter
 
 ### 0.1.30 (2026-02-24)
 * (HGlab01) finetune timeout management
-
-### 0.1.29 (2026-02-14)
-* (HGlab01) add time based grid costs calculation (see above)
-* (HGlab01) Bump axios to 1.13.5
 
 ### Older Changelog
 can be find [here](https://github.com/HGlab01/ioBroker.apg-info/blob/main/CHANGELOG_OLD.md)
