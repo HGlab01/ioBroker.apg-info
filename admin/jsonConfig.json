@@ -7,12 +7,36 @@
     "items": {
         "General": {
             "type": "panel",
-            "label": "General",
+            "label": {
+                "en": "General",
+                "de": "Allgemein",
+                "ru": "Общие",
+                "pt": "Geral",
+                "nl": "Algemeen",
+                "fr": "Général",
+                "it": "Generale",
+                "es": "General",
+                "pl": "Ogólne",
+                "uk": "Загальні",
+                "zh-cn": "常规"
+            },
             "items": {
                 "marketPrices": {
                     "newLine": true,
                     "type": "checkbox",
-                    "label": "Check market prices",
+                    "label": {
+                        "en": "Check market prices",
+                        "de": "Marktpreise abrufen",
+                        "ru": "Проверять рыночные цены",
+                        "pt": "Verificar preços de mercado",
+                        "nl": "Marktprijzen controleren",
+                        "fr": "Vérifier les prix du marché",
+                        "it": "Controlla prezzi di mercato",
+                        "es": "Verificar precios de mercado",
+                        "pl": "Sprawdzaj ceny rynkowe",
+                        "uk": "Перевіряти ринкові ціни",
+                        "zh-cn": "检查市场价格"
+                    },
                     "default": false,
                     "xs": 12,
                     "sm": 12,
@@ -27,13 +51,13 @@
                         "de": "Schwellenmarktpreis (€ct/kWh)",
                         "ru": "Порог рыночная цена (€ct/kWh)",
                         "pt": "Preço de mercado limiar (€ct/kWh)",
-                        "nl": "Dreig de marktprijs",
+                        "nl": "Drempelmarktprijs (€ct/kWh)",
                         "fr": "Prix du marché seuil (€ct/kWh)",
-                        "it": "Prezzo di mercato (€ct/kWh)",
-                        "es": "Precio del mercado de propiedad (€ct/kWh)",
-                        "pl": "Cena rynkowa (ok",
-                        "uk": "Потрібна ціна ринку (€ct/kWh)",
-                        "zh-cn": "市场价格(ct/kWh)"
+                        "it": "Prezzo di mercato soglia (€ct/kWh)",
+                        "es": "Precio del mercado umbral (€ct/kWh)",
+                        "pl": "Progowa cena rynkowa (€ct/kWh)",
+                        "uk": "Порогова ціна ринку (€ct/kWh)",
+                        "zh-cn": "市场价格阈值 (€ct/kWh)"
                     },
                     "disabled": "!data.marketPrices",
                     "min": 0,
@@ -50,17 +74,17 @@
                     "options": [
                         {
                             "label": {
-                                "en": "Swiss",
+                                "en": "Switzerland",
                                 "de": "Schweiz",
-                                "ru": "Swiss",
-                                "pt": "Swiss",
-                                "nl": "Swiss",
-                                "fr": "Swiss",
-                                "it": "Swiss",
-                                "es": "Swiss",
-                                "pl": "Swiss",
-                                "uk": "Swiss",
-                                "zh-cn": "Swiss"
+                                "ru": "Швейцария",
+                                "pt": "Suíça",
+                                "nl": "Zwitserland",
+                                "fr": "Suisse",
+                                "it": "Svizzera",
+                                "es": "Suiza",
+                                "pl": "Szwajcaria",
+                                "uk": "Швейцарія",
+                                "zh-cn": "瑞士"
                             },
                             "value": "ch"
                         },
@@ -68,15 +92,15 @@
                             "label": {
                                 "en": "Austria",
                                 "de": "Österreich",
-                                "ru": "Austria",
-                                "pt": "Austria",
-                                "nl": "Austria",
-                                "fr": "Austria",
+                                "ru": "Австрия",
+                                "pt": "Áustria",
+                                "nl": "Oostenrijk",
+                                "fr": "Autriche",
                                 "it": "Austria",
                                 "es": "Austria",
                                 "pl": "Austria",
-                                "uk": "Austria",
-                                "zh-cn": "Austria"
+                                "uk": "Австрія",
+                                "zh-cn": "奥地利"
                             },
                             "value": "at"
                         },
@@ -84,22 +108,31 @@
                             "label": {
                                 "en": "Germany",
                                 "de": "Deutschland",
-                                "ru": "Germany",
-                                "pt": "Germany",
-                                "nl": "Germany",
-                                "fr": "Germany",
-                                "it": "Germany",
-                                "es": "Germany",
-                                "pl": "Germany",
-                                "uk": "Germany",
-                                "zh-cn": "Germany"
+                                "ru": "Германия",
+                                "pt": "Alemanha",
+                                "nl": "Duitsland",
+                                "fr": "Allemagne",
+                                "it": "Germania",
+                                "es": "Alemania",
+                                "pl": "Niemcy",
+                                "uk": "Німеччина",
+                                "zh-cn": "德国"
                             },
                             "value": "de"
                         }
                     ],
                     "label": {
                         "en": "Country of the market",
-                        "de": "Land der Strombörse"
+                        "de": "Land der Strombörse",
+                        "ru": "Страна рынка",
+                        "pt": "País do mercado",
+                        "nl": "Land van de markt",
+                        "fr": "Pays du marché",
+                        "it": "Paese del mercato",
+                        "es": "País del mercado",
+                        "pl": "Kraj rynku",
+                        "uk": "Країна ринку",
+                        "zh-cn": "市场所在国"
                     },
                     "disabled": "!data.marketPrices",
                     "xs": 12,
@@ -111,7 +144,19 @@
                 "quarterHourly": {
                     "newLine": true,
                     "type": "checkbox",
-                    "label": "Get quarter-hourly market data (not for CH)",
+                    "label": {
+                        "en": "Get quarter-hourly market data (not for CH)",
+                        "de": "Viertelstündliche Marktdaten abrufen (nicht für CH)",
+                        "ru": "Получать данные рынка каждые 15 минут (не для CH)",
+                        "pt": "Obter dados de mercado a cada quarto de hora (não para CH)",
+                        "nl": "Kwartierlijkse marktgegevens ophalen (niet voor CH)",
+                        "fr": "Obtenir les données du marché au quart d'heure (pas pour CH)",
+                        "it": "Ottieni dati di mercato ogni quarto d'ora (non per CH)",
+                        "es": "Obtener datos del mercado cada cuarto de hora (no para CH)",
+                        "pl": "Pobieraj dane rynkowe co kwadrans (nie dla CH)",
+                        "uk": "Отримувати ринкові дані щокварталу (не для CH)",
+                        "zh-cn": "获取每刻钟市场数据（不适用于CH）"
+                    },
                     "default": false,
                     "disabled": "!data.marketPrices",
                     "xs": 12,
@@ -123,7 +168,19 @@
                 "hourly": {
                     "newLine": true,
                     "type": "checkbox",
-                    "label": "Get hourly market data",
+                    "label": {
+                        "en": "Get hourly market data",
+                        "de": "Stündliche Marktdaten abrufen",
+                        "ru": "Получать почасовые данные рынка",
+                        "pt": "Obter dados de mercado por hora",
+                        "nl": "Uurlijkse marktgegevens ophalen",
+                        "fr": "Obtenir les données du marché par heure",
+                        "it": "Ottieni dati di mercato ogni ora",
+                        "es": "Obtener datos del mercado por hora",
+                        "pl": "Pobieraj dane rynkowe co godzinę",
+                        "uk": "Отримувати щогодинні ринкові дані",
+                        "zh-cn": "获取每小时市场数据"
+                    },
                     "default": false,
                     "disabled": "!data.marketPrices",
                     "xs": 12,
@@ -135,7 +192,19 @@
                 "forecast": {
                     "newLine": true,
                     "type": "checkbox",
-                    "label": "Forecast based on 10.15 auction (works in AT and DE)",
+                    "label": {
+                        "en": "Forecast based on 10.15 auction (works in AT and DE)",
+                        "de": "Prognose basierend auf 10:15 Auktion (funktioniert in AT und DE)",
+                        "ru": "Прогноз на основе аукциона 10:15 (работает в AT и DE)",
+                        "pt": "Previsão baseada no leilão das 10h15 (funciona em AT e DE)",
+                        "nl": "Prognose op basis van 10:15 veiling (werkt in AT en DE)",
+                        "fr": "Prévision basée sur l'enchère de 10h15 (fonctionne en AT et DE)",
+                        "it": "Previsione basata sull'asta delle 10:15 (funziona in AT e DE)",
+                        "es": "Pronóstico basado en la subasta de las 10:15 (funciona en AT y DE)",
+                        "pl": "Prognoza oparta na aukcji o 10:15 (działa w AT i DE)",
+                        "uk": "Прогноз на основі аукціону о 10:15 (працює в AT та DE)",
+                        "zh-cn": "基于10:15拍卖的预测（适用于AT和DE）"
+                    },
                     "default": false,
                     "disabled": "!data.marketPrices",
                     "xs": 12,
@@ -147,7 +216,19 @@
                 "details": {
                     "newLine": true,
                     "type": "checkbox",
-                    "label": "Include all details (marketprice(_quarter_hourly).details)",
+                    "label": {
+                        "en": "Include all details (marketprice(_quarter_hourly).details)",
+                        "de": "Alle Details einschließen (marketprice(_quarter_hourly).details)",
+                        "ru": "Включить все детали (marketprice(_quarter_hourly).details)",
+                        "pt": "Incluir todos os detalhes (marketprice(_quarter_hourly).details)",
+                        "nl": "Alle details opnemen (marketprice(_quarter_hourly).details)",
+                        "fr": "Inclure tous les détails (marketprice(_quarter_hourly).details)",
+                        "it": "Includi tutti i dettagli (marketprice(_quarter_hourly).details)",
+                        "es": "Incluir todos los detalles (marketprice(_quarter_hourly).details)",
+                        "pl": "Uwzględnij wszystkie szczegóły (marketprice(_quarter_hourly).details)",
+                        "uk": "Включити всі деталі (marketprice(_quarter_hourly).details)",
+                        "zh-cn": "包含所有详情 (marketprice(_quarter_hourly).details)"
+                    },
                     "default": false,
                     "disabled": "!data.marketPrices",
                     "xs": 12,
@@ -169,7 +250,19 @@
                 "peakHours": {
                     "newLine": true,
                     "type": "checkbox",
-                    "label": "Check peak hours (works for Austria)",
+                    "label": {
+                        "en": "Check peak hours (works for Austria)",
+                        "de": "Spitzenstunden prüfen (funktioniert für Österreich)",
+                        "ru": "Проверять пиковые часы (работает для Австрии)",
+                        "pt": "Verificar horas de pico (funciona para a Áustria)",
+                        "nl": "Piekuren controleren (werkt voor Oostenrijk)",
+                        "fr": "Vérifier les heures de pointe (fonctionne pour l'Autriche)",
+                        "it": "Controlla le ore di punta (funziona per l'Austria)",
+                        "es": "Verificar horas pico (funciona para Austria)",
+                        "pl": "Sprawdzaj godziny szczytu (działa dla Austrii)",
+                        "uk": "Перевіряти пікові години (працює для Австрії)",
+                        "zh-cn": "检查高峰时段（适用于奥地利）"
+                    },
                     "default": false,
                     "xs": 12,
                     "sm": 12,
@@ -181,34 +274,82 @@
         },
         "Calculation": {
             "type": "panel",
-            "label": "Calculation",
+            "label": {
+                "en": "Calculation",
+                "de": "Berechnung",
+                "ru": "Расчёт",
+                "pt": "Cálculo",
+                "nl": "Berekening",
+                "fr": "Calcul",
+                "it": "Calcolo",
+                "es": "Cálculo",
+                "pl": "Obliczenia",
+                "uk": "Розрахунок",
+                "zh-cn": "计算"
+            },
             "items": {
                 "calculate": {
                     "newLine": true,
                     "type": "select",
                     "label": {
                         "en": "Activate price calculation",
-                        "de": "Preiskalkulation aktivieren"
+                        "de": "Preiskalkulation aktivieren",
+                        "ru": "Активировать расчёт цены",
+                        "pt": "Ativar cálculo de preço",
+                        "nl": "Prijsberekening activeren",
+                        "fr": "Activer le calcul du prix",
+                        "it": "Attiva calcolo prezzo",
+                        "es": "Activar cálculo de precio",
+                        "pl": "Aktywuj obliczanie ceny",
+                        "uk": "Активувати розрахунок ціни",
+                        "zh-cn": "启用价格计算"
                     },
                     "options": [
                         {
                             "label": {
                                 "en": "no calculation",
-                                "de": "keine Berechnung"
+                                "de": "keine Berechnung",
+                                "ru": "без расчёта",
+                                "pt": "sem cálculo",
+                                "nl": "geen berekening",
+                                "fr": "pas de calcul",
+                                "it": "nessun calcolo",
+                                "es": "sin cálculo",
+                                "pl": "bez obliczeń",
+                                "uk": "без розрахунку",
+                                "zh-cn": "不计算"
                             },
                             "value": false
                         },
                         {
                             "label": {
                                 "en": "simple calculation",
-                                "de": "Einfache Berechnung"
+                                "de": "Einfache Berechnung",
+                                "ru": "простой расчёт",
+                                "pt": "cálculo simples",
+                                "nl": "eenvoudige berekening",
+                                "fr": "calcul simple",
+                                "it": "calcolo semplice",
+                                "es": "cálculo simple",
+                                "pl": "proste obliczenia",
+                                "uk": "простий розрахунок",
+                                "zh-cn": "简单计算"
                             },
                             "value": true
                         },
                         {
                             "label": {
                                 "en": "time based calculation",
-                                "de": "Zeitbasierte Berechnung"
+                                "de": "Zeitbasierte Berechnung",
+                                "ru": "расчёт по времени",
+                                "pt": "cálculo baseado em tempo",
+                                "nl": "tijdgebaseerde berekening",
+                                "fr": "calcul basé sur le temps",
+                                "it": "calcolo basato sul tempo",
+                                "es": "cálculo basado en tiempo",
+                                "pl": "obliczenia oparte na czasie",
+                                "uk": "розрахунок на основі часу",
+                                "zh-cn": "基于时间的计算"
                             },
                             "value": "advanced"
                         }
@@ -234,7 +375,16 @@
                     "type": "number",
                     "label": {
                         "en": "Provider fee absolute (€ct/kWh)",
-                        "de": "Provider Gebühr Absolut (€ct/kWh)"
+                        "de": "Provider Gebühr Absolut (€ct/kWh)",
+                        "ru": "Абсолютная плата провайдера (€ct/kWh)",
+                        "pt": "Taxa absoluta do provedor (€ct/kWh)",
+                        "nl": "Absolute providervergoeding (€ct/kWh)",
+                        "fr": "Frais fournisseur absolus (€ct/kWh)",
+                        "it": "Tariffa provider assoluta (€ct/kWh)",
+                        "es": "Tarifa del proveedor absoluta (€ct/kWh)",
+                        "pl": "Opłata dostawcy absolutna (€ct/kWh)",
+                        "uk": "Абсолютна плата провайдера (€ct/kWh)",
+                        "zh-cn": "供应商绝对费用 (€ct/kWh)"
                     },
                     "hidden": "data.calculate != true",
                     "xs": 12,
@@ -247,7 +397,16 @@
                     "type": "number",
                     "label": {
                         "en": "Provider fee (%)",
-                        "de": "Provider Gebühr (%)"
+                        "de": "Provider Gebühr (%)",
+                        "ru": "Плата провайдера (%)",
+                        "pt": "Taxa do provedor (%)",
+                        "nl": "Providervergoeding (%)",
+                        "fr": "Frais fournisseur (%)",
+                        "it": "Tariffa provider (%)",
+                        "es": "Tarifa del proveedor (%)",
+                        "pl": "Opłata dostawcy (%)",
+                        "uk": "Плата провайдера (%)",
+                        "zh-cn": "供应商费用 (%)"
                     },
                     "hidden": "data.calculate != true",
                     "xs": 12,
@@ -260,7 +419,16 @@
                     "type": "number",
                     "label": {
                         "en": "other taxes (%)",
-                        "de": "weitere Abgaben (%)"
+                        "de": "weitere Abgaben (%)",
+                        "ru": "прочие налоги (%)",
+                        "pt": "outros impostos (%)",
+                        "nl": "overige belastingen (%)",
+                        "fr": "autres taxes (%)",
+                        "it": "altre tasse (%)",
+                        "es": "otros impuestos (%)",
+                        "pl": "inne podatki (%)",
+                        "uk": "інші податки (%)",
+                        "zh-cn": "其他税费 (%)"
                     },
                     "hidden": "data.calculate != true",
                     "xs": 12,
@@ -273,7 +441,16 @@
                     "type": "number",
                     "label": {
                         "en": "grid costs (€ct/kWh)",
-                        "de": "Netzentgelte (€ct/kWh)"
+                        "de": "Netzentgelte (€ct/kWh)",
+                        "ru": "затраты на сеть (€ct/kWh)",
+                        "pt": "custos de rede (€ct/kWh)",
+                        "nl": "netkosten (€ct/kWh)",
+                        "fr": "coûts réseau (€ct/kWh)",
+                        "it": "costi rete (€ct/kWh)",
+                        "es": "costes de red (€ct/kWh)",
+                        "pl": "koszty sieci (€ct/kWh)",
+                        "uk": "витрати на мережу (€ct/kWh)",
+                        "zh-cn": "电网费用 (€ct/kWh)"
                     },
                     "hidden": "data.calculate != true",
                     "xs": 12,
@@ -286,7 +463,16 @@
                     "type": "number",
                     "label": {
                         "en": "VAT (%)",
-                        "de": "USt (%)"
+                        "de": "USt (%)",
+                        "ru": "НДС (%)",
+                        "pt": "IVA (%)",
+                        "nl": "BTW (%)",
+                        "fr": "TVA (%)",
+                        "it": "IVA (%)",
+                        "es": "IVA (%)",
+                        "pl": "VAT (%)",
+                        "uk": "ПДВ (%)",
+                        "zh-cn": "增值税 (%)"
                     },
                     "hidden": "data.calculate != true",
                     "xs": 12,
@@ -320,11 +506,29 @@
                             "attr": "date_from",
                             "label": {
                                 "en": "Date from",
-                                "de": "Datum von"
+                                "de": "Datum von",
+                                "ru": "Дата с",
+                                "pt": "Data de",
+                                "nl": "Datum van",
+                                "fr": "Date de",
+                                "it": "Data da",
+                                "es": "Fecha desde",
+                                "pl": "Data od",
+                                "uk": "Дата з",
+                                "zh-cn": "开始日期"
                             },
                             "tooltip": {
                                 "en": "Date from",
-                                "de": "Datum von"
+                                "de": "Datum von",
+                                "ru": "Дата с",
+                                "pt": "Data de",
+                                "nl": "Datum van",
+                                "fr": "Date de",
+                                "it": "Data da",
+                                "es": "Fecha desde",
+                                "pl": "Data od",
+                                "uk": "Дата з",
+                                "zh-cn": "开始日期"
                             }
                         },
                         {
@@ -332,11 +536,29 @@
                             "attr": "date_to",
                             "label": {
                                 "en": "Date to",
-                                "de": "Datum bis"
+                                "de": "Datum bis",
+                                "ru": "Дата по",
+                                "pt": "Data até",
+                                "nl": "Datum tot",
+                                "fr": "Date jusqu'à",
+                                "it": "Data fino a",
+                                "es": "Fecha hasta",
+                                "pl": "Data do",
+                                "uk": "Дата до",
+                                "zh-cn": "结束日期"
                             },
                             "tooltip": {
                                 "en": "Date to",
-                                "de": "Datum bis"
+                                "de": "Datum bis",
+                                "ru": "Дата по",
+                                "pt": "Data até",
+                                "nl": "Datum tot",
+                                "fr": "Date jusqu'à",
+                                "it": "Data fino a",
+                                "es": "Fecha hasta",
+                                "pl": "Data do",
+                                "uk": "Дата до",
+                                "zh-cn": "结束日期"
                             }
                         },
                         {
@@ -354,11 +576,29 @@
                             },
                             "label": {
                                 "en": "Time from",
-                                "de": "Zeit von"
+                                "de": "Zeit von",
+                                "ru": "Время с",
+                                "pt": "Hora de",
+                                "nl": "Tijd van",
+                                "fr": "Heure de",
+                                "it": "Ora da",
+                                "es": "Hora desde",
+                                "pl": "Czas od",
+                                "uk": "Час з",
+                                "zh-cn": "开始时间"
                             },
                             "tooltip": {
                                 "en": "Time from",
-                                "de": "Zeit von"
+                                "de": "Zeit von",
+                                "ru": "Время с",
+                                "pt": "Hora de",
+                                "nl": "Tijd van",
+                                "fr": "Heure de",
+                                "it": "Ora da",
+                                "es": "Hora desde",
+                                "pl": "Czas od",
+                                "uk": "Час з",
+                                "zh-cn": "开始时间"
                             }
                         },
                         {
@@ -376,11 +616,29 @@
                             },
                             "label": {
                                 "en": "Time to",
-                                "de": "Zeit bis"
+                                "de": "Zeit bis",
+                                "ru": "Время по",
+                                "pt": "Hora até",
+                                "nl": "Tijd tot",
+                                "fr": "Heure jusqu'à",
+                                "it": "Ora fino a",
+                                "es": "Hora hasta",
+                                "pl": "Czas do",
+                                "uk": "Час до",
+                                "zh-cn": "结束时间"
                             },
                             "tooltip": {
                                 "en": "Time to",
-                                "de": "Zeit bis"
+                                "de": "Zeit bis",
+                                "ru": "Время по",
+                                "pt": "Hora até",
+                                "nl": "Tijd tot",
+                                "fr": "Heure jusqu'à",
+                                "it": "Ora fino a",
+                                "es": "Hora hasta",
+                                "pl": "Czas do",
+                                "uk": "Час до",
+                                "zh-cn": "结束时间"
                             }
                         },
                         {
@@ -389,11 +647,29 @@
                             "unit": "€ct/kWh",
                             "label": {
                                 "en": "Provider fee",
-                                "de": "Provider Gebühr"
+                                "de": "Provider Gebühr",
+                                "ru": "Плата провайдера",
+                                "pt": "Taxa do provedor",
+                                "nl": "Providervergoeding",
+                                "fr": "Frais fournisseur",
+                                "it": "Tariffa provider",
+                                "es": "Tarifa del proveedor",
+                                "pl": "Opłata dostawcy",
+                                "uk": "Плата провайдера",
+                                "zh-cn": "供应商费用"
                             },
                             "tooltip": {
                                 "en": "Provider fee absolute (€ct/kWh)",
-                                "de": "Provider Gebühr Absolut (€ct/kWh)"
+                                "de": "Provider Gebühr Absolut (€ct/kWh)",
+                                "ru": "Абсолютная плата провайдера (€ct/kWh)",
+                                "pt": "Taxa absoluta do provedor (€ct/kWh)",
+                                "nl": "Absolute providervergoeding (€ct/kWh)",
+                                "fr": "Frais fournisseur absolus (€ct/kWh)",
+                                "it": "Tariffa provider assoluta (€ct/kWh)",
+                                "es": "Tarifa del proveedor absoluta (€ct/kWh)",
+                                "pl": "Opłata dostawcy absolutna (€ct/kWh)",
+                                "uk": "Абсолютна плата провайдера (€ct/kWh)",
+                                "zh-cn": "供应商绝对费用 (€ct/kWh)"
                             }
                         },
                         {
@@ -402,11 +678,29 @@
                             "unit": "%",
                             "label": {
                                 "en": "Provider fee",
-                                "de": "Provider Gebühr"
+                                "de": "Provider Gebühr",
+                                "ru": "Плата провайдера",
+                                "pt": "Taxa do provedor",
+                                "nl": "Providervergoeding",
+                                "fr": "Frais fournisseur",
+                                "it": "Tariffa provider",
+                                "es": "Tarifa del proveedor",
+                                "pl": "Opłata dostawcy",
+                                "uk": "Плата провайдера",
+                                "zh-cn": "供应商费用"
                             },
                             "tooltip": {
                                 "en": "Provider fee (%)",
-                                "de": "Provider Gebühr (%)"
+                                "de": "Provider Gebühr (%)",
+                                "ru": "Плата провайдера (%)",
+                                "pt": "Taxa do provedor (%)",
+                                "nl": "Providervergoeding (%)",
+                                "fr": "Frais fournisseur (%)",
+                                "it": "Tariffa provider (%)",
+                                "es": "Tarifa del proveedor (%)",
+                                "pl": "Opłata dostawcy (%)",
+                                "uk": "Плата провайдера (%)",
+                                "zh-cn": "供应商费用 (%)"
                             }
                         },
                         {
@@ -415,11 +709,29 @@
                             "unit": "%",
                             "label": {
                                 "en": "other taxes",
-                                "de": "weitere Abgaben"
+                                "de": "weitere Abgaben",
+                                "ru": "прочие налоги",
+                                "pt": "outros impostos",
+                                "nl": "overige belastingen",
+                                "fr": "autres taxes",
+                                "it": "altre tasse",
+                                "es": "otros impuestos",
+                                "pl": "inne podatki",
+                                "uk": "інші податки",
+                                "zh-cn": "其他税费"
                             },
                             "tooltip": {
                                 "en": "other taxes (%)",
-                                "de": "weitere Abgaben (%)"
+                                "de": "weitere Abgaben (%)",
+                                "ru": "прочие налоги (%)",
+                                "pt": "outros impostos (%)",
+                                "nl": "overige belastingen (%)",
+                                "fr": "autres taxes (%)",
+                                "it": "altre tasse (%)",
+                                "es": "otros impuestos (%)",
+                                "pl": "inne podatki (%)",
+                                "uk": "інші податки (%)",
+                                "zh-cn": "其他税费 (%)"
                             }
                         },
                         {
@@ -428,11 +740,29 @@
                             "unit": "€ct/kWh",
                             "label": {
                                 "en": "grid costs",
-                                "de": "Netzentgelte"
+                                "de": "Netzentgelte",
+                                "ru": "затраты на сеть",
+                                "pt": "custos de rede",
+                                "nl": "netkosten",
+                                "fr": "coûts réseau",
+                                "it": "costi rete",
+                                "es": "costes de red",
+                                "pl": "koszty sieci",
+                                "uk": "витрати на мережу",
+                                "zh-cn": "电网费用"
                             },
                             "tooltip": {
                                 "en": "grid costs (€ct/kWh)",
-                                "de": "Netzentgelte (€ct/kWh)"
+                                "de": "Netzentgelte (€ct/kWh)",
+                                "ru": "затраты на сеть (€ct/kWh)",
+                                "pt": "custos de rede (€ct/kWh)",
+                                "nl": "netkosten (€ct/kWh)",
+                                "fr": "coûts réseau (€ct/kWh)",
+                                "it": "costi rete (€ct/kWh)",
+                                "es": "costes de red (€ct/kWh)",
+                                "pl": "koszty sieci (€ct/kWh)",
+                                "uk": "витрати на мережу (€ct/kWh)",
+                                "zh-cn": "电网费用 (€ct/kWh)"
                             }
                         },
                         {
@@ -441,11 +771,29 @@
                             "unit": "%",
                             "label": {
                                 "en": "VAT",
-                                "de": "USt"
+                                "de": "USt",
+                                "ru": "НДС",
+                                "pt": "IVA",
+                                "nl": "BTW",
+                                "fr": "TVA",
+                                "it": "IVA",
+                                "es": "IVA",
+                                "pl": "VAT",
+                                "uk": "ПДВ",
+                                "zh-cn": "增值税"
                             },
                             "tooltip": {
                                 "en": "VAT (%)",
-                                "de": "USt (%)"
+                                "de": "USt (%)",
+                                "ru": "НДС (%)",
+                                "pt": "IVA (%)",
+                                "nl": "BTW (%)",
+                                "fr": "TVA (%)",
+                                "it": "IVA (%)",
+                                "es": "IVA (%)",
+                                "pl": "VAT (%)",
+                                "uk": "ПДВ (%)",
+                                "zh-cn": "增值税 (%)"
                             }
                         }
                     ]
@@ -453,8 +801,17 @@
                 "_text1": {
                     "type": "staticText",
                     "text": {
+                        "en": "provider = tradePrice * tradePrice * providerFee + feeAbsolute; <br> charges = (tradePrice + provider) * otherTaxes; <br> vat = (tradePrice + provider + charges + gridCosts) * vat; <br> price = tradePrice + provider + charges + gridCosts + vat;",
                         "de": "provider = tradePrice * Abs(tradePrice * providerFee) + feeAbsolute; <br> charges = (tradePrice + provider) * otherTaxes; <br> vat = (tradePrice + provider + charges + gridCosts) * vat; <br> price = tradePrice + provider + charges + gridCosts + vat;",
-                        "en": "provider = tradePrice * tradePrice * providerFee + feeAbsolute; <br> charges = (tradePrice + provider) * otherTaxes; <br> vat = (tradePrice + provider + charges + gridCosts) * vat; <br> price = tradePrice + provider + charges + gridCosts + vat;"
+                        "ru": "provider = tradePrice * tradePrice * providerFee + feeAbsolute; <br> charges = (tradePrice + provider) * otherTaxes; <br> vat = (tradePrice + provider + charges + gridCosts) * vat; <br> price = tradePrice + provider + charges + gridCosts + vat;",
+                        "pt": "provider = tradePrice * tradePrice * providerFee + feeAbsolute; <br> charges = (tradePrice + provider) * otherTaxes; <br> vat = (tradePrice + provider + charges + gridCosts) * vat; <br> price = tradePrice + provider + charges + gridCosts + vat;",
+                        "nl": "provider = tradePrice * tradePrice * providerFee + feeAbsolute; <br> charges = (tradePrice + provider) * otherTaxes; <br> vat = (tradePrice + provider + charges + gridCosts) * vat; <br> price = tradePrice + provider + charges + gridCosts + vat;",
+                        "fr": "provider = tradePrice * tradePrice * providerFee + feeAbsolute; <br> charges = (tradePrice + provider) * otherTaxes; <br> vat = (tradePrice + provider + charges + gridCosts) * vat; <br> price = tradePrice + provider + charges + gridCosts + vat;",
+                        "it": "provider = tradePrice * tradePrice * providerFee + feeAbsolute; <br> charges = (tradePrice + provider) * otherTaxes; <br> vat = (tradePrice + provider + charges + gridCosts) * vat; <br> price = tradePrice + provider + charges + gridCosts + vat;",
+                        "es": "provider = tradePrice * tradePrice * providerFee + feeAbsolute; <br> charges = (tradePrice + provider) * otherTaxes; <br> vat = (tradePrice + provider + charges + gridCosts) * vat; <br> price = tradePrice + provider + charges + gridCosts + vat;",
+                        "pl": "provider = tradePrice * tradePrice * providerFee + feeAbsolute; <br> charges = (tradePrice + provider) * otherTaxes; <br> vat = (tradePrice + provider + charges + gridCosts) * vat; <br> price = tradePrice + provider + charges + gridCosts + vat;",
+                        "uk": "provider = tradePrice * tradePrice * providerFee + feeAbsolute; <br> charges = (tradePrice + provider) * otherTaxes; <br> vat = (tradePrice + provider + charges + gridCosts) * vat; <br> price = tradePrice + provider + charges + gridCosts + vat;",
+                        "zh-cn": "provider = tradePrice * tradePrice * providerFee + feeAbsolute; <br> charges = (tradePrice + provider) * otherTaxes; <br> vat = (tradePrice + provider + charges + gridCosts) * vat; <br> price = tradePrice + provider + charges + gridCosts + vat;"
                     },
                     "newLine": true,
                     "hidden": "data.calculate == false",
@@ -468,14 +825,35 @@
         },
         "EntsoeToken": {
             "type": "panel",
-            "label": "Entsoe Token",
+            "label": {
+                "en": "Entsoe Token",
+                "de": "Entsoe Token",
+                "ru": "Entsoe Token",
+                "pt": "Entsoe Token",
+                "nl": "Entsoe Token",
+                "fr": "Entsoe Token",
+                "it": "Entsoe Token",
+                "es": "Entsoe Token",
+                "pl": "Entsoe Token",
+                "uk": "Entsoe Token",
+                "zh-cn": "Entsoe Token"
+            },
             "items": {
                 "tokenEncrypted": {
                     "newLine": true,
                     "type": "text",
                     "label": {
                         "en": "Token",
-                        "de": "Token"
+                        "de": "Token",
+                        "ru": "Токен",
+                        "pt": "Token",
+                        "nl": "Token",
+                        "fr": "Token",
+                        "it": "Token",
+                        "es": "Token",
+                        "pl": "Token",
+                        "uk": "Токен",
+                        "zh-cn": "令牌"
                     },
                     "xs": 12,
                     "sm": 12,
@@ -496,8 +874,17 @@
                 "_text1": {
                     "type": "staticText",
                     "text": {
-                        "de": "Token is a must for Swiss market and a backup for AT + DE. How to request a token is described in the readme.",
-                        "en": "Token is a must for Swiss market and a backup for AT + DE. How to request a token is described in the readme."
+                        "en": "Token is a must for Swiss market and a backup for AT + DE. How to request a token is described in the readme.",
+                        "de": "Der Token ist für den Schweizer Markt erforderlich und dient als Backup für AT + DE. Wie ein Token beantragt werden kann, ist in der Readme beschrieben.",
+                        "ru": "Токен обязателен для швейцарского рынка и является резервом для AT + DE. Как запросить токен — описано в readme.",
+                        "pt": "O token é obrigatório para o mercado suíço e é um backup para AT + DE. Como solicitar um token está descrito no readme.",
+                        "nl": "Token is verplicht voor de Zwitserse markt en een back-up voor AT + DE. Hoe een token aan te vragen is beschreven in de readme.",
+                        "fr": "Le token est obligatoire pour le marché suisse et sert de sauvegarde pour AT + DE. Comment demander un token est décrit dans le readme.",
+                        "it": "Il token è obbligatorio per il mercato svizzero e funge da backup per AT + DE. Come richiedere un token è descritto nel readme.",
+                        "es": "El token es obligatorio para el mercado suizo y es un respaldo para AT + DE. Cómo solicitar un token se describe en el readme.",
+                        "pl": "Token jest wymagany dla rynku szwajcarskiego i stanowi kopię zapasową dla AT + DE. Jak uzyskać token opisano w readme.",
+                        "uk": "Токен є обов'язковим для швейцарського ринку та резервним для AT + DE. Як запросити токен — описано в readme.",
+                        "zh-cn": "Token是瑞士市场的必填项，也是AT + DE的备用选项。如何申请Token请参阅readme。"
                     },
                     "newLine": true,
                     "xs": 12,
@@ -509,5 +896,4 @@
             }
         }
     }
-
 }
