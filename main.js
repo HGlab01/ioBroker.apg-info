@@ -695,7 +695,7 @@ class ApgInfo extends utils.Adapter {
                     : this._processMarketPrices('tomorrow', prices1Awattar, prices1Exaa, prices1Exaa1015, prices1EnergyCharts, true);
         }
 
-        //check provider for quarter-hourly market data
+        //check provider for hourly market data
         if (this.config_hourly) {
             this.log.info(`Let's check for hourly market data`);
             const [prices0Awattar, prices1Awattar] = await Promise.all([getDataAwattar(this, false, country), getDataAwattar(this, true, country)]);
