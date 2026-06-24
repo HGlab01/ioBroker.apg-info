@@ -82,6 +82,8 @@ With this you can create nice charts like this one (created with echarts adapter
 ### Older Changelog
 can be find [here](https://github.com/HGlab01/ioBroker.apg-info/blob/main/CHANGELOG_OLD.md)
 
+[Older changelogs can be found there](CHANGELOG_OLD.md)
+
 ## License
 MIT License
 
