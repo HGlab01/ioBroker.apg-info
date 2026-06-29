@@ -9,7 +9,6 @@
 ## 0.1.27 (2025-11-19)
 * (HGlab01) disable data provider Epex (not a stable option)
 
-[Older changelogs can be found there](CHANGELOG_OLD.md)
 
 ## 0.1.26 (2025-11-15)
 * (HGlab01) optimize handling for source Entsoe
