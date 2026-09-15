@@ -210,6 +210,7 @@ class ApgInfo extends utils.Adapter {
             }
             const {
                 jDay: jDay0,
+                jDayRaw: jDay0Raw,
                 jDayBelowThreshold: jDay0BelowThreshold,
                 jDayAboveThreshold: jDay0AboveThreshold,
                 daysBelow: days0Below,
@@ -221,6 +222,7 @@ class ApgInfo extends utils.Adapter {
             }
             const {
                 jDay: jDay1,
+                jDayRaw: jDay1Raw,
                 jDayBelowThreshold: jDay1BelowThreshold,
                 jDayAboveThreshold: jDay1AboveThreshold,
                 daysBelow: days1Below,
@@ -232,6 +234,7 @@ class ApgInfo extends utils.Adapter {
             }
             const {
                 jDay: jDay0q,
+                jDayRaw: jDay0qRaw,
                 jDayBelowThreshold: jDay0BelowThresholdq,
                 jDayAboveThreshold: jDay0AboveThresholdq,
                 daysBelow: days0Belowq,
@@ -243,6 +246,7 @@ class ApgInfo extends utils.Adapter {
             }
             const {
                 jDay: jDay1q,
+                jDayRaw: jDay1qRaw,
                 jDayBelowThreshold: jDay1BelowThresholdq,
                 jDayAboveThreshold: jDay1AboveThresholdq,
                 daysBelow: days1Belowq,
@@ -254,11 +258,15 @@ class ApgInfo extends utils.Adapter {
             let arrBelow1 = Object.keys(jDay1BelowThreshold).map(key => [key, jDay1BelowThreshold[key]]);
             let arrAll0 = Object.keys(jDay0).map(key => [key, jDay0[key]]);
             let arrAll1 = Object.keys(jDay1).map(key => [key, jDay1[key]]);
+            const arrAll0Raw = Object.keys(jDay0Raw).map(key => [key, jDay0Raw[key]]);
+            const arrAll1Raw = Object.keys(jDay1Raw).map(key => [key, jDay1Raw[key]]);
 
             let arrBelow0q = Object.keys(jDay0BelowThresholdq).map(key => [key, jDay0BelowThresholdq[key]]);
             let arrBelow1q = Object.keys(jDay1BelowThresholdq).map(key => [key, jDay1BelowThresholdq[key]]);
             let arrAll0q = Object.keys(jDay0q).map(key => [key, jDay0q[key]]);
             let arrAll1q = Object.keys(jDay1q).map(key => [key, jDay1q[key]]);
+            const arrAll0qRaw = Object.keys(jDay0qRaw).map(key => [key, jDay0qRaw[key]]);
+            const arrAll1qRaw = Object.keys(jDay1qRaw).map(key => [key, jDay1qRaw[key]]);
 
             jDay0BelowThreshold.numberOfHours = days0Below;
             jDay0AboveThreshold.numberOfHours = days0Above;
@@ -460,14 +468,14 @@ class ApgInfo extends utils.Adapter {
             }
 
             if (this.config_hourly) {
-                await this.createCharts(arrAll0Copy, arrAll1Copy, source1, false);
+                await this.createCharts(arrAll0Copy, arrAll1Copy, arrAll0Raw, arrAll1Raw, source1, false);
                 await jsonExplorer.checkExpire('marketprice.*');
                 await jsonExplorer.deleteObjectsWithNull('marketprice.*Threshold.*');
                 await jsonExplorer.deleteObjectsWithNull('marketprice.details.*');
             }
 
             if (this.config_quarterHourly) {
-                await this.createCharts(arrAll0qCopy, arrAll1qCopy, source1q, true);
+                await this.createCharts(arrAll0qCopy, arrAll1qCopy, arrAll0qRaw, arrAll1qRaw, source1q, true);
                 await jsonExplorer.checkExpire('marketprice_quarter_hourly.*');
                 await jsonExplorer.deleteObjectsWithNull('marketprice_quarter_hourly.*Threshold.*');
                 await jsonExplorer.deleteObjectsWithNull('marketprice_quarter_hourly.details.*');
@@ -493,10 +501,11 @@ class ApgInfo extends utils.Adapter {
      * @param {any[] | null} prices - The array of price objects.
      * @param {string} dayString - A string identifier for the day (e.g., 'today', 'tomorrow').
      * @param {boolean} quaterly - Indicates if the prices are in quarterly format.
-     * @returns {{jDay: object, jDayBelowThreshold: object, jDayAboveThreshold: object, daysBelow: number, daysAbove: number} | null} return
+     * @returns {{jDay: object, jDayRaw: object, jDayBelowThreshold: object, jDayAboveThreshold: object, daysBelow: number, daysAbove: number} | null} return
      */
     _processAndCategorizePrices(prices, dayString, quaterly = false) {
         const jDay = {};
+        const jDayRaw = {};
         const jDayBelowThreshold = {};
         const jDayAboveThreshold = {};
         let daysBelow = 0;
@@ -529,9 +538,11 @@ class ApgInfo extends utils.Adapter {
                 range = `${sBeginHour}_to_${sEndHour}`;
                 productTime.setHours(Number(iBeginHour), 0, 0, 0);
             }
-            const marketprice = this.calcPrice(prices[idS].Price / 10, productTime);
+            const rawMarketprice = Math.round((prices[idS].Price / 10) * 1000) / 1000;
+            const marketprice = this.calcPrice(rawMarketprice, productTime);
             this.log.debug(`Marketprice for product ${product} is ${marketprice}`);
             jDay[range] = marketprice;
+            jDayRaw[range] = rawMarketprice;
             if (marketprice < this.threshold) {
                 jDayBelowThreshold[range] = marketprice;
                 daysBelow++;
@@ -543,7 +554,7 @@ class ApgInfo extends utils.Adapter {
 
         this.log.debug(`Day prices for ${dayString} look like ${JSON.stringify(jDay)}`);
 
-        return { jDay, jDayBelowThreshold, jDayAboveThreshold, daysBelow, daysAbove };
+        return { jDay, jDayRaw, jDayBelowThreshold, jDayAboveThreshold, daysBelow, daysAbove };
     }
 
     /**
@@ -1241,21 +1252,25 @@ class ApgInfo extends utils.Adapter {
      * Creates JSON-data for a single chart.
      *
      * @param {any[]} dataArray array with market prices
+     * @param {any[]} rawDataArray array with raw market prices
      * @param {boolean} isTomorrow true if data is for tomorrow
      * @param {string | null} source source to be used
      * @param {number} allMin minimum value for y-axis
      * @param {number} allMax maximum value for y-axis
      * @param {string} statePath path to the chart state
      * @param {boolean} quarter_hourly true if data is quarter-hourly
-     * @returns {Promise<any[]>} chart data
+     * @returns {Promise<{chartData: any[], rawChartData: any[]}>} calculated and raw chart data
      */
-    async createSingleChart(dataArray, isTomorrow, source, allMin, allMax, statePath, quarter_hourly) {
+    async createSingleChart(dataArray, rawDataArray, isTomorrow, source, allMin, allMax, statePath, quarter_hourly) {
         this.log.debug(`Creating chart in state ${statePath}`);
         const chartData = [];
+        const rawChartData = [];
         if (quarter_hourly == false) {
             for (const idS in dataArray) {
                 const iHour = parseInt(dataArray[idS][0]); //analysing "00_to_01" with parseInt ignores everything starting with "_"
-                chartData[idS] = { y: dataArray[idS][1], t: calcDate(iHour, isTomorrow) };
+                const timestamp = calcDate(iHour, isTomorrow);
+                chartData[idS] = { y: dataArray[idS][1], t: timestamp };
+                rawChartData[idS] = { y: rawDataArray[idS][1], t: timestamp };
 
                 //add the final point for the last hour
                 const maxIndex = chartData.length - 1;
@@ -1263,6 +1278,10 @@ class ApgInfo extends utils.Adapter {
                     chartData[maxIndex + 1] = {
                         y: chartData[maxIndex].y,
                         t: chartData[maxIndex].t + 60 * 60 * 1000,
+                    };
+                    rawChartData[maxIndex + 1] = {
+                        y: rawChartData[maxIndex].y,
+                        t: rawChartData[maxIndex].t + 60 * 60 * 1000,
                     };
                 }
             }
@@ -1277,6 +1296,7 @@ class ApgInfo extends utils.Adapter {
                 date.setHours(parseInt(hours));
                 date.setMinutes(parseInt(minutes));
                 chartData[idS] = { y: dataArray[idS][1], t: date.getTime() };
+                rawChartData[idS] = { y: rawDataArray[idS][1], t: date.getTime() };
 
                 //add the final point for the last quarter-hour
                 const maxIndex = chartData.length - 1;
@@ -1284,6 +1304,10 @@ class ApgInfo extends utils.Adapter {
                     chartData[maxIndex + 1] = {
                         y: chartData[maxIndex].y,
                         t: chartData[maxIndex].t + 15 * 60 * 1000,
+                    };
+                    rawChartData[maxIndex + 1] = {
+                        y: rawChartData[maxIndex].y,
+                        t: rawChartData[maxIndex].t + 15 * 60 * 1000,
                     };
                 }
             }
@@ -1319,8 +1343,9 @@ class ApgInfo extends utils.Adapter {
 
         await jsonExplorer.stateSetCreate(statePath, 'jsonChart', JSON.stringify(chart));
         await jsonExplorer.stateSetCreate(statePath.replace(/jsonChart$/, 'jsonChartData'), 'jsonChartData', JSON.stringify(chart.graphs[0].data));
+        await jsonExplorer.stateSetCreate(statePath.replace(/jsonChart$/, 'jsonChartDataRaw'), 'jsonChartDataRaw', JSON.stringify(rawChartData));
 
-        return chart.graphs[0].data;
+        return { chartData: chart.graphs[0].data, rawChartData };
     }
 
     /**
@@ -1328,10 +1353,12 @@ class ApgInfo extends utils.Adapter {
      *
      * @param {any[]} arrayToday aray with market prices for today
      * @param {any[]} arrayTomorrow array with market prices for tomorrow
+     * @param {any[]} rawArrayToday array with raw market prices for today
+     * @param {any[]} rawArrayTomorrow array with raw market prices for tomorrow
      * @param {string | null} sourceTomorrow source to be used
      * @param {boolean} quarter_hourly true if data is quarter-hourly
      */
-    async createCharts(arrayToday, arrayTomorrow, sourceTomorrow, quarter_hourly) {
+    async createCharts(arrayToday, arrayTomorrow, rawArrayToday, rawArrayTomorrow, sourceTomorrow, quarter_hourly) {
         let todayMin = 1000,
             tomorrowMin = 1000;
         let todayMax = 0,
@@ -1351,8 +1378,9 @@ class ApgInfo extends utils.Adapter {
         const roundedMax = Math.ceil((allMax * 1.1) / 5) * 5;
 
         if (quarter_hourly == true && this.config_quarterHourly == true) {
-            const chartDataToday = await this.createSingleChart(
+            const { chartData: chartDataToday, rawChartData: rawChartDataToday } = await this.createSingleChart(
                 arrayToday,
+                rawArrayToday,
                 false,
                 null,
                 allMin,
@@ -1360,8 +1388,9 @@ class ApgInfo extends utils.Adapter {
                 'marketprice_quarter_hourly.today.jsonChart',
                 quarter_hourly,
             );
-            const chartDataTomorrow = await this.createSingleChart(
+            const { chartData: chartDataTomorrow, rawChartData: rawChartDataTomorrow } = await this.createSingleChart(
                 arrayTomorrow,
+                rawArrayTomorrow,
                 true,
                 sourceTomorrow,
                 allMin,
@@ -1374,10 +1403,16 @@ class ApgInfo extends utils.Adapter {
                 'jsonChartData',
                 JSON.stringify([...chartDataToday, ...chartDataTomorrow]),
             );
+            await jsonExplorer.stateSetCreate(
+                'marketprice_quarter_hourly.jsonChartDataRaw',
+                'jsonChartDataRaw',
+                JSON.stringify([...rawChartDataToday, ...rawChartDataTomorrow]),
+            );
         }
         if (quarter_hourly == false && this.config_hourly == true) {
-            const chartDataToday = await this.createSingleChart(
+            const { chartData: chartDataToday, rawChartData: rawChartDataToday } = await this.createSingleChart(
                 arrayToday,
+                rawArrayToday,
                 false,
                 null,
                 allMin,
@@ -1385,8 +1420,9 @@ class ApgInfo extends utils.Adapter {
                 'marketprice.today.jsonChart',
                 quarter_hourly,
             );
-            const chartDataTomorrow = await this.createSingleChart(
+            const { chartData: chartDataTomorrow, rawChartData: rawChartDataTomorrow } = await this.createSingleChart(
                 arrayTomorrow,
+                rawArrayTomorrow,
                 true,
                 sourceTomorrow,
                 allMin,
@@ -1398,6 +1434,11 @@ class ApgInfo extends utils.Adapter {
                 'marketprice.jsonChartData',
                 'jsonChartData',
                 JSON.stringify([...chartDataToday, ...chartDataTomorrow]),
+            );
+            await jsonExplorer.stateSetCreate(
+                'marketprice.jsonChartDataRaw',
+                'jsonChartDataRaw',
+                JSON.stringify([...rawChartDataToday, ...rawChartDataTomorrow]),
             );
         }
     }

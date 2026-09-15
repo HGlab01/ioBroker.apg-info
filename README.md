@@ -49,6 +49,7 @@ As an alternative you can use the [echarts adapter](https://github.com/ioBroker/
 - `[..].marketprice.today.jsonChartData` and `[..].marketprice.tomorrow.jsonChartData` contain only the chart data array
 - `[..].marketprice.jsonChartData` combines today's and tomorrow's chart data in one array.  
 - `[..].marketprice_quarter_hourly.jsonChartData` provides the same combined chart data for quarter-hourly prices.
+- The corresponding `jsonChartDataRaw` states contain raw market prices before fees, charges, grid costs, and VAT are added.
 
 With this you can create nice charts like this one (created with echarts adapter and the combined chart quarter hourly data):  
 <img src="doc/echarts.svg" alt="JSON Chart Data" width="50%" />
