@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "apg-info",
-    "version": "0.1.35",
+    "version": "0.1.36-alpha.0",
     "news": {
+      "0.1.36-alpha.0": {
+        "en": "Adapter requires admin >= 7.8.23 now\nadd raw chart data states\nBump axios to 1.20.0",
+        "de": "Adapter benötigt jetzt admin >= 7.8.23\nRaw-Chartdaten hinzufügen\nAxios auf 1.20.0",
+        "ru": "Для адаптера теперь требуется администратор >= 7.8.23\nдобавить состояния необработанных данных диаграммы\nПоднимитесь на ось 1.20.0",
+        "pt": "Adapter exige admin >= 7.8.23 agora\nadicionar gráficos brutos\nAumente axios a 1.20.0",
+        "nl": "Adapter vereist nu admin >= 7.8.23\nonbewerkte statussen van diagramgegevens toevoegen\nAxios naar 1.20.0 brengen",
+        "fr": "Adapter nécessite admin >= 7.8.23\najouter des états bruts\nBump Axios à 1.20.0",
+        "it": "Adapter richiede admin >= 7.8.23 ora\naggiungere dati grezzi\nPassa axios a 1.20.0",
+        "es": "El adaptador necesita admin >= 7.8.23 ahora\nañadir estados gráficos sin procesar\nBump axios a 1.20.0",
+        "pl": "Adapter wymaga administratora >= 7.8.23 teraz\ndodawanie stanów surowych danych wykresu\nBump axios do 1.20.0",
+        "uk": "Адаптер вимагає адміністратора >= 7.8.23 зараз\nдодавання необроблених станів даних діаграми\nПідвищіть аксіос до 1.20.0",
+        "zh-cn": "适配器现在需要管理员 >= 7.8.23\n添加原始图表数据状态\n将 axios 升级到 1.20.0"
+      },
       "0.1.35": {
         "en": "improve provider sequence for forecast capability",
         "de": "verbessern der anbietersequenz für prognosefähigkeit",
@@ -80,19 +93,6 @@
         "pl": "Adapter wymaga node.js > = 22\nfix \"DE\" nie jest kodem dostępnej strefy rynkowej\nAxios bump do 1.15.2",
         "uk": "Адаптер вимагає node.js >= 22 тепер\nвиправити 'DE' не є кодом доступної зони торгів\nБампер аксіос до 1.15.2",
         "zh-cn": "适配器需要节点.js 现在22\n修正“ DE” 不是一个可用投标区的代码\n横轴改为 1.15.2"
-      },
-      "0.1.30": {
-        "en": "finetune timeout management",
-        "de": "feinabstimmung timeout management",
-        "ru": "настройка тайм-аута",
-        "pt": "gestão de tempo- limite fino",
-        "nl": "finetune timeout management",
-        "fr": "gestion du temps d'arrêt",
-        "it": "gestione del timeout",
-        "es": "fino tiempo fuera gestión",
-        "pl": "zarządzanie finetune timeout",
-        "uk": "управління витратами",
-        "zh-cn": "微调超时管理"
       }
     },
     "titleLang": {

@@ -59,9 +59,10 @@ With this you can create nice charts like this one (created with echarts adapter
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
-
-### **WORK IN PROGRESS**
-- (ioBroker-Bot) Adapter requires admin >= 7.8.23 now.
+### 0.1.36-alpha.0 (2026-09-15)
+* (ioBroker-Bot) Adapter requires admin >= 7.8.23 now
+* (SimonFischer04) add raw chart data states
+* (HGlab01) Bump axios to 1.20.0
 
 ### 0.1.35 (2026-06-15)
 * (HGlab01) improve provider sequence for forecast capability
@@ -80,9 +81,6 @@ With this you can create nice charts like this one (created with echarts adapter
 * (HGlab01) Adapter requires node.js >= 22 now
 * (HGlab01) fix 'DE' is not the code for an available bidding zone
 * (HGlab01) Bump axios to 1.15.2
-
-### 0.1.30 (2026-02-24)
-* (HGlab01) finetune timeout management
 
 ### Older Changelog
 can be find [here](https://github.com/HGlab01/ioBroker.apg-info/blob/main/CHANGELOG_OLD.md)
