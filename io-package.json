@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "apg-info",
-    "version": "0.1.36-alpha.0",
+    "version": "0.1.36",
     "news": {
+      "0.1.36": {
+        "en": "Adapter requires admin >= 7.8.23 now\nadd raw chart data states\nBump axios to 1.20.0",
+        "de": "Adapter benötigt jetzt admin >= 7.8.23\nRaw-Chartdaten hinzufügen\nAxios auf 1.20.0",
+        "ru": "Для адаптера теперь требуется администратор >= 7.8.23\nдобавить состояния необработанных данных диаграммы\nПоднимитесь на ось 1.20.0",
+        "pt": "Adapter exige admin >= 7.8.23 agora\nadicionar gráficos brutos\nAumente axios a 1.20.0",
+        "nl": "Adapter vereist nu admin >= 7.8.23\nonbewerkte statussen van diagramgegevens toevoegen\nAxios naar 1.20.0 brengen",
+        "fr": "Adapter nécessite admin >= 7.8.23\najouter des états bruts\nBump Axios à 1.20.0",
+        "it": "Adapter richiede admin >= 7.8.23 ora\naggiungere dati grezzi\nPassa axios a 1.20.0",
+        "es": "El adaptador necesita admin >= 7.8.23 ahora\nañadir estados gráficos sin procesar\nBump axios a 1.20.0",
+        "pl": "Adapter wymaga administratora >= 7.8.23 teraz\ndodawanie stanów surowych danych wykresu\nBump axios do 1.20.0",
+        "uk": "Адаптер вимагає адміністратора >= 7.8.23 зараз\nдодавання необроблених станів даних діаграми\nПідвищіть аксіос до 1.20.0",
+        "zh-cn": "适配器现在需要管理员 >= 7.8.23\n添加原始图表数据状态\n将 axios 升级到 1.20.0"
+      },
       "0.1.36-alpha.0": {
         "en": "Adapter requires admin >= 7.8.23 now\nadd raw chart data states\nBump axios to 1.20.0",
         "de": "Adapter benötigt jetzt admin >= 7.8.23\nRaw-Chartdaten hinzufügen\nAxios auf 1.20.0",
@@ -69,19 +82,6 @@
         "zh-cn": "横轴改为1.16.0\n技术支持(vis-2)"
       },
       "0.1.32": {
-        "en": "Adapter requires node.js >= 22 now\nfix 'DE' is not the code for an available bidding zone\nBump axios to 1.15.2",
-        "de": "Adapter benötigt node.js >= 22 jetzt\nfix 'DE' ist nicht der Code für eine verfügbare Biddingzone\nBump axios zu 1.15.2",
-        "ru": "Адаптер требует node.js >= 22 сейчас\n«DE» не является кодом для доступной зоны торгов\nАксиос удара до 1,15,2",
-        "pt": "Adaptador requer nod.js >= 22 agora\nfixar 'DE' não é o código para uma zona de licitação disponível\nBump axios até 1.15.2",
-        "nl": "Voor de adapter zijn node.js < 22 nu nodig\nfix 'DE' is niet de code voor een beschikbare biedzone\nBump axios naar 1.15.2",
-        "fr": "Adaptateur nécessite node.js >= 22 maintenant\ncorriger 'DE' n'est pas le code d'une zone de soumission disponible\nAxios à 1.15.2",
-        "it": "Adattatore richiede node.js >= 22 ora\nfix 'DE' non è il codice per una zona di offerta disponibile\nAssio di bump a 1.15.2",
-        "es": "Adaptador requiere node.js ю= 22 ahora\nfijar 'DE' no es el código para una zona de licitación disponible\nAxios de bomba a 1.15.2",
-        "pl": "Adapter wymaga node.js > = 22\nfix \"DE\" nie jest kodem dostępnej strefy rynkowej\nAxios bump do 1.15.2",
-        "uk": "Адаптер вимагає node.js >= 22 тепер\nвиправити 'DE' не є кодом доступної зони торгів\nБампер аксіос до 1.15.2",
-        "zh-cn": "适配器需要节点.js 现在22\n修正“ DE” 不是一个可用投标区的代码\n横轴改为 1.15.2"
-      },
-      "0.1.31": {
         "en": "Adapter requires node.js >= 22 now\nfix 'DE' is not the code for an available bidding zone\nBump axios to 1.15.2",
         "de": "Adapter benötigt node.js >= 22 jetzt\nfix 'DE' ist nicht der Code für eine verfügbare Biddingzone\nBump axios zu 1.15.2",
         "ru": "Адаптер требует node.js >= 22 сейчас\n«DE» не является кодом для доступной зоны торгов\nАксиос удара до 1,15,2",
