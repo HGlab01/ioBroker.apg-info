@@ -59,6 +59,9 @@ With this you can create nice charts like this one (created with echarts adapter
     Placeholder for the next version (at the beginning of the line):
     ### __WORK IN PROGRESS__
 -->
+### 0.1.37-alpha.0 (2026-11-16)
+* (HGlab01) add fix price - for flat energy prices
+
 ### 0.1.36 (2026-09-17)
 * (ioBroker-Bot) Adapter requires admin >= 7.8.23 now
 * (SimonFischer04) add raw chart data states
@@ -76,11 +79,6 @@ With this you can create nice charts like this one (created with echarts adapter
 * (HGlab01) Bump axios to 1.16.1
 * (SimonFischer04) support echarts (vis-2)
 * (HGlab01) fix E5050 process.exit() used
-
-### 0.1.32 (2026-05-02)
-* (HGlab01) Adapter requires node.js >= 22 now
-* (HGlab01) fix 'DE' is not the code for an available bidding zone
-* (HGlab01) Bump axios to 1.15.2
 
 ### Older Changelog
 can be find [here](https://github.com/HGlab01/ioBroker.apg-info/blob/main/CHANGELOG_OLD.md)
