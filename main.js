@@ -169,16 +169,58 @@ class ApgInfo extends utils.Adapter {
                 prices0q = [],
                 prices1 = [],
                 prices1q = [];
-            if (country == 'ch') {
-                const [pprices0, pprices1] = await Promise.all([
-                    this._getAndProcessEntsoeData(false, country, false),
-                    this._getAndProcessEntsoeData(true, country, false),
-                ]);
-                prices0 = pprices0?.prices ?? [];
-                prices1 = pprices1?.prices ?? [];
+            const fixPrice = this.config.fixPrice ?? false;
+            const fixPriceAmount = (this.config.fixPriceAmount ?? 0) * 10;
+            if (fixPrice == true) {
+                if (this.config_quarterHourly) {
+                    for (let i = 0; i < 24 * 4; i++) {
+                        // Calculate hour index (1 to 24) and quarter index (1 to 4)
+                        const hourNumber = Math.floor(i / 4) + 1;
+                        const quarterNumber = (i % 4) + 1;
+                        const paddedHour = String(hourNumber).padStart(2, '0');
+                        // Calculate start and end times in minutes
+                        const startMinutesTotal = i * 15;
+                        const endMinutesTotal = (i + 1) * 15;
+                        const startHour = String(Math.floor(startMinutesTotal / 60)).padStart(2, '0');
+                        const startMin = String(startMinutesTotal % 60).padStart(2, '0');
+                        const endHour = String(Math.floor(endMinutesTotal / 60)).padStart(2, '0');
+                        const endMin = String(endMinutesTotal % 60).padStart(2, '0');
+                        const timeRange = `${startHour}:${startMin}-${endHour}:${endMin}`;
+
+                        prices0q[i] = {
+                            Price: fixPriceAmount,
+                            Product: `Q${paddedHour}_${quarterNumber}`,
+                            ProductText: `qEnCh${paddedHour}_${quarterNumber} (${timeRange})`,
+                            id: timeRange,
+                        };
+                        prices1q[i] = {
+                            Price: fixPriceAmount,
+                            Product: `Q${paddedHour}_${quarterNumber}`,
+                            ProductText: `qEnCh${paddedHour}_${quarterNumber} (${timeRange})`,
+                            id: timeRange,
+                        };
+                    }
+                }
+                if (this.config_hourly == true) {
+                    for (let i = 0; i < 24; i++) {
+                        prices0[i] = { Price: fixPriceAmount, Product: `H${pad(i + 1, 2)}` };
+                        prices1[i] = { Price: fixPriceAmount, Product: `H${pad(i + 1, 2)}` };
+                    }
+                }
             } else {
-                ({ prices0, prices1, source1, prices0q, prices1q, source1q } = await this._getAndProcessMarketData(country, forecast));
+                if (country == 'ch') {
+                    const [pprices0, pprices1] = await Promise.all([
+                        this._getAndProcessEntsoeData(false, country, false),
+                        this._getAndProcessEntsoeData(true, country, false),
+                    ]);
+                    prices0 = pprices0?.prices ?? [];
+                    prices1 = pprices1?.prices ?? [];
+                } else {
+                    ({ prices0, prices1, source1, prices0q, prices1q, source1q } = await this._getAndProcessMarketData(country, forecast));
+                }
             }
+            //this.log.info(JSON.stringify(prices0));
+            //this.log.info(JSON.stringify(prices0q));
 
             if (this.config_hourly) {
                 jsonExplorer.stateSetCreate('marketprice.today.date', 'date', day0.getTime());

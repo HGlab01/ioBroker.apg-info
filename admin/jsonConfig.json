@@ -269,6 +269,54 @@
                     "md": 6,
                     "lg": 4,
                     "xl": 4
+                },
+                "fixPrice": {
+                    "newLine": true,
+                    "type": "checkbox",
+                    "label": {
+                        "en": "Fix price values",
+                        "de": "Fix preis",
+                        "ru": "Исправить значения цены",
+                        "pt": "Corrigir valores de preço",
+                        "nl": "Prijs waarden corrigeren",
+                        "fr": "Corriger les valeurs de prix",
+                        "it": "Correggi i valori del prezzo",
+                        "es": "Corregir valores de precio",
+                        "pl": "Napraw wartości cen",
+                        "uk": "Виправити значення ціни",
+                        "zh-cn": "修复价格值"
+                    },
+                    "default": false,
+                    "xs": 4,
+                    "sm": 4,
+                    "md": 3,
+                    "lg": 2,
+                    "xl": 2
+                },
+                "fixPriceAmount": {
+                    "type": "number",
+                    "label": {
+                        "en": "Fix price amount (€ct/kWh)",
+                        "de": "Fixer Preisbetrag (€ct/kWh)",
+                        "ru": "Фиксированная сумма цены (€ct/kWh)",
+                        "pt": "Quantia de preço fixo (€ct/kWh)",
+                        "nl": "Vaste prijsbedrag (€ct/kWh)",
+                        "fr": "Montant du prix fixe (€ct/kWh)",
+                        "it": "Fix price amount (€ct/kWh)",
+                        "es": "Fix price amount (€ct/kWh)",
+                        "pl": "Fix price amount (€ct/kWh)",
+                        "uk": "Fix price amount (€ct/kWh)",
+                        "zh-cn": "Fix price amount (€ct/kWh)"
+                    },
+                    "disabled": "!data.fixPrice",
+                    "min": 0,
+                    "step": 0.1,
+                    "newLine": false,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 3,
+                    "lg": 2,
+                    "xl": 2
                 }
             }
         },
